@@ -170,9 +170,14 @@ least one vendor. Documents naming each vendor, as a share of those 6,086 (a doc
 | **Cloudera** | **55** | **0.9%** | **118** | **7** | **0.9%** |
 
 Cloudera appears in 55 documents, about 1 in 37 of Snowflake's volume, and in only 7 switching-language documents.
-The corpus was collected with the same query budget for every vendor (`config.VENDOR_QUERIES`), so the gap is not a
-collection artefact of fewer searches. It is itself a finding: in public practitioner discussion since 2023, Cloudera
-is close to absent from lakehouse platform choice. Two caveats: the sources skew toward cloud-native and developer
-audiences, where on-premises Hadoop estates are discussed less; and "Hortonworks" is counted as Cloudera, so the
-figure is not lowered by the merger. Meeting the Cloudera floor of 12 took most of the eligible Cloudera documents,
-so Cloudera results from the seed sample rest on a handful of voices.
+On HN and Stack Exchange, Cloudera had the same search budget as Databricks, Snowflake and Google (one base term,
+crossed with the same switching phrases, plus the `cloudera` Stack Overflow tag), and it still appears in 30 HN and
+19 Stack Exchange documents against 722 to 1,052 HN documents for each of those three. That gap is a finding: in
+public practitioner discussion since 2023, Cloudera is close to absent from lakehouse platform choice.
+
+Caveats a reader should see alongside the number:
+- **Dev.to is not a fair comparison for Cloudera.** The Dev.to feeds (`config.DEVTO_TAGS`) include tags for
+  Databricks, Snowflake, BigQuery and Redshift but none for Cloudera, so its 3 Dev.to documents understate it there.
+- The sources skew toward cloud-native and developer audiences, where on-premises Hadoop estates are discussed less.
+- "Hortonworks" is counted as Cloudera, so the figure is not lowered by the merger.
+- Cloudera findings from the seed sample rest on 12 documents.
