@@ -79,10 +79,14 @@ def near(
     texts = [normalise_for_hash(b) for _, b in long_existing] + [normalise_for_hash(docs[i].body) for i in long_idx]
     vec = HashingVectorizer(analyzer="word", ngram_range=(3, 3), n_features=2**20, alternate_sign=False, norm="l2")
     X = vec.transform(texts)
-    nn = NearestNeighbors(metric="cosine", algorithm="brute").fit(X)
-    dist, ind = nn.radius_neighbors(X, radius=1 - threshold, sort_results=True)
-
     n_exist = len(long_existing)
+    nn = NearestNeighbors(metric="cosine", algorithm="brute").fit(X)
+    # Query only the new documents (against everything): cost grows with batch x corpus,
+    # not corpus x corpus, which matters once the database holds tens of thousands of rows.
+    dist_new, ind_new = nn.radius_neighbors(X[n_exist:], radius=1 - threshold, sort_results=True)
+    dist = [None] * n_exist + list(dist_new)
+    ind = [None] * n_exist + list(ind_new)
+
     dropped: set[int] = set()  # positions in `texts`
     drops: list[DropRecord] = []
     for pos in range(n_exist, len(texts)):

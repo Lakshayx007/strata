@@ -117,3 +117,17 @@ def test_unambiguous_phrase_is_not_also_rejected():
 def test_switching_language_uses_word_boundaries():
     assert normalize.has_switching_language("We ran a POC last quarter")
     assert not normalize.has_switching_language("unix epoch in my pocket")
+
+
+def test_devto_article_maps_markdown_body():
+    raw = {"id": 5, "title": "Why we left Redshift", "body_markdown": "We moved off Redshift to BigQuery.", "url": "https://dev.to/a/b",
+           "author": "writer", "published_at": "2025-03-01T10:00:00Z", "reactions": 12, "comments_count": 3, "tags": ["redshift"]}
+    [doc] = normalize.to_documents([item("devto", "article", raw)])
+    assert doc.url == "https://dev.to/a/b" and doc.body.startswith("We moved off") and doc.posted_at.year == 2025
+
+
+def test_github_title_only_issue_uses_title():
+    raw = {"number": 7, "title": "Migrating from Hudi to Iceberg", "body": "", "url": "https://github.com/apache/iceberg/issues/7",
+           "author": "dev", "created_at": "2025-01-02T00:00:00Z", "comments": 4, "reactions": 1}
+    [doc] = normalize.to_documents([item("github_threads", "issue", raw)])
+    assert doc.body == "Migrating from Hudi to Iceberg" and doc.n_comments == 4
