@@ -4,8 +4,7 @@
 # Repository secrets used (Settings > Secrets and variables > Actions):
 #   DATABASE_URL          Supabase session-pooler URI (port 5432)
 #   AUTHOR_HASH_SALT      salt for author hashes; never change it after the first run
-#   REDDIT_CLIENT_ID      only needed for reddit / all
-#   REDDIT_CLIENT_SECRET  only needed for reddit / all
+# Reddit is excluded (its API now requires approval), so no Reddit secrets are used.
 # The GitHub token comes from Actions itself (read-only here); no personal token is needed.
 
 name: ingest
@@ -16,8 +15,8 @@ on:
       source:
         description: Which source to collect
         type: choice
-        default: hackernews
-        options: [hackernews, reddit, stackexchange, github, vendor_docs, all]
+        default: all
+        options: [all, hackernews, stackexchange, devto, github_threads, github, vendor_docs]
       since:
         description: Earliest post date to collect (YYYY-MM-DD)
         default: "2023-01-01"
@@ -27,6 +26,7 @@ on:
 
 permissions:
   contents: read
+  discussions: read
 
 # One ingestion at a time, so two runs never upsert into the same tables concurrently.
 concurrency:
@@ -40,8 +40,6 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       AUTHOR_HASH_SALT: ${{ secrets.AUTHOR_HASH_SALT }}
-      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
-      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
       STRATA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PYTHONUNBUFFERED: "1"
     steps:
@@ -65,7 +63,8 @@ jobs:
           LIMIT: ${{ inputs.limit }}
         run: |
           if [ "$SOURCE" = "all" ]; then
-            SOURCES="hackernews,stackexchange,github,vendor_docs,reddit"
+            # Reddit is excluded (API access requires approval); the runner logs and skips it.
+            SOURCES="hackernews,stackexchange,devto,github_threads,github,vendor_docs"
           else
             SOURCES="$SOURCE"
           fi

@@ -33,7 +33,16 @@ This is enforced structurally. The two live in separate tables, and `signals` ha
   access, so applying it to `hn.algolia.com`, `api.stackexchange.com` or `oauth.reddit.com` would produce false
   blocks. For vendor pages, an unreachable, 401/403 or 5xx robots.txt means the host is treated as off-limits, and a
   4xx (other than 401/403) means no restrictions (RFC 9309).
-- Reddit uses app-only, read-only OAuth, which means no user account. GitHub uses a classic token with no scopes.
+- **Reddit is excluded.** Creating an API app now requires approval under Reddit's Responsible Builder Policy,
+  which this project does not have. No unauthenticated JSON endpoints or old.reddit scraping are used as a
+  workaround. The sources table carries the row with that note, so the gap is visible.
+- Replacement volume comes from keyless official APIs:
+  - Stack Exchange: Stack Overflow, plus dba, datascience and softwareengineering. The smaller sites are searched
+    by full text because their tags differ.
+  - Dev.to tag feeds. On the broad tags, dataengineering and lakehouse, an article body is fetched only when its
+    title, description or tags name a vendor or lakehouse technology.
+  - GitHub issues and discussions. These are searched only for migration and comparison phrases.
+- GitHub calls use the Actions token, or a no-scope classic token when run locally.
 - `sources.terms_note` records what each source's terms permit at the time of collection.
 
 ## What becomes a document
@@ -95,7 +104,7 @@ consolidated onto. A wider list (`SWITCHING_SEARCH_PHRASES`) is used only at sea
 feeds a reported count.
 
 A document is **multi-vendor** if it mentions two or more distinct vendors. `tech:` entities do not count. Headline
-readiness numbers from `python -m analysis.report` cover the discussion sources only (Reddit, HN, Stack Exchange),
+readiness numbers from `python -m analysis.report` cover the discussion sources only (HN, Stack Exchange, Dev.to, GitHub threads),
 because vendor pages are reference text and are not seed material.
 
 ## Signals
