@@ -37,7 +37,12 @@ def _client(accept: str = "application/vnd.github+json") -> PoliteClient:
 
 def fetch(query: str, since: datetime, limit: int = 1_000_000) -> list[FetchedItem]:
     """`query` is "owner/repo". Returns every star event (with starred_at), one contributor
-    count, and every issue opened or updated since `since` (PRs excluded)."""
+    count, and every issue opened or updated since `since` (PRs excluded).
+
+    `limit` is ignored on purpose: it caps search results elsewhere, but here truncation would
+    silently undercount the oldest months of stars and issue velocity.
+    """
+    limit = 10**9
     items: list[FetchedItem] = []
     failures: list[str] = []
     # The three metrics are independent: a refusal on one endpoint must not discard the others.
