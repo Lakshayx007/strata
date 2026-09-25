@@ -72,7 +72,7 @@ jobs:
           python -m ingestion.run --sources "$SOURCES" --since "$SINCE" --limit "$LIMIT"
 
       # Runs even if ingestion ended with errors, so the counts of what did land are always visible.
-      - name: Report documents, mentions and signals
+      - name: Corpus report (switching, multi-vendor, length, duplicates, signals)
         if: always() && env.DATABASE_URL != ''
         run: |
-          { echo '```'; python -m ingestion.report; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
+          { echo '```'; python -m analysis.report; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
