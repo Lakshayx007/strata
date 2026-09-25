@@ -58,8 +58,9 @@ the mapping. The hash exists so that one prolific poster dominating a theme can 
 2. **Near-duplicate:** word 3-shingles, cosine similarity >= 0.90, checked against earlier documents in the batch
    and against every document already loaded. Texts under 30 words are exempt: two short "we moved to X" comments
    from different people are separate voices.
-Every dropped document is written to `data/processed/dedupe_report_*.csv` with the document it duplicated and the
-similarity score.
+Every dropped document is recorded in the `dedupe_drops` table (and a local CSV) with the document it duplicated and
+the similarity score. The duplicate rate is dropped / (dropped + kept). Drops are unique per source item, so
+re-running an ingestion does not inflate it.
 
 ## Mention matching
 
@@ -84,6 +85,18 @@ are recorded in `mentions`, but are never attributed to a vendor and are exclude
 not Databricks.
 
 `first_char_offset` indexes into `body`. It is NULL when the entity appears only in the title.
+
+## Switching language and corpus readiness
+
+A document "contains switching language" if its **body** matches any phrase in `config.SWITCHING_PHRASES`. The match
+is case-insensitive and on whole words, so "POC" does not match "epoch". The phrases are: migrated from, moved off,
+switched to, moving from, instead of, evaluated, bake-off, bakeoff, POC, proof of concept, ripped out, replaced with,
+consolidated onto. A wider list (`SWITCHING_SEARCH_PHRASES`) is used only at search time to improve recall. It never
+feeds a reported count.
+
+A document is **multi-vendor** if it mentions two or more distinct vendors. `tech:` entities do not count. Headline
+readiness numbers from `python -m analysis.report` cover the discussion sources only (Reddit, HN, Stack Exchange),
+because vendor pages are reference text and are not seed material.
 
 ## Signals
 

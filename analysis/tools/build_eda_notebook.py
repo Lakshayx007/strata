@@ -98,11 +98,11 @@ if not disc.empty:
         ax.set_title(s, loc="left", fontsize=10); ax.set_xlabel("words (clipped at p99)")
     plt.tight_layout(); plt.show()""")
 
-md("## 5. Switching language share\n\nHow much of the corpus contains any phrase from `config.SWITCHING_PHRASES`. This is a coarse filter for stratification, not a label.")
+md("## 5. Switching language share\n\nHow much of the corpus body text contains any phrase from `config.SWITCHING_PHRASES` (same rule as `python -m analysis.report`). A coarse filter for stratification, not a label.")
 code("""if disc.empty:
     print("No discussion documents yet.")
 else:
-    disc["switching"] = (disc.title.fillna("") + " " + disc.body).map(has_switching_language)
+    disc["switching"] = disc.body.map(has_switching_language)  # body only, same rule as analysis.report
     display(disc.groupby("source").switching.agg(["sum", "mean", "size"]).rename(columns={"sum": "with_switching", "mean": "share", "size": "docs"}).round(3))""")
 
 md("## 6. Rejected mention candidates\n\nCandidates discarded by the ambiguity rules, for precision review. Snippets are in `data/processed/rejected_mentions.csv`.")
