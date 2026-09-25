@@ -1,0 +1,78 @@
+# Runs Strata ingestion on GitHub's runners (which have open internet access) and loads into Supabase.
+# Start it from the Actions tab: "ingest" > "Run workflow", then pick a source.
+#
+# Repository secrets used (Settings > Secrets and variables > Actions):
+#   DATABASE_URL          Supabase session-pooler URI (port 5432)
+#   AUTHOR_HASH_SALT      salt for author hashes; never change it after the first run
+#   REDDIT_CLIENT_ID      only needed for reddit / all
+#   REDDIT_CLIENT_SECRET  only needed for reddit / all
+# The GitHub token comes from Actions itself (read-only here); no personal token is needed.
+
+name: ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Which source to collect
+        type: choice
+        default: hackernews
+        options: [hackernews, reddit, stackexchange, github, vendor_docs, all]
+      since:
+        description: Earliest post date to collect (YYYY-MM-DD)
+        default: "2023-01-01"
+      limit:
+        description: Max results per search query
+        default: "500"
+
+permissions:
+  contents: read
+
+# One ingestion at a time, so two runs never upsert into the same tables concurrently.
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      AUTHOR_HASH_SALT: ${{ secrets.AUTHOR_HASH_SALT }}
+      REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+      REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+      STRATA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Ingest
+        env:
+          SOURCE: ${{ inputs.source }}
+          SINCE: ${{ inputs.since }}
+          LIMIT: ${{ inputs.limit }}
+        run: |
+          if [ "$SOURCE" = "all" ]; then
+            SOURCES="hackernews,stackexchange,github,vendor_docs,reddit"
+          else
+            SOURCES="$SOURCE"
+          fi
+          python -m ingestion.run --sources "$SOURCES" --since "$SINCE" --limit "$LIMIT"
+
+      # Runs even if ingestion ended with errors, so the counts of what did land are always visible.
+      - name: Report documents, mentions and signals
+        if: always() && env.DATABASE_URL != ''
+        run: |
+          { echo '```'; python -m ingestion.report; echo '```'; } | tee -a "$GITHUB_STEP_SUMMARY"
