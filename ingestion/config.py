@@ -102,14 +102,23 @@ EXCLUDED_PATTERNS: list[dict] = [
 ]
 
 # --- Switching language ---------------------------------------------------
-# Used two ways: combined with vendor queries to target switching discussion,
-# and (Phase 2) to stratify the seed sample by whether switching language is present.
+# SWITCHING_PHRASES defines "contains switching language" for the corpus report and for
+# Phase 2 stratification. It is Lakshay's list, matched case-insensitively on word
+# boundaries against the document body. Change it only deliberately: every switching
+# count Strata reports depends on it.
 SWITCHING_PHRASES: list[str] = [
-    "migrated from", "migrating from", "migration from", "moved off", "moving off",
-    "moved away from", "switched to", "switching to", "switched from", "instead of",
-    "evaluated", "evaluating", "POC", "proof of concept", "bake-off", "bakeoff",
-    "cost blowup", "bill shock", "replaced", "ditched",
+    "migrated from", "moved off", "switched to", "moving from", "instead of",
+    "evaluated", "bake-off", "bakeoff", "POC", "proof of concept", "ripped out",
+    "replaced with", "consolidated onto",
 ]
+
+# Phrases combined with vendor queries at search time to over-sample switching discussion.
+# A superset of SWITCHING_PHRASES (recall at collection time is cheap; the report uses the
+# stricter list above).
+SWITCHING_SEARCH_PHRASES: list[str] = list(dict.fromkeys(SWITCHING_PHRASES + [
+    "migrating from", "migration from", "moving off", "moved away from", "switching to",
+    "switched from", "evaluating", "cost blowup", "bill shock", "replaced", "ditched",
+]))
 
 
 def search_queries() -> list[tuple[str, str]]:
@@ -122,7 +131,7 @@ def search_queries() -> list[tuple[str, str]]:
     for vendor, queries in VENDOR_QUERIES.items():
         for q in queries:
             pairs.append((vendor, q))
-            pairs.extend((vendor, f'{q} "{p}"') for p in SWITCHING_PHRASES)
+            pairs.extend((vendor, f'{q} "{p}"') for p in SWITCHING_SEARCH_PHRASES)
     return pairs
 
 
