@@ -39,9 +39,17 @@ def fetch(query: str, since: datetime, limit: int = 1_000_000) -> list[FetchedIt
     """`query` is "owner/repo". Returns every star event (with starred_at), one contributor
     count, and every issue opened or updated since `since` (PRs excluded)."""
     items: list[FetchedItem] = []
-    items.extend(_stars(query, limit))
-    items.extend(_contributors(query))
-    items.extend(_issues(query, since, limit))
+    failures: list[str] = []
+    # The three metrics are independent: a refusal on one endpoint must not discard the others.
+    for name, part in (("stars", lambda: _stars(query, limit)), ("contributors", lambda: _contributors(query)),
+                       ("issues", lambda: _issues(query, since, limit))):
+        try:
+            items.extend(part())
+        except Exception as exc:
+            failures.append(f"{name}: {type(exc).__name__}: {exc}")
+            log.warning("github %s %s failed: %s", query, name, exc)
+    if failures and not items:
+        raise RuntimeError(f"all GitHub metrics failed for {query}: " + "; ".join(failures))
     return items
 
 

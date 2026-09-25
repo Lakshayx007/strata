@@ -131,3 +131,10 @@ def test_github_title_only_issue_uses_title():
            "author": "dev", "created_at": "2025-01-02T00:00:00Z", "comments": 4, "reactions": 1}
     [doc] = normalize.to_documents([item("github_threads", "issue", raw)])
     assert doc.body == "Migrating from Hudi to Iceberg" and doc.n_comments == 4
+
+
+def test_nul_bytes_are_removed():
+    raw = {"number": 8, "title": "t\x00", "body": "stack trace \x00\x00 here", "url": "https://github.com/a/b/issues/8",
+           "author": None, "created_at": "2025-01-02T00:00:00Z", "comments": 0, "reactions": 0}
+    [doc] = normalize.to_documents([item("github_threads", "issue", raw)])
+    assert "\x00" not in doc.body and "\x00" not in doc.title

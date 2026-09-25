@@ -58,7 +58,7 @@ FETCHERS = {
 }
 
 
-FLUSH_EVERY_QUERIES = 20  # load in batches so a long run that is cut off keeps what it already fetched
+FLUSH_EVERY_QUERIES = 5  # load in batches so a long run that is cut off keeps what it already fetched
 
 
 def fetch_source(source: str, since: datetime, limit: int) -> Iterator[tuple[list[FetchedItem], list[str]]]:

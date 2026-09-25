@@ -5,7 +5,7 @@
 #   DATABASE_URL          Supabase session-pooler URI (port 5432)
 #   AUTHOR_HASH_SALT      salt for author hashes; never change it after the first run
 # Reddit is excluded (its API now requires approval), so no Reddit secrets are used.
-# The GitHub token comes from Actions itself (read-only here); no personal token is needed.
+#   STRATA_GITHUB_TOKEN   optional: classic token with no scopes, for the GitHub star/contributor signals
 
 name: ingest
 
@@ -40,7 +40,9 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       AUTHOR_HASH_SALT: ${{ secrets.AUTHOR_HASH_SALT }}
-      STRATA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # A no-scope personal token (secret STRATA_GITHUB_TOKEN) if set, else the Actions token. The Actions
+      # token is scoped to this repo's installation and GitHub refuses it for some endpoints on other repos.
+      STRATA_GITHUB_TOKEN: ${{ secrets.STRATA_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
       PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4
