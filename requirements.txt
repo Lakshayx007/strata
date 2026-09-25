@@ -1,0 +1,21 @@
+# Pinned to the versions the Phase 1 tests and notebook were run with (Python 3.11).
+httpx==0.28.1
+praw==8.0.3
+prawcore==4.0.0
+beautifulsoup4==4.15.0
+pandas==3.0.6
+numpy==2.4.6
+scikit-learn==1.9.1
+SQLAlchemy==2.1.1
+psycopg2-binary==2.9.13
+python-dotenv==1.2.3
+PyYAML==6.0.1
+# analysis notebook
+matplotlib==3.11.2
+nbformat==5.11.1
+nbconvert==7.17.1
+ipykernel==7.3.0
+# tests
+pytest==9.1.1
+# FastAPI and Uvicorn are added in Phase 4, when the backend exists.
+# Optional, only if DOCS_USE_PLAYWRIGHT=1: pip install playwright && playwright install chromium

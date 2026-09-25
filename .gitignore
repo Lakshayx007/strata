@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+data/raw/
+data/state/
+*.jsonl
+.venv/
+venv/
+data/processed/
