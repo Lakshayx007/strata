@@ -1,0 +1,69 @@
+# Phase 2 labelling steps that need the database. Start from the Actions tab: "phase2" > "Run workflow".
+#
+#   sample       draw the seed sample (or re-export the existing draw), print coverage and share of voice,
+#                and attach the sampled documents as a run artifact for the labelling pass
+#   load_labels  load the committed draft labels (labeled_by='model_draft') and, once the reviewed file is
+#                committed, the human labels (labeled_by='human')
+#
+# Uses the DATABASE_URL secret only.
+
+name: phase2
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: Which step to run
+        type: choice
+        default: sample
+        options: [sample, load_labels]
+      redraw:
+        description: "sample only: replace an existing draw"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ingest   # never overlaps an ingestion run
+  cancel-in-progress: false
+
+jobs:
+  phase2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Draw seed sample
+        if: inputs.step == 'sample'
+        run: |
+          python -m analysis.labeling.sample ${{ inputs.redraw && '--redraw' || '' }}
+          { echo '```'; cat data/processed/labeling/seed_v1_report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload sampled documents
+        if: inputs.step == 'sample'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed_v1
+          path: data/processed/labeling/
+          retention-days: 14
+
+      - name: Load labels
+        if: inputs.step == 'load_labels'
+        run: python -m analysis.labeling.load_labels
