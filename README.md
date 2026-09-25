@@ -11,6 +11,7 @@ Market and competitive intelligence for the enterprise lakehouse market. Phase 1
     python -m ingestion.run --sources reddit,github                          # need Reddit app + no-scope GitHub token
     python -m ingestion.run --from-raw data/raw/<source>/<file>.jsonl       # re-load without re-fetching
     python analysis/tools/build_eda_notebook.py && jupyter nbconvert --execute --inplace analysis/notebooks/01_corpus_eda.ipynb
+    python -m analysis.report                                                # corpus readiness numbers, from the DB only
     pytest
 
 ## Run in GitHub Actions
