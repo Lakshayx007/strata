@@ -13,6 +13,12 @@ Market and competitive intelligence for the enterprise lakehouse market. Phase 1
     python analysis/tools/build_eda_notebook.py && jupyter nbconvert --execute --inplace analysis/notebooks/01_corpus_eda.ipynb
     pytest
 
+## Run in GitHub Actions
+Add the repository secrets `DATABASE_URL` (Supabase session pooler, port 5432), `AUTHOR_HASH_SALT`, and, for Reddit,
+`REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET`. Then go to Actions > ingest > Run workflow and pick a source.
+The job log and run summary end with document, mention and signal counts from the database.
+Raw JSONL is not kept between Actions runs; the database is the record.
+
 ## Layout
 - `db/schema.sql` Postgres schema (idempotent; applied automatically by `ingestion.run`)
 - `ingestion/config.py` every search term, vendor alias, subreddit, tag, repo and URL
