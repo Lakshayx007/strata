@@ -57,8 +57,32 @@ CREATE TABLE IF NOT EXISTS labels (
     document_id    BIGINT NOT NULL REFERENCES documents (id) ON DELETE CASCADE,
     taxonomy_code  TEXT NOT NULL,
     confidence     REAL,
-    labeled_by     TEXT NOT NULL CHECK (labeled_by IN ('human', 'model')),
+    labeled_by     TEXT NOT NULL CHECK (labeled_by IN ('human', 'model', 'model_draft')),
     labeled_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Phase 2 additions to labels. Idempotent, so databases created before Phase 2 converge on re-run.
+-- 'model_draft' = a model's pre-label for human review; it is never counted as ground truth.
+ALTER TABLE labels ADD COLUMN IF NOT EXISTS sample         TEXT;  -- e.g. 'seed_v1'; NULL for labels outside a sample
+ALTER TABLE labels ADD COLUMN IF NOT EXISTS from_vendor    TEXT;
+ALTER TABLE labels ADD COLUMN IF NOT EXISTS to_vendor      TEXT;
+ALTER TABLE labels ADD COLUMN IF NOT EXISTS direction      TEXT;
+ALTER TABLE labels ADD COLUMN IF NOT EXISTS evidence_span  TEXT;
+ALTER TABLE labels DROP CONSTRAINT IF EXISTS labels_labeled_by_check;
+ALTER TABLE labels ADD CONSTRAINT labels_labeled_by_check CHECK (labeled_by IN ('human', 'model', 'model_draft'));
+ALTER TABLE labels DROP CONSTRAINT IF EXISTS labels_direction_check;
+ALTER TABLE labels ADD CONSTRAINT labels_direction_check CHECK (direction IS NULL OR direction IN ('adopt', 'leave', 'evaluate', 'none'));
+CREATE INDEX IF NOT EXISTS labels_sample_idx ON labels (sample, labeled_by);
+
+-- Which documents were drawn into a labelling sample, and why. Recorded so the draw is auditable.
+CREATE TABLE IF NOT EXISTS sample_members (
+    sample        TEXT NOT NULL,
+    document_id   BIGINT NOT NULL REFERENCES documents (id) ON DELETE CASCADE,
+    stratum       TEXT NOT NULL,   -- source / switching or not
+    picked_for    TEXT NOT NULL,   -- 'vendor_floor:<vendor>' or 'quota'
+    seed          INTEGER NOT NULL,
+    drawn_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (sample, document_id)
 );
 
 CREATE TABLE IF NOT EXISTS vendor_features (
