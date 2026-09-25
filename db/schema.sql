@@ -98,3 +98,17 @@ CREATE TABLE IF NOT EXISTS signals (
     fetched_at    TIMESTAMPTZ NOT NULL,
     UNIQUE (source_id, signal_type, entity, period_start, metric)
 );
+
+-- Dedupe audit: every document removed as a duplicate before loading, so the duplicate
+-- rate can be reported from the database (Actions runners keep no local files).
+-- Unique per source item, so re-running an ingestion does not inflate the count.
+CREATE TABLE IF NOT EXISTS dedupe_drops (
+    id                   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    source_id            BIGINT NOT NULL REFERENCES sources (id),
+    dropped_external_id  TEXT NOT NULL,
+    kept_key             TEXT NOT NULL,  -- external_id of the kept document, or db:<content_hash>
+    reason               TEXT NOT NULL CHECK (reason IN ('exact', 'near')),
+    similarity           REAL NOT NULL,
+    dropped_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (source_id, dropped_external_id)
+);

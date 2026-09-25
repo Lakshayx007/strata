@@ -102,6 +102,8 @@ def process(items: list[FetchedItem], engine=None, tag: str = "run") -> dict[str
         report.parent.mkdir(parents=True, exist_ok=True)
         pd.DataFrame([d.__dict__ for d in drops]).to_csv(report, index=False)
     loaded = load_to_db.upsert_documents(engine, kept) if engine is not None else 0
+    if engine is not None:
+        load_to_db.record_drops(engine, drops)
     n_signals = load_to_db.upsert_signals(engine, signals) if engine is not None else 0
     return {"fetched": len(items), "documents": len(docs), "dropped_dupes": len(drops), "loaded": loaded, "signals": n_signals}
 
