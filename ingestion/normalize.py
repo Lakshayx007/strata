@@ -141,7 +141,28 @@ def _vendor_docs(item: FetchedItem) -> DocumentRow | None:
     return _row(item, r["url"], r.get("title"), r.get("text") or "", None, posted, None, None)
 
 
+def _iso(ts: str | None) -> datetime | None:
+    return datetime.fromisoformat(ts.replace("Z", "+00:00")) if ts else None
+
+
+def _devto(item: FetchedItem) -> DocumentRow | None:
+    r = item.raw
+    # Markdown is kept as written: it is already readable text, and stripping it would lose code blocks.
+    return _row(item, r["url"], r.get("title"), r.get("body_markdown") or "", r.get("author"), _iso(r.get("published_at")),
+                r.get("reactions"), r.get("comments_count"))
+
+
+def _github_threads(item: FetchedItem) -> DocumentRow | None:
+    r = item.raw
+    body = r.get("body") or ""
+    if not body.strip():
+        body = r.get("title") or ""  # a title-only issue: the title is what was said
+    return _row(item, r["url"], r.get("title"), body, r.get("author"), _iso(r.get("created_at")), r.get("reactions"), r.get("comments"))
+
+
 MAPPERS: dict[str, Callable[[FetchedItem], DocumentRow | None]] = {
+    "devto": _devto,
+    "github_threads": _github_threads,
     "reddit": _reddit,
     "hackernews": _hackernews,
     "stackexchange": _stackexchange,

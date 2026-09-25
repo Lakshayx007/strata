@@ -23,7 +23,7 @@ from ingestion import config
 from ingestion.load_to_db import get_engine
 from ingestion.normalize import has_switching_language
 
-DISCUSSION_SOURCES = ["reddit", "hackernews", "stackexchange"]  # vendor pages are reference text, not seed material
+DISCUSSION_SOURCES = ["hackernews", "stackexchange", "devto", "github_threads", "reddit"]  # vendor pages are reference text, not seed material
 THIN_WORDS = 20  # below this a document rarely carries a reason that can be labelled
 
 
