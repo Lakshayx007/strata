@@ -43,7 +43,7 @@ class SEClient:
         BUDGET_FILE.parent.mkdir(parents=True, exist_ok=True)
         BUDGET_FILE.write_text(json.dumps({today: used + 1}))
 
-    def get(self, path: str, params: dict[str, Any]) -> dict[str, Any]:
+    def get(self, path: str, params: dict[str, Any], site: str = config.SE_SITE) -> dict[str, Any]:
         import time
 
         if self._pending_backoff:
@@ -51,7 +51,7 @@ class SEClient:
             time.sleep(self._pending_backoff)
             self._pending_backoff = 0.0
         self._spend()
-        params = {"site": config.SE_SITE, **params}
+        params = {"site": site, **params}
         if config.SE_KEY:
             params["key"] = config.SE_KEY
         data = self._http.get_json(f"{config.SE_BASE_URL}{path}", params)
@@ -65,13 +65,21 @@ class SEClient:
 
 
 def fetch(query: str, since: datetime, limit: int = config.DEFAULT_LIMIT) -> list[FetchedItem]:
-    """`query` is a vendor key from config.SE_TAGS; returns tag counts plus up to `limit` questions per tag."""
+    """`query` is a vendor key from config.SE_TAGS.
+
+    Stack Overflow: monthly tag counts plus up to `limit` questions per tag. The extra sites
+    (dba, datascience, softwareengineering) use their own, sparser tags, so they are searched
+    by the vendor's base query terms instead.
+    """
     client = SEClient()
     items: list[FetchedItem] = []
     try:
         for tag in config.SE_TAGS[query]:
             items.extend(_tag_counts(client, query, tag))
             items.extend(_questions(client, query, tag, since, limit))
+        for site in config.SE_EXTRA_SITES:
+            for term in config.VENDOR_QUERIES[query]:
+                items.extend(_search(client, site, query, term, since, limit))
     except BudgetExhausted as exc:
         log.warning("stopping Stack Exchange early: %s", exc)
     finally:
@@ -124,7 +132,31 @@ def _questions(client: SEClient, vendor: str, tag: str, since: datetime, limit: 
             )
             now = datetime.now(timezone.utc)
             for q in data.get("items", []):
-                items.append(FetchedItem(SOURCE, "question", str(q["question_id"]), now, tag, {**q, "vendor": vendor}))
+                raw = {**q, "vendor": vendor, "site": config.SE_SITE}
+                items.append(FetchedItem(SOURCE, "question", f"{config.SE_SITE}:{q['question_id']}", now, tag, raw))
+            if not data.get("has_more"):
+                break
+            page += 1
+        counter["count"] = len(items)
+    return items[:limit]
+
+
+def _search(client: SEClient, site: str, vendor: str, term: str, since: datetime, limit: int) -> list[FetchedItem]:
+    """Full-text search on a smaller site; one or two pages at most, to protect the shared daily budget."""
+    items: list[FetchedItem] = []
+    page = 1
+    with log_fetch(SOURCE, f"search:{site}:{term}") as counter:
+        while len(items) < limit and page <= 2:
+            data = client.get(
+                "/search/advanced",
+                {"q": term, "fromdate": int(since.timestamp()), "sort": "creation", "order": "desc",
+                 "filter": "withbody", "pagesize": 100, "page": page},
+                site=site,
+            )
+            now = datetime.now(timezone.utc)
+            for q in data.get("items", []):
+                raw = {**q, "vendor": vendor, "site": site}
+                items.append(FetchedItem(SOURCE, "question", f"{site}:{q['question_id']}", now, f"{site}:{term}", raw))
             if not data.get("has_more"):
                 break
             page += 1
