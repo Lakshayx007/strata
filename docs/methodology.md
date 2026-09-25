@@ -120,3 +120,59 @@ because vendor pages are reference text and are not seed material.
 
 A source that returns nothing, or cannot run, stays empty and is reported as such. Nothing is synthesised or
 back-filled, and the EDA notebook's coverage table shows every source, including those with zero rows.
+
+# Phase 2: seed sample and labelling
+
+## Seed sample (`seed_v1`)
+
+`python -m analysis.labeling.sample` (or the **phase2** workflow, step `sample`) draws 150 discussion documents with
+a fixed seed (20260925) and records the draw in `sample_members`, so a re-run returns the same documents even after
+the corpus grows.
+
+- **Pool:** Hacker News, Stack Exchange and Dev.to documents with at least 20 words that name at least one of the six
+  vendors (`tech:` entities do not count). GitHub issues and discussions are not in the seed quota.
+- **Quotas:** HN 60, Stack Exchange 45, Dev.to 45, so HN does not dominate.
+- **Switching weight:** at least 110 of 150 use switching language (the Phase 1 phrase list), set per source in
+  proportion to its quota.
+- **Vendor floors:** at least 12 documents naming Cloudera and at least 10 each for Microsoft, AWS and Google. Floors
+  are filled first, scarcest vendor first, switching documents first, spread across sources.
+
+Achieved on 2026-09-25 (phase2 run 36173630209):
+
+| | Target | Achieved |
+|---|---|---|
+| Total | 150 | 150 |
+| Switching language | ≥ 110 | 110 |
+| HN / Stack Exchange / Dev.to | 60 / 45 / 45 | 60 / 45 / 45 (switching 44 / 33 / 33) |
+| Cloudera | ≥ 12 | 12 |
+| Microsoft | ≥ 10 | 19 |
+| AWS | ≥ 10 | 32 |
+| Google | ≥ 10 | 36 |
+| Databricks / Snowflake | – | 46 / 72 |
+| Multi-vendor documents | – | 39 |
+
+34 of the 150 were picked to meet a vendor floor (Cloudera 12, Microsoft 9, Google 7, AWS 4); the rest were drawn
+at random within the source quotas. The floors therefore over-represent the smaller vendors relative to the corpus,
+so seed-sample label frequencies must not be read as market-wide frequencies.
+
+## Finding: Cloudera's share of voice
+
+Across the 12,056 discussion documents (HN, Stack Exchange, Dev.to, GitHub threads) on 2026-09-25, 6,086 name at
+least one vendor. Documents naming each vendor, as a share of those 6,086 (a document can name several):
+
+| Vendor | Documents | Share | Mentions | Switching-language documents | Share of 791 |
+|---|---|---|---|---|---|
+| Snowflake | 2,009 | 33.0% | 15,410 | 371 | 46.9% |
+| Databricks | 1,687 | 27.7% | 10,468 | 245 | 31.0% |
+| Google | 1,376 | 22.6% | 5,477 | 168 | 21.2% |
+| AWS | 1,122 | 18.4% | 4,260 | 148 | 18.7% |
+| Microsoft | 678 | 11.1% | 3,233 | 66 | 8.3% |
+| **Cloudera** | **55** | **0.9%** | **118** | **7** | **0.9%** |
+
+Cloudera appears in 55 documents, about 1 in 37 of Snowflake's volume, and in only 7 switching-language documents.
+The corpus was collected with the same query budget for every vendor (`config.VENDOR_QUERIES`), so the gap is not a
+collection artefact of fewer searches. It is itself a finding: in public practitioner discussion since 2023, Cloudera
+is close to absent from lakehouse platform choice. Two caveats: the sources skew toward cloud-native and developer
+audiences, where on-premises Hadoop estates are discussed less; and "Hortonworks" is counted as Cloudera, so the
+figure is not lowered by the merger. Meeting the Cloudera floor of 12 took most of the eligible Cloudera documents,
+so Cloudera results from the seed sample rest on a handful of voices.
