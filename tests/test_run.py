@@ -15,3 +15,11 @@ def test_placeholder_values_count_as_missing(monkeypatch):
 
 def test_sources_without_credentials_need_nothing_extra(monkeypatch):
     assert run.missing_env(["hackernews", "stackexchange", "vendor_docs"], use_db=False) == []
+
+
+def test_supabase_uri_is_pinned_to_psycopg2():
+    from ingestion.load_to_db import normalise_db_url
+
+    assert normalise_db_url("postgresql://u:p@h:5432/postgres") == "postgresql+psycopg2://u:p@h:5432/postgres"
+    assert normalise_db_url("postgres://u:p@h:5432/postgres") == "postgresql+psycopg2://u:p@h:5432/postgres"
+    assert normalise_db_url("postgresql+psycopg2://x") == "postgresql+psycopg2://x"
