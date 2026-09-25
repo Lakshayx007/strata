@@ -25,6 +25,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy import MetaData, Table
 
 from ingestion import config
+from ingestion.dedupe import DropRecord
 from ingestion.normalize import DocumentRow, RejectedMention, SignalRow, find_mentions_with_rejections
 
 log = logging.getLogger("strata.load")
@@ -182,3 +183,23 @@ def recompute_all_mentions(engine: Engine) -> int:
             conn.execute(mentions.insert(), new)
     report_rejections(rejections)
     return len(new)
+
+
+def record_drops(engine: Engine, drops: Iterable[DropRecord]) -> int:
+    """Persist the dedupe audit. Idempotent on (source, dropped_external_id)."""
+    drops = list({(d.dropped_source, d.dropped_external_id): d for d in drops}.values())
+    if not drops:
+        return 0
+    table = Table("dedupe_drops", MetaData(), autoload_with=engine)
+    source_ids = {name: ensure_source(engine, name) for name in {d.dropped_source for d in drops}}
+    values = [{"source_id": source_ids[d.dropped_source], "dropped_external_id": d.dropped_external_id,
+               "kept_key": d.kept_key, "reason": d.reason, "similarity": d.similarity} for d in drops]
+    for start in range(0, len(values), BATCH):
+        stmt = pg_insert(table).values(values[start:start + BATCH])
+        stmt = stmt.on_conflict_do_update(
+            index_elements=["source_id", "dropped_external_id"],
+            set_={"kept_key": stmt.excluded.kept_key, "reason": stmt.excluded.reason, "similarity": stmt.excluded.similarity},
+        )
+        with engine.begin() as conn:
+            conn.execute(stmt)
+    return len(values)
