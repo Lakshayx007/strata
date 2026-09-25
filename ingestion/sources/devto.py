@@ -8,15 +8,19 @@ body, which the list endpoint does not include.
 
 from __future__ import annotations
 
+import logging
 import re
 from datetime import datetime, timezone
 from typing import Any
 
 from ingestion import config
+import httpx
+
 from ingestion.http import PoliteClient, log_fetch
 from ingestion.models import FetchedItem
 
 SOURCE = "devto"
+log = logging.getLogger("strata.devto")
 
 # Pre-filter for broad tags, on metadata only. Deliberately loose (bare words): it only decides
 # whether to spend a request on the body; the strict mention rules run later on the full text.
@@ -44,7 +48,13 @@ def fetch(query: str, since: datetime, limit: int = config.DEFAULT_LIMIT, client
                 if query in config.DEVTO_BROAD_TAGS and not _is_relevant(summary):
                     continue
                 _SEEN.add(summary["id"])
-                article = client.get_json(f"{config.DEVTO_API}/articles/{summary['id']}")
+                try:
+                    article = client.get_json(f"{config.DEVTO_API}/articles/{summary['id']}")
+                except httpx.HTTPStatusError as exc:
+                    if exc.response.status_code == 404:  # listed but since deleted or unpublished
+                        log.info("devto article %s no longer available; skipped", summary["id"])
+                        continue
+                    raise
                 items.append(FetchedItem(SOURCE, "article", str(article["id"]), datetime.now(timezone.utc), query, _raw(article)))
             counter["count"] = len(items)
     finally:

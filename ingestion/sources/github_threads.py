@@ -15,6 +15,8 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+import httpx
+
 from ingestion import config
 from ingestion.http import PoliteClient, log_fetch
 from ingestion.models import FetchedItem
@@ -63,7 +65,15 @@ def fetch(query: str, since: datetime, limit: int = config.DEFAULT_LIMIT) -> lis
         for phrase in config.GITHUB_THREAD_PHRASES:
             q = f'repo:{query} "{phrase}" created:>={day}'
             with log_fetch(SOURCE, f"{query} {phrase!r}") as counter:
-                found = _issues(client, q) + _discussions(client, q)
+                try:
+                    found = _issues(client, q)
+                except httpx.HTTPStatusError as exc:
+                    if exc.response.status_code != 422:
+                        raise
+                    # 422 = GitHub will not run this search for this repo (e.g. not searchable with this token).
+                    log.warning("issue search rejected (422) for %r; continuing with discussions", q)
+                    found = []
+                found += _discussions(client, q)
                 for kind, raw in found:
                     key = raw["url"]
                     if key in seen:

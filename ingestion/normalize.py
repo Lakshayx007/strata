@@ -85,7 +85,9 @@ def _ts(epoch: float | int | None) -> datetime | None:
 
 def _row(item: FetchedItem, url: str, title: str | None, body: str, author: str | None,
          posted_at: datetime | None, score: int | None, n_comments: int | None) -> DocumentRow | None:
-    body = body.strip()
+    # Postgres text cannot hold NUL bytes; some issue bodies contain them (pasted binary output).
+    body = body.replace("\x00", "").strip()
+    title = title.replace("\x00", "") if title else title
     if body in PLACEHOLDER_BODIES:
         return None
     return DocumentRow(

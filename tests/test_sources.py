@@ -51,3 +51,17 @@ def test_reddit_is_excluded_and_not_in_all_sources():
 
     assert "reddit" in config.EXCLUDED_SOURCES and "reddit" not in run.ALL_SOURCES
     assert config.SOURCE_REGISTRY["reddit"]["terms_note"].startswith("excluded: API access requires approval")
+
+
+def test_devto_skips_articles_deleted_after_listing():
+    import httpx
+
+    class Gone(FakeDevto):
+        def get_json(self, url, params=None):
+            if url.endswith("/articles/1"):
+                raise httpx.HTTPStatusError("gone", request=httpx.Request("GET", url), response=httpx.Response(404))
+            return super().get_json(url, params)
+
+    devto._SEEN.clear()
+    items = devto.fetch("snowflake", SINCE, 100, client=Gone())
+    assert [i.external_id for i in items] == ["2"]

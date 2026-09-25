@@ -70,6 +70,9 @@ class PoliteClient:
                 log.warning("%s HTTP %s on %s; backing off %.1fs", self.source, resp.status_code, url, delay)
                 time.sleep(delay)
                 continue
+            if resp.is_client_error:
+                # The body says *why* (rate limit, permissions, bad query); keep it in the log.
+                log.warning("%s HTTP %s on %s: %s", self.source, resp.status_code, resp.url, resp.text[:300])
             resp.raise_for_status()
             return resp
         raise RuntimeError("unreachable")
