@@ -25,11 +25,12 @@ import pandas as pd
 
 from ingestion import config, dedupe, load_to_db, normalize
 from ingestion.models import FetchedItem
-from ingestion.sources import github_ecosystem, hackernews, reddit, stackexchange, vendor_docs
+from ingestion.sources import devto, github_ecosystem, github_threads, hackernews, reddit, stackexchange, vendor_docs
 
 log = logging.getLogger("strata.run")
 PLACEHOLDER_MARKERS = ("YOUR_", "REPLACE_WITH")
-ALL_SOURCES = ["reddit", "hackernews", "stackexchange", "github", "vendor_docs"]
+# Every runnable source; config.EXCLUDED_SOURCES (e.g. reddit) are skipped with a log line, not an error.
+ALL_SOURCES = ["hackernews", "stackexchange", "devto", "github_threads", "github", "vendor_docs"]
 
 
 def _queries(source: str) -> list[str]:
@@ -39,6 +40,10 @@ def _queries(source: str) -> list[str]:
         return list(config.SE_TAGS)
     if source == "github":
         return list(config.GITHUB_REPOS)
+    if source == "devto":
+        return list(config.DEVTO_TAGS)
+    if source == "github_threads":
+        return list(config.GITHUB_THREAD_REPOS)
     return list(config.VENDOR_DOC_URLS)
 
 
@@ -47,6 +52,8 @@ FETCHERS = {
     "hackernews": hackernews.fetch,
     "stackexchange": stackexchange.fetch,
     "github": github_ecosystem.fetch,
+    "devto": devto.fetch,
+    "github_threads": github_threads.fetch,
     "vendor_docs": vendor_docs.fetch,
 }
 
@@ -126,6 +133,9 @@ def main() -> None:
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
     sources = [x.strip() for x in args.sources.split(",") if x.strip()]
+    for x in [x for x in sources if x in config.EXCLUDED_SOURCES]:
+        log.warning("skipping %s: %s", x, config.EXCLUDED_SOURCES[x])
+    sources = [x for x in sources if x not in config.EXCLUDED_SOURCES]
     unknown = [x for x in sources if x not in FETCHERS]
     if unknown:
         sys.exit(f"Unknown source(s): {', '.join(unknown)}. Choose from: {', '.join(ALL_SOURCES)}")
@@ -140,6 +150,9 @@ def main() -> None:
     engine = None if args.no_db else load_to_db.get_engine()
     if engine is not None:
         load_to_db.apply_schema(engine)
+        # Excluded sources still get a row, so the sources table shows the gap and why.
+        for name in config.EXCLUDED_SOURCES:
+            load_to_db.ensure_source(engine, name)
 
     if args.from_raw:
         items = read_raw(args.from_raw)
@@ -151,13 +164,17 @@ def main() -> None:
     for source in sources:
         totals: dict[str, int] = {}
         all_errors: list[str] = []
-        for batch_no, (items, errors) in enumerate(fetch_source(source, since, args.limit)):
-            all_errors += errors
-            if not items:
-                continue
-            save_raw(source, items)
-            for k, v in process(items, engine, f"{source}_{batch_no}").items():
-                totals[k] = totals.get(k, 0) + v
+        try:
+            for batch_no, (items, errors) in enumerate(fetch_source(source, since, args.limit)):
+                all_errors += errors
+                if not items:
+                    continue
+                save_raw(source, items)
+                for k, v in process(items, engine, f"{source}_{batch_no}").items():
+                    totals[k] = totals.get(k, 0) + v
+        except Exception as exc:  # continue-on-error per source: one broken source never stops the others
+            all_errors.append(f"{source} aborted: {type(exc).__name__}: {exc}")
+            log.exception("source %s aborted", source)
         if engine is not None:
             # Recorded even when nothing came back: "ran and got 0" is different from "never ran".
             load_to_db.mark_run(engine, load_to_db.ensure_source(engine, source))

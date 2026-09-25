@@ -141,7 +141,9 @@ def search_queries() -> list[tuple[str, str]]:
 REQUIRED_ENV_ALWAYS = ["AUTHOR_HASH_SALT"]
 REQUIRED_ENV_DB = ["DATABASE_URL"]
 REQUIRED_ENV_BY_SOURCE: dict[str, list[str]] = {
-    "reddit": ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"],
+    "reddit": ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"],  # excluded; kept so the adapter stays runnable if approved
+    "devto": [],
+    "github_threads": ["STRATA_GITHUB_TOKEN"],
     "hackernews": [],
     "stackexchange": [],  # STACKEXCHANGE_KEY is optional
     "github": ["STRATA_GITHUB_TOKEN"],
@@ -161,7 +163,9 @@ HN_MIN_INTERVAL_S = 0.5  # Algolia allows 10k req/hour/IP; we stay far below.
 
 # --- Stack Exchange -------------------------------------------------------
 SE_BASE_URL = "https://api.stackexchange.com/2.3"
-SE_SITE = "stackoverflow"
+SE_SITE = "stackoverflow"  # tag-count signals come from Stack Overflow only (the tags are defined there)
+# Extra sites searched by full text for question bodies (their tag sets differ from Stack Overflow's).
+SE_EXTRA_SITES = ["dba", "datascience", "softwareengineering"]
 SE_KEY = os.getenv("STACKEXCHANGE_KEY", "")
 # Unkeyed quota is 300/day per IP; the spec caps us under it with a margin.
 SE_DAILY_BUDGET = int(os.getenv("SE_DAILY_BUDGET", "290"))
@@ -173,7 +177,9 @@ SE_TAGS: dict[str, list[str]] = {
     "microsoft": ["microsoft-fabric", "azure-synapse"],
     "google": ["google-bigquery"],
 }
-SE_TAG_COUNT_MONTHS = int(os.getenv("SE_TAG_COUNT_MONTHS", "24"))
+# One request per tag per month; 12 months keeps tag counts to ~96 of the 290-request daily budget,
+# leaving room for question bodies from all four sites.
+SE_TAG_COUNT_MONTHS = int(os.getenv("SE_TAG_COUNT_MONTHS", "12"))
 
 # --- GitHub ---------------------------------------------------------------
 GITHUB_TOKEN = os.getenv("STRATA_GITHUB_TOKEN", "")
@@ -196,13 +202,36 @@ VENDOR_DOC_URLS: dict[str, list[str]] = {
 DOCS_MIN_INTERVAL_S = 3.0
 DOCS_USE_PLAYWRIGHT = os.getenv("DOCS_USE_PLAYWRIGHT", "0") == "1"
 
+# --- Dev.to (Forem public API) ------------------------------------------------
+DEVTO_API = "https://dev.to/api"
+DEVTO_TAGS = ["databricks", "snowflake", "dataengineering", "lakehouse", "bigquery", "redshift"]
+DEVTO_MIN_INTERVAL_S = 1.0
+DEVTO_MAX_PAGES_PER_TAG = int(os.getenv("DEVTO_MAX_PAGES_PER_TAG", "10"))  # 100 articles per page
+# Broad tags (dataengineering) carry many unrelated posts. For those, only articles whose title,
+# description or tags name a vendor or "lakehouse" get their full body fetched (one request each).
+DEVTO_BROAD_TAGS = {"dataengineering", "lakehouse"}
+
+# --- GitHub issues and discussions (text) -------------------------------------
+# Searched for migration and comparison language only, never bulk-collected.
+GITHUB_THREAD_REPOS = ["delta-io/delta", "apache/iceberg", "apache/hudi", "dbt-labs/dbt-core"]
+GITHUB_THREAD_PHRASES: list[str] = list(dict.fromkeys(SWITCHING_PHRASES + [
+    "migrate from", "migrating from", "migration from", "compared to", "comparison with", "versus",
+]))
+
+# --- Excluded sources ---------------------------------------------------------
+# Listed here, and in the sources table, so the gap is visible rather than silent.
+EXCLUDED_SOURCES: dict[str, str] = {
+    "reddit": "excluded: API access requires approval (Reddit Responsible Builder Policy); not collected, "
+              "and no unauthenticated or scraped fallback is used.",
+}
+
 # --- What each source's terms permit (written to sources.terms_note) ------
 SOURCE_REGISTRY: dict[str, dict[str, str]] = {
     "reddit": {
         "kind": "api",
         "base_url": "https://oauth.reddit.com",
-        "terms_note": "Reddit Data API via app-only read-only OAuth (praw, no user login). Data API Terms permit non-commercial research use; "
-        "commercial use needs a separate agreement. 100 QPM per OAuth client. No bulk redistribution of content.",
+        "terms_note": "excluded: API access requires approval (Reddit Responsible Builder Policy). Not collected; "
+        "no unauthenticated JSON endpoints or scraping are used as a workaround.",
     },
     "hackernews": {
         "kind": "api",
@@ -213,7 +242,7 @@ SOURCE_REGISTRY: dict[str, dict[str, str]] = {
     "stackexchange": {
         "kind": "api",
         "base_url": SE_BASE_URL,
-        "terms_note": "Stack Exchange API v2.3. 300 requests/day unkeyed (10k with key); must honour 'backoff'. "
+        "terms_note": "Stack Exchange API v2.3 (stackoverflow, dba, datascience, softwareengineering). 300 requests/day unkeyed (10k with key); must honour 'backoff'. "
         "Content CC BY-SA; attribution via question URL required.",
     },
     "github": {
@@ -221,6 +250,18 @@ SOURCE_REGISTRY: dict[str, dict[str, str]] = {
         "base_url": GITHUB_API,
         "terms_note": "GitHub REST API with a classic token with no scopes (public data only), 5,000 requests/hour. Public repository metadata only; "
         "GitHub Acceptable Use permits research use of public data via the API.",
+    },
+    "devto": {
+        "kind": "api",
+        "base_url": DEVTO_API,
+        "terms_note": "Forem/Dev.to public API, unauthenticated read endpoints (articles by tag, article by id). "
+        "Throttled to 1 request/second; articles stay authors' content, stored with links back.",
+    },
+    "github_threads": {
+        "kind": "api",
+        "base_url": GITHUB_API,
+        "terms_note": "GitHub REST search (issues) and GraphQL search (discussions) on public repos, Actions token. "
+        "Only threads matching migration/comparison phrases; search limit 30 requests/minute respected.",
     },
     "vendor_docs": {
         "kind": "docs",
