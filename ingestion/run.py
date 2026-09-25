@@ -19,6 +19,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Iterator
 
 import pandas as pd
 
@@ -50,19 +51,30 @@ FETCHERS = {
 }
 
 
-def fetch_source(source: str, since: datetime, limit: int) -> tuple[list[FetchedItem], list[str]]:
+FLUSH_EVERY_QUERIES = 20  # load in batches so a long run that is cut off keeps what it already fetched
+
+
+def fetch_source(source: str, since: datetime, limit: int) -> Iterator[tuple[list[FetchedItem], list[str]]]:
+    """Yield (items, errors) every FLUSH_EVERY_QUERIES queries, and once more at the end."""
     items: list[FetchedItem] = []
     errors: list[str] = []
-    for q in _queries(source):
+    fetched_any = False
+    queries = _queries(source)
+    for n, q in enumerate(queries, 1):
         try:
-            items.extend(FETCHERS[source](q, since, limit))
+            got = FETCHERS[source](q, since, limit)
+            items.extend(got)
+            fetched_any = fetched_any or bool(got)
         except Exception as exc:  # keep going: one failing query should not discard the rest
             errors.append(f"{source} query {q!r} failed: {type(exc).__name__}: {exc}")
             log.warning(errors[-1])
-            if len(errors) >= 3 and not items:
-                errors.append(f"abandoned {source} after 3 consecutive failures with no data")
+            if len(errors) >= 3 and not fetched_any:
+                errors.append(f"abandoned {source} after 3 failures with no data")
                 break
-    return items, errors
+        if n % FLUSH_EVERY_QUERIES == 0 and items:
+            yield items, errors
+            items, errors = [], []
+    yield items, errors
 
 
 def save_raw(source: str, items: list[FetchedItem]) -> Path | None:
@@ -133,14 +145,21 @@ def main() -> None:
         return
 
     since = datetime.fromisoformat(args.since).replace(tzinfo=timezone.utc)
-    summary = {}
+    summary: dict[str, dict] = {}
     for source in sources:
-        items, errors = fetch_source(source, since, args.limit)
-        raw_path = save_raw(source, items)
-        stats = process(items, engine, source) if items else {"fetched": 0}
-        if engine is not None and items:
+        totals: dict[str, int] = {}
+        all_errors: list[str] = []
+        for batch_no, (items, errors) in enumerate(fetch_source(source, since, args.limit)):
+            all_errors += errors
+            if not items:
+                continue
+            save_raw(source, items)
+            for k, v in process(items, engine, f"{source}_{batch_no}").items():
+                totals[k] = totals.get(k, 0) + v
+        if engine is not None:
+            # Recorded even when nothing came back: "ran and got 0" is different from "never ran".
             load_to_db.mark_run(engine, load_to_db.ensure_source(engine, source))
-        summary[source] = {**stats, "raw": str(raw_path) if raw_path else None, "errors": errors}
+        summary[source] = {**totals, "errors": all_errors}
         log.info("%s: %s", source, summary[source])
     print(json.dumps(summary, indent=2))
     failed = {k: v["errors"] for k, v in summary.items() if v["errors"]}

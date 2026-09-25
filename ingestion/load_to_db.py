@@ -36,7 +36,16 @@ def get_engine(url: str | None = None) -> Engine:
     url = url or config.DATABASE_URL
     if not url:
         raise RuntimeError("DATABASE_URL is not set")
-    return create_engine(url, pool_pre_ping=True, future=True)
+    return create_engine(normalise_db_url(url), pool_pre_ping=True, future=True)
+
+
+def normalise_db_url(url: str) -> str:
+    """Supabase hands out postgresql:// (or postgres://) URIs. SQLAlchemy 2.1 maps a bare
+    postgresql:// to psycopg 3, which we do not install, so pin the psycopg2 driver explicitly."""
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg2://" + url[len(prefix):]
+    return url
 
 
 def apply_schema(engine: Engine, path: Path = SCHEMA_SQL) -> None:
