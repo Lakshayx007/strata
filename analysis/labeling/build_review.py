@@ -72,6 +72,8 @@ def validate(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame
     problems = []
     for t in taxonomy.itertuples():
         for k in (1, 2):
+            if t.kind == "utility" and not getattr(t, f"example_{k}_quote"):
+                continue  # 'none' and 'other' are catch-alls, not categories; examples are optional
             doc_id, quote = int(getattr(t, f"example_{k}_doc_id")), getattr(t, f"example_{k}_quote")
             try:
                 locate(docs[doc_id]["body"], quote)
@@ -95,6 +97,10 @@ def validate(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame
             problems.append(f"doc {r.document_id} evidence: {e}")
     if problems:
         raise SystemExit("Review file not built:\n  " + "\n  ".join(problems))
+
+
+def _int(v):
+    return int(v) if str(v).strip() not in ("", "nan") else None
 
 
 HEADER_FILL = PatternFill("solid", fgColor="DDE4EE")
@@ -132,11 +138,12 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
     # Sheet 1: taxonomy
     ws = wb.active
     ws.title = "taxonomy"
-    th = ["code", "name", "definition", "example_1_doc_id", "example_1_quote", "example_2_doc_id", "example_2_quote",
+    th = ["code", "kind", "name", "definition", "example_1_doc_id", "example_1_quote", "example_2_doc_id", "example_2_quote",
           "draft_count", "status", "my_decision", "my_new_name"]
     counts = drafts.taxonomy_code.value_counts()
-    trows = [[t.code, t.name, t.definition, int(t.example_1_doc_id), t.example_1_quote, int(t.example_2_doc_id),
-              t.example_2_quote, int(counts.get(t.code, 0)), "DRAFT", None, None] for t in taxonomy.itertuples()]
+    trows = [[t.code, t.kind, t.name, t.definition, _int(t.example_1_doc_id), t.example_1_quote,
+              _int(t.example_2_doc_id), t.example_2_quote, int(counts.get(t.code, 0)), "DRAFT", None, None]
+             for t in taxonomy.itertuples()]
     _sheet(ws, th, trows, {"code": 14, "name": 22, "definition": 48, "example_1_quote": 60, "example_2_quote": 60,
                            "my_decision": 14, "my_new_name": 22}, ["my_decision", "my_new_name"])
 
@@ -181,7 +188,11 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
         "",
         "labels sheet: fill a my_ cell only when you disagree with the draft next to it. A blank my_ cell means the draft stands.",
         "my_label, my_from, my_to and my_direction have dropdowns (Data > Data validation in Sheets if they do not show).",
-        "Codes: 'none' = no stated switching reason in the document; 'other' in from/to = a vendor outside the six.",
+        "Codes: 'none' = no stated reason for a platform choice; 'other' = a reason outside the eight categories.",
+        "In from/to, 'other' = a platform outside the six vendors (Postgres, DuckDB, Trino...); 'none' = not stated.",
+        "direction describes a move the document reports (adopt/leave/evaluate); 'none' = no move, even if a reason is argued.",
+        "For 'none' rows, draft_evidence is the sentence where a switching phrase matched (or the first sentence),",
+        "so you can see why the document was flagged as switching language.",
         "",
         "Excerpts are about 60 words centred on draft_evidence; follow the link for the full text.",
         "Every quote and evidence sentence was checked to be verbatim text of its document before this file was built.",
@@ -199,7 +210,7 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
     docs = {int(d["id"]): d for d in json.loads(args.documents.read_text())}
-    taxonomy = pd.read_csv(TAXONOMY_CSV)
+    taxonomy = pd.read_csv(TAXONOMY_CSV, keep_default_na=False)
     drafts = pd.read_csv(DRAFT_CSV, keep_default_na=False)
     print(f"Wrote {build(docs, taxonomy, drafts, args.out)}")
 
