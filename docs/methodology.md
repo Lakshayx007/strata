@@ -181,3 +181,28 @@ Caveats a reader should see alongside the number:
 - The sources skew toward cloud-native and developer audiences, where on-premises Hadoop estates are discussed less.
 - "Hortonworks" is counted as Cloudera, so the figure is not lowered by the merger.
 - Cloudera findings from the seed sample rest on 12 documents.
+
+## Draft taxonomy and pre-labels (`model_draft`)
+
+The eight draft categories and 150 pre-labels were written by the model after reading the sample, and are stored
+as `labeled_by='model_draft'`. They are not ground truth. The files are `analysis/labeling/taxonomy_draft.csv` and
+`analysis/labeling/draft_labels.csv`, and the review workbook is `analysis/labeling/seed_review.xlsx`. Every example
+quote and evidence sentence is checked by `build_review.py` (and again by `load_labels.py` against the database) to
+be verbatim text of its document. The build fails otherwise.
+
+What the draft pass found about the sample itself (to be confirmed by the human review):
+
+- **Most switching-language matches are not switching.** Of the 110 documents flagged by the phrase list, 22 state
+  a reason for choosing, leaving or evaluating a platform. "Instead of" and "evaluated" match ordinary prose and
+  how-to questions. On Stack Exchange, 2 of 33 flagged questions state a reason. The phrase list is a recall filter,
+  not a measure of switching discussion, and no reported number should treat it as one.
+- **Dev.to carries most of the stated reasoning** (13 of 45 documents), but much of it is vendor or consultancy
+  content (Chaos Genius, MotherDuck, PipeCode, Hexaview). Source authorship should be a column in Phase 3.
+- **"snowflake" has false positives on HN.** At least 7 HN documents use "snowflake" in its non-vendor sense ("special
+  snowflake", a political insult, "snowflake model"). The mention matcher needs a context rule for bare
+  "snowflake", like the ones already used for redshift and synapse.
+
+## Agreement between the draft and the human review
+
+Pending. When the reviewed workbook comes back, rows are loaded as `labeled_by='human'` (a blank `my_` cell keeps the
+draft value), and agreement per category is recorded here.
