@@ -7,10 +7,10 @@ from analysis.labeling.build_review import build, excerpt, locate
 BODY = " ".join(f"w{i}" for i in range(100)) + " We moved off Redshift because the bill tripled. " + " ".join(f"v{i}" for i in range(100))
 DOCS = {1: {"id": 1, "source": "hackernews", "url": "https://news.ycombinator.com/item?id=1", "title": "t", "body": BODY},
         2: {"id": 2, "source": "devto", "url": "https://dev.to/x", "title": None, "body": "Short text.\n\nWe  evaluated BigQuery."}}
-TAX = pd.DataFrame([{"code": "cost", "name": "Cost", "definition": "d", "example_1_doc_id": 1,
+TAX = pd.DataFrame([{"code": "cost", "kind": "category", "name": "Cost", "definition": "d", "example_1_doc_id": 1,
                      "example_1_quote": "the bill tripled", "example_2_doc_id": 2, "example_2_quote": "We evaluated BigQuery."},
-                    {"code": "none", "name": "No reason", "definition": "d", "example_1_doc_id": 2,
-                     "example_1_quote": "Short text.", "example_2_doc_id": 1, "example_2_quote": "w1 w2"}])
+                    {"code": "none", "kind": "utility", "name": "No reason", "definition": "d", "example_1_doc_id": 2,
+                     "example_1_quote": "Short text.", "example_2_doc_id": "", "example_2_quote": ""}])
 DRAFTS = pd.DataFrame([
     {"document_id": 1, "taxonomy_code": "cost", "from_vendor": "aws", "to_vendor": "other", "direction": "leave",
      "evidence_span": "We moved off Redshift because the bill tripled."},
