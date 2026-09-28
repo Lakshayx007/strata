@@ -4,6 +4,7 @@
 #   sample              draw the chosen seed sample (or re-export the existing draw), print coverage and share of
 #                       voice, and attach the sampled documents as a run artifact for the labelling pass
 #   load_labels         load the committed label files: model_draft, claude_review and human, per sample
+#   probe_category      count a proposed reason category's cue sentences across the corpus (category_probe.py)
 #
 # Uses the DATABASE_URL secret only.
 
@@ -16,7 +17,7 @@ on:
         description: Which step to run
         type: choice
         default: sample
-        options: [sample, recompute_mentions, load_labels]
+        options: [sample, recompute_mentions, load_labels, probe_category]
       sample:
         description: "sample only: which seed sample"
         type: choice
@@ -75,6 +76,10 @@ jobs:
           name: ${{ inputs.step == 'sample' && inputs.sample || 'recompute_mentions' }}
           path: data/processed/labeling/
           retention-days: 14
+
+      - name: Probe a proposed category
+        if: inputs.step == 'probe_category'
+        run: python -m analysis.labeling.category_probe
 
       - name: Load labels
         if: inputs.step == 'load_labels'
