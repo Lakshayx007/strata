@@ -1,10 +1,10 @@
 """Build analysis/labeling/seed_review.xlsx, the review workbook for the seed sample.
 
-    python -m analysis.labeling.build_review --documents data/processed/labeling/seed_v1_documents.json
+    python -m analysis.labeling.build_review --sample seed_v2 --documents data/processed/labeling/seed_v2_documents.json
 
 Inputs (committed next to this file):
-  taxonomy_draft.csv   the DRAFT categories, each with two quotes and their document IDs
-  draft_labels.csv     one model_draft label per sampled document, with its evidence sentence
+  taxonomy.csv                  the categories, each with two quotes and their document IDs
+  draft_labels_<sample>.csv     one model_draft label per sampled document, with its evidence sentence
 The documents export (from `python -m analysis.labeling.sample`) supplies the text. It is not committed.
 
 Every quote and evidence sentence is checked to be verbatim text of its document before the workbook is
@@ -27,9 +27,16 @@ from openpyxl.worksheet.datavalidation import DataValidation
 from ingestion import config
 
 HERE = Path(__file__).resolve().parent
-TAXONOMY_CSV = HERE / "taxonomy_draft.csv"
-DRAFT_CSV = HERE / "draft_labels.csv"
+TAXONOMY_CSV = HERE / "taxonomy.csv"
 OUT = HERE / "seed_review.xlsx"
+
+
+def draft_csv(sample: str) -> Path:
+    return HERE / f"draft_labels_{sample}.csv"
+
+
+def review_xlsx(sample: str) -> Path:
+    return HERE / ("seed_review.xlsx" if sample == "seed_v1" else f"{sample}_review.xlsx")
 DIRECTIONS = ["adopt", "leave", "evaluate", "none"]
 VENDOR_CHOICES = config.VENDORS + ["other", "none"]
 DECISIONS = ["keep", "rename", "merge-into"]
@@ -131,7 +138,8 @@ def _dropdown(ws, header: list[str], col: str, choices_ref: str, n_rows: int) ->
     dv.add(f"{letter}2:{letter}{n_rows + 1}")
 
 
-def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, out: Path = OUT) -> Path:
+def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, out: Path = OUT,
+          sample: str = "seed_v1") -> Path:
     validate(docs, taxonomy, drafts)
     wb = Workbook()
 
@@ -142,7 +150,7 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
           "draft_count", "status", "my_decision", "my_new_name"]
     counts = drafts.taxonomy_code.value_counts()
     trows = [[t.code, t.kind, t.name, t.definition, _int(t.example_1_doc_id), t.example_1_quote,
-              _int(t.example_2_doc_id), t.example_2_quote, int(counts.get(t.code, 0)), "DRAFT", None, None]
+              _int(t.example_2_doc_id), t.example_2_quote, int(counts.get(t.code, 0)), getattr(t, "status", "DRAFT"), None, None]
              for t in taxonomy.itertuples()]
     _sheet(ws, th, trows, {"code": 14, "name": 22, "definition": 48, "example_1_quote": 60, "example_2_quote": 60,
                            "my_decision": 14, "my_new_name": 22}, ["my_decision", "my_new_name"])
@@ -181,7 +189,8 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
 
     readme = wb.create_sheet("how_to_review", 0)
     for line in [
-        "Seed sample review (sample seed_v1, 150 documents). Everything in this file is a DRAFT by the model (labeled_by='model_draft').",
+        f"Seed sample review (sample {sample}, {len(drafts)} documents). Every label in this file is a DRAFT by the model "
+        "(labeled_by='model_draft').",
         "",
         "taxonomy sheet: set my_decision to keep, rename or merge-into. For rename, put the new name in my_new_name;",
         "for merge-into, put the code of the category it merges into in my_new_name.",
@@ -207,12 +216,13 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--documents", type=Path, required=True)
-    ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--sample", default="seed_v1")
+    ap.add_argument("--out", type=Path)
     args = ap.parse_args()
     docs = {int(d["id"]): d for d in json.loads(args.documents.read_text())}
     taxonomy = pd.read_csv(TAXONOMY_CSV, keep_default_na=False)
-    drafts = pd.read_csv(DRAFT_CSV, keep_default_na=False)
-    print(f"Wrote {build(docs, taxonomy, drafts, args.out)}")
+    drafts = pd.read_csv(draft_csv(args.sample), keep_default_na=False)
+    print(f"Wrote {build(docs, taxonomy, drafts, args.out or review_xlsx(args.sample), args.sample)}")
 
 
 if __name__ == "__main__":

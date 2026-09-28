@@ -77,7 +77,7 @@ document_id,taxonomy_code,from_vendor,to_vendor,direction,evidence_span
 8404,none,none,none,none,"I am currently working on a project where I am using Polars in a Fabric Notebook, and I would like to save this data into a Delta Table within a Microsoft Fabric Lakehouse."
 8434,performance_scale,none,google,evaluate,"The total time for BigQuery to load 350GB of csv, run 12 different regular expressions against each, and output that to a new csv was about 10 minutes."
 8594,none,none,none,none,"I am guessing that instead of giving access to the entire external location, we can provide access to a specific subfolder of the location using volumes."
-8703,skills_team,none,none,none,"I could use Java, but I am also managing our team and we want to stay with Python since that is our team's core skill set (myself included)."
+8703,operational_simplicity,none,none,none,"I could use Java, but I am also managing our team and we want to stay with Python since that is our team's core skill set (myself included)."
 8733,none,none,none,none,I'm trying to UNION ALL requests (one request by quarter).
 8859,none,none,none,none,Our testing so far with the custom dialect worked fine even writing TimestampTypes as datetime2 until a limit clause is send because the query contains LIMIT 10001 instead of TOP 10001.
 9002,none,none,none,none,"Is anything like below possible to achieve and how: {""col1_list"":[v1,v2], ""col2_list"": [v3,v4]} Or instead of ARRAY_AGG I must use something else to achieve the result?"
@@ -136,7 +136,7 @@ document_id,taxonomy_code,from_vendor,to_vendor,direction,evidence_span
 11131,none,none,none,none,"By using the PERIOD data type, you can handle a time range such as ""valid from when to when"" as a single value, instead of splitting it into two columns for the start and end timestamps."
 11135,operational_simplicity,aws,other,evaluate,"S3 Tables handles compaction, but you cannot see what it did."
 11140,none,none,none,none,Delete file maintenance Iceberg's merge-on-read mode writes position delete files instead of immediately rewriting data files on row-level deletes.
-11149,skills_team,none,none,evaluate,"and that is a team-and-cost question, not a file-format one."
+11149,operational_simplicity,none,none,evaluate,"and that is a team-and-cost question, not a file-format one."
 11150,lock_in_openness,none,aws,evaluate,"Those are managed platforms with their own runtimes and billing; EMR keeps you on open-source engines and open table formats you can lift to any other environment, at the cost of more assembly."
 12422,none,none,none,none,"## Introdução ao DQX No cenário atual, onde os dados são frequentemente comparados ao ""novo petróleo"", garantir sua qualidade tornou-se uma prioridade estratégica para organizações de todos os tamanhos."
 12496,none,none,none,none,The goal of this project is to explore the **Olist dataset** about Brazilian e-commerce using **Apache Spark**.
