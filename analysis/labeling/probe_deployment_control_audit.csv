@@ -7,7 +7,7 @@ document_id,source,verdict,note
 3688,hackernews,yes,on-prem versus hosted named as an evaluation criterion
 3710,hackernews,no,difficulty of moving SaaS to on-prem; no reason for a choice
 5224,hackernews,no,Matrix server language choice; not a data platform
-7118,hackernews,no,on-prem to cloud migration (opposite direction); drafted as cost
+7118,hackernews,overlap,simulated moving on-prem to AWS or GCP and renewed on-prem hardware instead; cost is the reason
 9069,stackexchange,no,metadata lost moving on-prem to Snowflake; no reason
 10738,devto,no,deployment complexity of a model endpoint; operational
 10948,devto,no,Kafka replacement write-up; no deployment choice

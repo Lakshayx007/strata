@@ -424,14 +424,13 @@ What the draft pass found, before any review:
 ## Pooled reason counts, seed_v1 + seed_v2 (2026-09-28)
 
 `python -m analysis.labeling.pool` writes `analysis/labeling/pooled_reasons.md`. It uses the `claude_review` set
-where one exists and the `model_draft` set otherwise, so today it pools seed_v1 `claude_review` with seed_v2
-`model_draft`; it will switch seed_v2 to `claude_review` once that review is loaded. No label is human.
+where one exists and the `model_draft` set otherwise. Both samples now use `claude_review`. No label is human.
 
-64 reasons in 300 documents:
+63 reasons in 300 documents:
 
 | category | seed_v1 | seed_v2 | total | Hacker News | Dev.to | Stack Exchange |
 |---|---|---|---|---|---|---|
-| cost | 8 | 13 | 21 | 16 | 5 | 0 |
+| cost | 8 | 12 | 20 | 15 | 5 | 0 |
 | operational_simplicity | 7 | 4 | 11 | 7 | 4 | 0 |
 | lock_in_openness | 4 | 4 | 8 | 2 | 6 | 0 |
 | performance_scale | 3 | 5 | 8 | 5 | 2 | 1 |
@@ -439,11 +438,11 @@ where one exists and the `model_draft` set otherwise, so today it pools seed_v1 
 | ecosystem_fit | 3 | 1 | 4 | 0 | 4 | 0 |
 | other | 1 | 2 | 3 | 3 | 0 | 0 |
 | governance_security | 2 | 0 | 2 | 1 | 1 | 0 |
-| **total** | 31 | 33 | 64 | 41 | 22 | 1 |
+| **total** | 31 | 32 | 63 | 40 | 22 | 1 |
 
-By source, 41 of 120 Hacker News documents give a reason (34%), 22 of 90 Dev.to (24%) and 1 of 90 Stack Exchange
+By source, 40 of 120 Hacker News documents give a reason (33%), 22 of 90 Dev.to (24%) and 1 of 90 Stack Exchange
 (1%). Stack Exchange asks how, not why, so it contributes almost nothing to reason counts. Cost and right-sizing
-reasons come mostly from Hacker News; lock-in and ecosystem reasons mostly from Dev.to. With 64 reasons in total,
+reasons come mostly from Hacker News; lock-in and ecosystem reasons mostly from Dev.to. With 63 reasons in total,
 categories below about 10 are too small to rank against each other.
 
 ## Proposed category `deployment_control`: not added (2026-09-28)
@@ -465,8 +464,8 @@ cue lists as a yardstick. "Strict" means a cue, a platform term and a move phras
 | right_sizing | 33 | 0 | 0 | 0 | 0 | 0 |
 
 Every one of the 27 strict documents was read (`analysis/labeling/probe_deployment_control_audit.csv`):
-**3 are a deployment-control reason** (919, 2116, 3688), 5 mention deployment but the reason is cost, lock-in or
-operational simplicity (105, 3276, 11019, 11078, 11150), and 19 are not a reason at all. Most of those 19 describe
+**3 are a deployment-control reason** (919, 2116, 3688), 6 mention deployment but the reason is cost, lock-in or
+operational simplicity (105, 3276, 7118, 11019, 11078, 11150), and 18 are not a reason at all. Most of those 18 describe
 on-prem-to-cloud migrations, the opposite of the proposed category. In the 300 labelled seed documents only one
 reason (2116) fits it. Strict documents name Snowflake 12, Databricks 12, AWS 7, Cloudera 2, Google 2, Microsoft 1.
 
@@ -491,7 +490,45 @@ mandate rather than through a comparison with a competitor. It is one document o
 so it illustrates a possible pattern and does not measure one. No claim about Cloudera's licensing or support
 policy is made here; only what the asker wrote.
 
-## seed_v2 agreement: pending
+## seed_v2 second review (`claude_review`) and model-vs-model agreement (2026-09-28)
 
-The workbook attached as the seed_v2 review on 2026-09-28 contained only seed_v1 rows (identical to
-`seed_review_claude_review.xlsx`), so model_draft vs `claude_review` agreement for seed_v2 has not been computed.
+The seed_v2 workbook came back as `analysis/labeling/seed_v2_review_claude_review.xlsx` (150 rows). Its `my_`
+columns and notes were filled by a separate Claude session that saw excerpts only, so they are stored as
+`labeled_by='claude_review'` (`claude_review_labels_seed_v2.csv`). `human_check` is blank in every row; see
+"Limitation: no human review". A blank `my_` cell keeps the draft value.
+`python -m analysis.labeling.review --sample seed_v2 ... --labeled-by claude_review` writes `agreement_seed_v2.md`.
+
+| field | all 150 rows | kappa | 33 rows the draft gave a reason |
+|---|---|---|---|
+| reason code | 98.0% | 0.95 | 93.9% (kappa 0.92) |
+| from vendor | 97.3% | 0.85 | 87.9% |
+| to vendor | 97.3% | 0.85 | 87.9% |
+| direction | 98.7% | 0.95 | 93.9% |
+
+seed_v1 gave 94.7% (kappa 0.85) on the reason code, so the second pass changed less this time. Three reason codes
+changed: 6901 (performance to none: it describes which workloads vendors target) and 7052 (cost to none: a storage
+design trade-off) lost their reason, and 1272 gained one (none to performance: "But at the larger org, we started
+having performance issues." comes just before the Redshift-to-Snowflake move; the evidence sentence was changed to
+that verbatim sentence). The four vendor changes (413, 453, 454, 10833) fill in a from-vendor where a post compares
+Databricks or Snowflake with a non-vendor tool such as DuckDB.
+
+The reviewer's notes flag five documents as vendor or self-promotional content (164, 453, 454, 6565, 10626) and
+suggest a 'promotional' flag. That flag is not implemented; the documents keep their labels.
+
+Agreement this high between two model passes should not be read as accuracy (see the limitation above): the
+reviewer saw the draft and excerpts only, which makes it easy to agree.
+
+### Detectors scored on seed_v2
+
+`python -m analysis.labeling.detector_eval --sample seed_v2` (`detector_eval_seed_v2.csv`), positives = 36
+documents with a reason or a move in the `claude_review` labels:
+
+| detector | flagged | true positives | precision | recall |
+|---|---|---|---|---|
+| v1 phrase list | 47 | 12 | 25.5% | 33.3% |
+| v2 platform + move/reason sentence | 120 | 35 | 29.2% | 97.2% |
+
+seed_v2 was drawn with 120 of 150 documents flagged by v2, so its recall here is inflated by design: only the 30
+unflagged documents can hold a miss (one, 6538, does). The fair reading is precision, which holds at about 30% on a
+sample the detector was not tuned on (32% on seed_v1). v1's recall falls from 82% on seed_v1 to 33% here because
+this sample was not drawn on v1's phrases.
