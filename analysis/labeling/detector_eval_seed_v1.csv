@@ -1,0 +1,3 @@
+detector,documents,positives,flagged,true_positives,precision,recall,missed
+v1 phrase list (SWITCHING_PHRASES),150,33,110,27,0.24545454545454545,0.8181818181818182,274 649 1750 6711 11070 12498
+v2 platform + move/reason sentence,150,33,84,27,0.32142857142857145,0.8181818181818182,989 2156 6711 8134 10994 11092
