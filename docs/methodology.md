@@ -185,12 +185,12 @@ Caveats a reader should see alongside the number:
 ## Draft taxonomy and pre-labels (`model_draft`)
 
 The eight draft categories and 150 pre-labels were written by the model after reading the sample, and are stored
-as `labeled_by='model_draft'`. They are not ground truth. The files are `analysis/labeling/taxonomy_draft.csv` and
-`analysis/labeling/draft_labels.csv`, and the review workbook is `analysis/labeling/seed_review.xlsx`. Every example
+as `labeled_by='model_draft'`. They are not ground truth. The files are `analysis/labeling/taxonomy.csv` (formerly
+`taxonomy_draft.csv`) and `analysis/labeling/draft_labels_seed_v1.csv` (formerly `draft_labels.csv`), and the review workbook is `analysis/labeling/seed_review.xlsx`. Every example
 quote and evidence sentence is checked by `build_review.py` (and again by `load_labels.py` against the database) to
 be verbatim text of its document. The build fails otherwise.
 
-What the draft pass found about the sample itself (to be confirmed by the human review):
+What the draft pass found about the sample itself:
 
 - **Most switching-language matches are not switching.** Of the 110 documents flagged by the phrase list, 22 state
   a reason for choosing, leaving or evaluating a platform. "Instead of" and "evaluated" match ordinary prose and
@@ -202,7 +202,96 @@ What the draft pass found about the sample itself (to be confirmed by the human 
   snowflake", a political insult, "snowflake model"). The mention matcher needs a context rule for bare
   "snowflake", like the ones already used for redshift and synapse.
 
-## Agreement between the draft and the human review
+## Taxonomy decision (2026-09-28)
 
-Pending. When the reviewed workbook comes back, rows are loaded as `labeled_by='human'` (a blank `my_` cell keeps the
-draft value), and agreement per category is recorded here.
+All categories were kept except `skills_team`, which merged into `operational_simplicity` (now named "Operational
+simplicity and operating model"; its definition covers the team's skills and operating model). The two drafts
+coded `skills_team` (documents 8703 and 11149) were recoded in the draft file, so seed_v1 now has seven reason
+categories plus the utility codes `other` and `none`. The round-1 workbook `seed_review.xlsx` is kept as sent and
+still shows `skills_team`.
+
+## Second review pass (`claude_review`) and model-vs-model agreement
+
+**Who reviewed.** The `my_` columns of the returned workbook were filled by a second Claude session that saw only
+the ~60-word excerpts and the links, not by a person. Its rows are stored as `labeled_by='claude_review'`
+(`analysis/labeling/claude_review_labels_seed_v1.csv`, workbook `seed_review_claude_review.xlsx`). A blank `my_` cell
+keeps the draft value. **No seed_v1 label is human.** Every number below is agreement between two model passes, not
+a validation against a person, and two model passes can share the same blind spots. It shows the draft labels are
+consistent under a second reading; it does not show they are right.
+
+Computed by `python -m analysis.labeling.review` after applying the taxonomy merge to both sides, so the merge is not
+counted as disagreement. Rows are split by whether the draft gave a reason, because 121 of 150 drafts are `none` and
+would otherwise dominate the headline.
+
+| Rows | Field | n | Agree | % agree | Cohen's kappa |
+|---|---|---|---|---|---|
+| all rows | taxonomy_code | 150 | 142 | 94.7% | 0.85 |
+| all rows | from_vendor | 150 | 147 | 98.0% | 0.88 |
+| all rows | to_vendor | 150 | 145 | 96.7% | 0.87 |
+| all rows | direction | 150 | 144 | 96.0% | 0.85 |
+| draft = none | taxonomy_code | 121 | 116 | 95.9% | n/a |
+| draft = none | from_vendor | 121 | 120 | 99.2% | 0.66 |
+| draft = none | to_vendor | 121 | 117 | 96.7% | 0.49 |
+| draft = none | direction | 121 | 117 | 96.7% | 0.42 |
+| draft = a reason | taxonomy_code | 29 | 26 | 89.7% | 0.88 |
+| draft = a reason | from_vendor | 29 | 27 | 93.1% | 0.89 |
+| draft = a reason | to_vendor | 29 | 28 | 96.6% | 0.95 |
+| draft = a reason | direction | 29 | 27 | 93.1% | 0.90 |
+
+Kappa is n/a where one rater used a single value in that subset (every draft row in 'draft = none' is none, so kappa cannot be computed there).
+
+Per draft category (taxonomy_code):
+
+| Category | Draft rows | Kept by reviewer | % kept | Reviewer rows |
+|---|---|---|---|---|
+| none | 121 | 116 | 95.9% | 119 |
+| cost | 8 | 7 | 87.5% | 8 |
+| operational_simplicity | 6 | 5 | 83.3% | 7 |
+| lock_in_openness | 4 | 4 | 100.0% | 4 |
+| ecosystem_fit | 4 | 3 | 75.0% | 3 |
+| governance_security | 2 | 2 | 100.0% | 2 |
+| performance_scale | 2 | 2 | 100.0% | 3 |
+| right_sizing | 2 | 2 | 100.0% | 3 |
+| other | 1 | 1 | 100.0% | 1 |
+
+Confusion table (rows: model_draft, columns: reviewer):
+
+| model_draft \ reviewer | cost | ecosystem_fit | governance_security | lock_in_openness | none | operational_simplicity | other | performance_scale | right_sizing |
+|---|---|---|---|---|---|---|---|---|---|
+| cost | 7 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| ecosystem_fit | 0 | 3 | 0 | 0 | 1 | 0 | 0 | 0 | 0 |
+| governance_security | 0 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 |
+| lock_in_openness | 0 | 0 | 0 | 4 | 0 | 0 | 0 | 0 | 0 |
+| none | 1 | 0 | 0 | 0 | 116 | 2 | 0 | 1 | 1 |
+| operational_simplicity | 0 | 0 | 0 | 0 | 1 | 5 | 0 | 0 | 0 |
+| other | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+| performance_scale | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 |
+| right_sizing | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 |
+
+
+Headline: the two passes agree on the reason code for 142 of 150 documents (94.7%, kappa 0.85). On the 29 documents
+where the draft gave a reason, 26 match (89.7%, kappa 0.88). The reviewer moved five `none` drafts to a reason
+(989, 1010, 2110, 10994, 11092) and three reason drafts to `none` (7853, 8703, 12516).
+
+### Rows the reviewer flagged for a full-text check
+
+The reviewer only saw excerpts, so four rows it marked "LOW CONFIDENCE" or "Check the full text" were read in full:
+
+- **989** (HN). Argues for a "snowflake approach": one enterprise data layer, transforming centrally rather than in
+  each downstream system, with flexible access and performance. The vendor reading is plausible (data context), but
+  no platform move is reported. The reviewer's `operational_simplicity` fits the argument; direction stays `none`.
+- **1010** (HN). Argues for PostgreSQL by default (free, runs anywhere, no budget approval, one stack from tiny to
+  large) and says requirements could send a team to Snowflake, Redis or DynamoDB. A stated preference, not a move.
+  The reasons mix cost and flexibility; the reviewer's `right_sizing` is a fair reading.
+- **12498** (Dev.to, a Hexaview vendor blog). The legacy systems named are "Teradata, Netezza, or Oracle". There is
+  no Hadoop or Cloudera mention, so `from_vendor` stays `other`, not `cloudera`. Reasons given: cost to maintain,
+  data variety and volume, proprietary lock-in. It is vendor marketing, not a practitioner account.
+- **78** (HN). An essay on open-source go-to-market (Amplitude pricing, AWS for startups, Snowflake vs Databricks and
+  open source). Databricks and Snowflake are correct company matches, but no platform choice is described; `none`.
+
+### Vendor-match check on rows noted "NOT THE VENDOR" or "Off-topic"
+
+Correct vendor matches: 694, 706 (Variant type proposals), 910, 1119 (the Snowflake breach), 1351 (Snowflake as an
+OpenTelemetry maintainer). False "snowflake" matches: 895 ("snowflake status"), 903 ("they're a snowflake"), 905
+("being called a snowflake"), 929 ("snowflake model"), 942, 1364 and 1394 ("special snowflake"), 1545 ("fresh
+snowflake"). These eight are the test cases for the Snowflake disambiguation rule below.
