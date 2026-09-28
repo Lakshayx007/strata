@@ -173,3 +173,10 @@ def test_reason_language_needs_a_platform_and_a_move_or_reason():
     assert not normalize.has_reason_language("I evaluated three restaurants instead of cooking.")  # no platform
     assert not normalize.has_reason_language("Snowflake announced a keynote.")  # platform, no move or reason
     assert normalize.reason_score("We replaced Teradata with BigQuery because of cost. BigQuery is fast.") == 2
+
+
+def test_snowflake_in_headlines_and_after_abbreviations():
+    for title in ["Snowflake CEO Frank Slootman Retires", "Snowflake Copilot", "Snowflake Arctic"]:
+        assert "snowflake" in {m.vendor for m in normalize.find_mentions("", title)}, title
+    assert "snowflake" not in {m.vendor for m in normalize.find_mentions("", "How to write a novel using the snowflake method")}
+    assert "snowflake" in {m.vendor for m in normalize.find_mentions("If, say, e.g. Snowflake were to run bare on the hypervisor")}

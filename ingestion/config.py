@@ -79,7 +79,9 @@ AMBIGUOUS_TERMS: list[dict] = [
         "context": [r"warehous", r"\bsql\b", r"\bquer(?:y|ies)\b", r"\bdata\b", r"databricks", r"bigquery", r"redshift",
                     r"\bdbt\b", r"cortex", r"snowpark", r"\bcredits?\b", r"\bcloud\b", r"\bel?tl?\b", r"iceberg",
                     r"analytics", r"\btables?\b", r"pipelines?", r"\bsaas\b", r"lakehouse", r"\bs3\b", r"fivetran",
-                    r"\bstages?\b", r"storage integration", r"\bazure\b", r"\baws\b", r"\bgcp\b", r"snowsight", r"\bipo\b"],
+                    r"\bstages?\b", r"storage integration", r"\bazure\b", r"\baws\b", r"\bgcp\b", r"snowsight", r"\bipo\b",
+                    r"postgres", r"\bspark\b", r"\bclusters?\b", r"\bcompute\b", r"\bceo\b", r"\bstock\b", r"earnings",
+                    r"slootman", r"arctic"],
     },
     {   # Astronomy: "the redshift of distant galaxies"; also a GPU renderer.
         "entity": "aws", "term": r"\bredshift\b", "window": 200,
