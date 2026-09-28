@@ -152,7 +152,8 @@ def test_snowflake_idioms_are_not_the_vendor():
 def test_snowflake_vendor_by_case_or_context():
     cases = {
         "unless you're Snowflake level good": True,       # capitalised mid-sentence
-        "Snowflake raised prices again.": False,           # sentence-initial, no context
+        "Snowflake raised prices again.": True,            # capitalised
+        "Tor's Snowflake proxy helps users in Iran": False,  # another thing called Snowflake
         "Snowflake raised prices on warehouse credits.": True,
         "we query snowflake from dbt": True,               # lowercase with data context
         "a snowflake fell on my nose": False,
@@ -175,8 +176,17 @@ def test_reason_language_needs_a_platform_and_a_move_or_reason():
     assert normalize.reason_score("We replaced Teradata with BigQuery because of cost. BigQuery is fast.") == 2
 
 
-def test_snowflake_in_headlines_and_after_abbreviations():
+def test_snowflake_headlines_other_senses_and_stack_exchange_phrasing():
     for title in ["Snowflake CEO Frank Slootman Retires", "Snowflake Copilot", "Snowflake Arctic"]:
         assert "snowflake" in {m.vendor for m in normalize.find_mentions("", title)}, title
-    assert "snowflake" not in {m.vendor for m in normalize.find_mentions("", "How to write a novel using the snowflake method")}
+    for title in ["How to write a novel using the snowflake method", "Snowflake Koch Fractal", "Snowflake (Slang)",
+                  "Growing Snowflakes with Neural Cellular Automata"]:
+        assert "snowflake" not in {m.vendor for m in normalize.find_mentions("", title)}, title
+    assert "snowflake" in {m.vendor for m in normalize.find_mentions("setup snowflake task to run every 2nd Monday")}
     assert "snowflake" in {m.vendor for m in normalize.find_mentions("If, say, e.g. Snowflake were to run bare on the hypervisor")}
+
+
+def test_snowflake_own_idiom_is_lowercase_only():
+    assert "snowflake" not in {m.vendor for m in normalize.find_mentions("every Jira data instance is its own snowflake")}
+    assert "snowflake" in {m.vendor for m in normalize.find_mentions("they run their own Snowflake account")}
+    assert "snowflake" not in {m.vendor for m in normalize.find_mentions("support my special-snowflake MCP server")}
