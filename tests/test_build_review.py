@@ -47,3 +47,13 @@ def test_build_refuses_invented_quote(tmp_path):
     bad.loc[0, "example_1_quote"] = "costs went up a lot"
     with pytest.raises(SystemExit):
         build(DOCS, bad, DRAFTS, tmp_path / "r.xlsx")
+
+
+def test_reason_rows_first_and_optional_human_check_column(tmp_path):
+    drafts = DRAFTS.assign(document_id=[2, 1], taxonomy_code=["cost", "none"])
+    drafts.loc[1, "evidence_span"], drafts.loc[0, "evidence_span"] = DRAFTS.evidence_span[0], DRAFTS.evidence_span[1]
+    ws = load_workbook(build(DOCS, TAX, drafts, tmp_path / "r.xlsx", human_check=True))["labels"]
+    header = [c.value for c in ws[1]]
+    assert header[-1] == "human_check" and ws.cell(row=2, column=len(header)).value is None
+    assert [ws.cell(row=r, column=1).value for r in (2, 3)] == [2, 1]  # the reason row (doc 2) comes first
+    assert "human_check" not in [c.value for c in load_workbook(build(DOCS, TAX, DRAFTS, tmp_path / "s.xlsx"))["labels"][1]]

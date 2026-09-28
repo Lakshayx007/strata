@@ -18,6 +18,7 @@ import json
 import re
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -74,8 +75,11 @@ def excerpt(body: str, span: str, n_words: int = EXCERPT_WORDS) -> str:
     return ("… " if pre else "") + " ".join(words) + (" …" if post else "")
 
 
-def validate(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame) -> None:
+def validate(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame,
+             example_docs: dict[int, dict] | None = None) -> None:
+    """`example_docs` holds the documents the taxonomy quotes come from (seed_v1), when they are not in `docs`."""
     codes = set(taxonomy.code)
+    quote_docs = {**(example_docs or {}), **docs}
     problems = []
     for t in taxonomy.itertuples():
         for k in (1, 2):
@@ -83,7 +87,7 @@ def validate(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame
                 continue  # 'none' and 'other' are catch-alls, not categories; examples are optional
             doc_id, quote = int(getattr(t, f"example_{k}_doc_id")), getattr(t, f"example_{k}_quote")
             try:
-                locate(docs[doc_id]["body"], quote)
+                locate(quote_docs[doc_id]["body"], quote)
             except (KeyError, ValueError) as e:
                 problems.append(f"taxonomy {t.code} example {k} (doc {doc_id}): {e}")
     missing = set(docs) - set(drafts.document_id)
@@ -139,8 +143,8 @@ def _dropdown(ws, header: list[str], col: str, choices_ref: str, n_rows: int) ->
 
 
 def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, out: Path = OUT,
-          sample: str = "seed_v1") -> Path:
-    validate(docs, taxonomy, drafts)
+          sample: str = "seed_v1", human_check: bool = False, example_docs: dict[int, dict] | None = None) -> Path:
+    validate(docs, taxonomy, drafts, example_docs)
     wb = Workbook()
 
     # Sheet 1: taxonomy
@@ -169,15 +173,17 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
     # Sheet 2: labels
     wl = wb.create_sheet("labels", 1)
     lh = ["doc_id", "source", "link", "title", "excerpt", "draft_label", "draft_from", "draft_to", "draft_direction",
-          "draft_evidence", "my_label", "my_from", "my_to", "my_direction", "notes"]
+          "draft_evidence", "my_label", "my_from", "my_to", "my_direction", "notes"] + (["human_check"] if human_check else [])
     lrows = []
-    for r in drafts.sort_values(["document_id"]).itertuples():
+    # Reason-bearing drafts first, then drafts that only report a move, then the rest; by document id within each.
+    order = drafts.assign(_k=np.select([drafts.taxonomy_code != "none", drafts.direction != "none"], [0, 1], 2))
+    for r in order.sort_values(["_k", "document_id"]).itertuples():
         d = docs[r.document_id]
         lrows.append([r.document_id, d["source"], d["url"], d.get("title") or "", excerpt(d["body"], r.evidence_span),
                       r.taxonomy_code, r.from_vendor, r.to_vendor, r.direction, _norm(r.evidence_span),
-                      None, None, None, None, None])
+                      None, None, None, None, None] + ([None] if human_check else []))
     _sheet(wl, lh, lrows, {"doc_id": 9, "source": 13, "link": 30, "title": 28, "excerpt": 70, "draft_evidence": 45,
-                           "notes": 30}, ["my_label", "my_from", "my_to", "my_direction", "notes"])
+                           "notes": 30, "human_check": 16}, ["my_label", "my_from", "my_to", "my_direction", "notes", "human_check"])
     for i in range(len(lrows)):
         c = wl.cell(row=i + 2, column=lh.index("link") + 1)
         c.hyperlink, c.style = c.value, "Hyperlink"
@@ -197,12 +203,17 @@ def build(docs: dict[int, dict], taxonomy: pd.DataFrame, drafts: pd.DataFrame, o
         "",
         "labels sheet: fill a my_ cell only when you disagree with the draft next to it. A blank my_ cell means the draft stands.",
         "my_label, my_from, my_to and my_direction have dropdowns (Data > Data validation in Sheets if they do not show).",
-        "Codes: 'none' = no stated reason for a platform choice; 'other' = a reason outside the eight categories.",
+        f"Codes: 'none' = no stated reason for a platform choice; 'other' = a reason outside the "
+        f"{int((taxonomy.kind != 'utility').sum())} categories.",
         "In from/to, 'other' = a platform outside the six vendors (Postgres, DuckDB, Trino...); 'none' = not stated.",
         "direction describes a move the document reports (adopt/leave/evaluate); 'none' = no move, even if a reason is argued.",
-        "For 'none' rows, draft_evidence is the sentence where a switching phrase matched (or the first sentence),",
+        "For 'none' rows, draft_evidence is the sentence where the switching detector matched (or the first sentence),",
         "so you can see why the document was flagged as switching language.",
         "",
+        "Rows are ordered: drafts that give a reason first, then drafts that only report a move, then the rest.",
+        *(["human_check: for the rows you check yourself, write ok, or what is wrong. Only rows with human_check "
+           "filled in are recorded as labeled_by='human'; every other my_ cell is recorded under the reviewer "
+           "you name when the file comes back."] if human_check else []),
         "Excerpts are about 60 words centred on draft_evidence; follow the link for the full text.",
         "Every quote and evidence sentence was checked to be verbatim text of its document before this file was built.",
     ]:
@@ -218,11 +229,17 @@ def main() -> None:
     ap.add_argument("--documents", type=Path, required=True)
     ap.add_argument("--sample", default="seed_v1")
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--human-check", action="store_true", help="add a blank human_check column for spot checks")
+    ap.add_argument("--example-documents", type=Path, default=Path("data/processed/labeling/seed_v1_documents.json"),
+                    help="documents export holding the taxonomy's example quotes (seed_v1)")
     args = ap.parse_args()
     docs = {int(d["id"]): d for d in json.loads(args.documents.read_text())}
     taxonomy = pd.read_csv(TAXONOMY_CSV, keep_default_na=False)
     drafts = pd.read_csv(draft_csv(args.sample), keep_default_na=False)
-    print(f"Wrote {build(docs, taxonomy, drafts, args.out or review_xlsx(args.sample), args.sample)}")
+    examples = ({int(d["id"]): d for d in json.loads(args.example_documents.read_text())}
+                if args.example_documents.exists() else None)
+    out = build(docs, taxonomy, drafts, args.out or review_xlsx(args.sample), args.sample, args.human_check, examples)
+    print(f"Wrote {out}")
 
 
 if __name__ == "__main__":
