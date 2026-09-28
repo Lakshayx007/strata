@@ -1,4 +1,4 @@
-# Strata methodology (Phase 1: collection)
+# Strata methodology
 
 This file records the collection and counting decisions a reviewer would need to judge whether a Strata number is
 defensible. It is updated whenever one of those decisions changes.
@@ -122,6 +122,15 @@ A source that returns nothing, or cannot run, stays empty and is reported as suc
 back-filled, and the EDA notebook's coverage table shows every source, including those with zero rows.
 
 # Phase 2: seed sample and labelling
+
+## Limitation: no human review
+
+**No label in this project has been reviewed by a human.** Every label is either a first-pass model draft
+(`labeled_by='model_draft'`) or a second pass by a separate Claude session that saw excerpts only
+(`labeled_by='claude_review'`). The `human_check` column in the seed_v2 workbook was intentionally left blank.
+All "agreement" figures are therefore model-vs-model: they measure consistency between two passes of similar
+models, not accuracy, and shared blind spots would not show up in them. Category counts and detector precision
+figures inherit that limitation and should be read as model-labelled estimates.
 
 ## Seed sample (`seed_v1`)
 
@@ -397,8 +406,8 @@ taxonomy.
 
 The 150 seed_v2 documents were pre-labelled by the model (`analysis/labeling/draft_labels_seed_v2.csv`) with the
 approved taxonomy and the same rules as seed_v1. The review workbook is `analysis/labeling/seed_v2_review.xlsx`:
-rows with a draft reason come first, then rows that only report a move, and a blank `human_check` column lets
-Lakshay spot-check rows himself. Only rows with `human_check` filled in will be stored as `labeled_by='human'`.
+rows with a draft reason come first, then rows that only report a move. The workbook has a `human_check` column,
+which was intentionally left blank: there is no human review in this project (see "Limitation" above).
 
 What the draft pass found, before any review:
 
@@ -411,3 +420,78 @@ What the draft pass found, before any review:
   Hacker News gives 25 of 60, Dev.to 8 of 45. Most Dev.to documents flagged by v2 are vendor, consultancy or
   training content that names costs and features without describing a platform choice.
 - Cost is again the most common reason (13), then performance and scale (5).
+
+## Pooled reason counts, seed_v1 + seed_v2 (2026-09-28)
+
+`python -m analysis.labeling.pool` writes `analysis/labeling/pooled_reasons.md`. It uses the `claude_review` set
+where one exists and the `model_draft` set otherwise, so today it pools seed_v1 `claude_review` with seed_v2
+`model_draft`; it will switch seed_v2 to `claude_review` once that review is loaded. No label is human.
+
+64 reasons in 300 documents:
+
+| category | seed_v1 | seed_v2 | total | Hacker News | Dev.to | Stack Exchange |
+|---|---|---|---|---|---|---|
+| cost | 8 | 13 | 21 | 16 | 5 | 0 |
+| operational_simplicity | 7 | 4 | 11 | 7 | 4 | 0 |
+| lock_in_openness | 4 | 4 | 8 | 2 | 6 | 0 |
+| performance_scale | 3 | 5 | 8 | 5 | 2 | 1 |
+| right_sizing | 3 | 4 | 7 | 7 | 0 | 0 |
+| ecosystem_fit | 3 | 1 | 4 | 0 | 4 | 0 |
+| other | 1 | 2 | 3 | 3 | 0 | 0 |
+| governance_security | 2 | 0 | 2 | 1 | 1 | 0 |
+| **total** | 31 | 33 | 64 | 41 | 22 | 1 |
+
+By source, 41 of 120 Hacker News documents give a reason (34%), 22 of 90 Dev.to (24%) and 1 of 90 Stack Exchange
+(1%). Stack Exchange asks how, not why, so it contributes almost nothing to reason counts. Cost and right-sizing
+reasons come mostly from Hacker News; lock-in and ecosystem reasons mostly from Dev.to. With 64 reasons in total,
+categories below about 10 are too small to rank against each other.
+
+## Proposed category `deployment_control`: not added (2026-09-28)
+
+The seed_v2 review proposed a category for choosing where a platform runs (self-hosted, bring-your-own-cloud,
+customer-managed VPC, on-prem, data residency). `python -m analysis.labeling.category_probe` (Actions `phase2`,
+step `probe_category`) counts cue sentences over all 12,056 discussion documents, using the existing categories'
+cue lists as a yardstick. "Strict" means a cue, a platform term and a move phrase in the same sentence.
+
+| category | documents with cue | strict | strict HN | strict SE | strict Dev.to | strict GitHub |
+|---|---|---|---|---|---|---|
+| cost | 1,719 | 106 | 32 | 1 | 70 | 3 |
+| performance_scale | 1,824 | 76 | 16 | 3 | 54 | 3 |
+| operational_simplicity | 1,661 | 51 | 13 | 0 | 36 | 2 |
+| ecosystem_fit | 938 | 46 | 7 | 3 | 32 | 4 |
+| governance_security | 1,143 | 43 | 5 | 0 | 37 | 1 |
+| lock_in_openness | 516 | 28 | 8 | 0 | 20 | 0 |
+| **deployment_control** | 302 | 27 | 9 | 1 | 17 | 0 |
+| right_sizing | 33 | 0 | 0 | 0 | 0 | 0 |
+
+Every one of the 27 strict documents was read (`analysis/labeling/probe_deployment_control_audit.csv`):
+**3 are a deployment-control reason** (919, 2116, 3688), 5 mention deployment but the reason is cost, lock-in or
+operational simplicity (105, 3276, 11019, 11078, 11150), and 19 are not a reason at all. Most of those 19 describe
+on-prem-to-cloud migrations, the opposite of the proposed category. In the 300 labelled seed documents only one
+reason (2116) fits it. Strict documents name Snowflake 12, Databricks 12, AWS 7, Cloudera 2, Google 2, Microsoft 1.
+
+**Recommendation: do not add it.** Three real cases in the full corpus is too few to count, and most mentions
+already fit cost, lock-in or operational simplicity. Code the rare pure cases as `other` with a note, and keep the
+cue list in `category_probe.py` so the question can be re-run if new sources change the picture. (The cue probe
+also finds no strict `right_sizing` documents, but that category is kept on label evidence, 7 reasons, because its
+cue list is only the word "overkill".)
+
+## Qualitative finding: Cloudera free-edition upgrade path (doc 7279)
+
+Document 7279 (Stack Overflow, 2023-09-20, "Cloudera Enterprise (Community Edition) for RHEL 8",
+https://stackoverflow.com/questions/77139887) is a single case, recorded as a qualitative finding rather than a
+count. The asker's team runs "a mini DWH platform with Cloudera Enterprise community version" (Cloudera Express
+6.0.1) on RHEL 7, must move to RHEL 8, and is "not able to find any upgraded version of Cloudera Enterprise which
+supports RHEL 8". They "want to stay on Community edition of Cloudera" and describe the information on Cloudera's
+community site as "not very much clear". The draft label is `none` (no platform choice is made yet).
+
+What it shows: a team on Cloudera's free edition has an operating-system upgrade forced on it and cannot find a
+supported path that keeps them on the free edition. That is a retention risk that arrives through a platform
+mandate rather than through a comparison with a competitor. It is one document out of 55 that mention Cloudera,
+so it illustrates a possible pattern and does not measure one. No claim about Cloudera's licensing or support
+policy is made here; only what the asker wrote.
+
+## seed_v2 agreement: pending
+
+The workbook attached as the seed_v2 review on 2026-09-28 contained only seed_v1 rows (identical to
+`seed_review_claude_review.xlsx`), so model_draft vs `claude_review` agreement for seed_v2 has not been computed.
