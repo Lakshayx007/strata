@@ -392,3 +392,22 @@ All vendor floors are met (Cloudera 12, Microsoft 13, AWS 37, Google 34). seed_v
 reason-bearing documents, so category shares in it are not corpus shares; they are for building and testing the
 taxonomy.
 
+
+## seed_v2 draft labels (`model_draft`, 2026-09-28)
+
+The 150 seed_v2 documents were pre-labelled by the model (`analysis/labeling/draft_labels_seed_v2.csv`) with the
+approved taxonomy and the same rules as seed_v1. The review workbook is `analysis/labeling/seed_v2_review.xlsx`:
+rows with a draft reason come first, then rows that only report a move, and a blank `human_check` column lets
+Lakshay spot-check rows himself. Only rows with `human_check` filled in will be stored as `labeled_by='human'`.
+
+What the draft pass found, before any review:
+
+- **33 of 150 drafts give a reason** (seed_v1: 29), and 20 report a move or an evaluation. Drawing reason-bearing
+  documents first helped less than the detector flags suggested.
+- **By detector tier** (draft reason or move / documents): a sentence with both a move and a reason 30 / 74 (41%),
+  detector v2 only 7 / 46 (15%), not flagged 1 / 30. So v2's precision on this fresh sample is about 31% (37 of 120)
+  by the drafts, close to its 32% on seed_v1. These are draft labels, so the figure is provisional until reviewed.
+- **Stack Exchange gives no reasons at all** (0 of 45; three report a migration to Snowflake without saying why).
+  Hacker News gives 25 of 60, Dev.to 8 of 45. Most Dev.to documents flagged by v2 are vendor, consultancy or
+  training content that names costs and features without describing a platform choice.
+- Cost is again the most common reason (13), then performance and scale (5).
