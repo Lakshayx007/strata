@@ -1,0 +1,28 @@
+document_id,source,verdict,note
+105,hackernews,overlap,BYOC as a vendor trend driven by egress cost; cost is the reason
+919,hackernews,yes,asks whether Databricks is being replaced by self-managed spark-on-k8s
+2110,hackernews,no,Lance file format; no deployment choice
+2116,hackernews,yes,PaaS that runs in the customer's own cloud preferred over managed SaaS
+3276,hackernews,overlap,self-hosting blocked by dependence on high-level services; lock-in is the reason
+3688,hackernews,yes,on-prem versus hosted named as an evaluation criterion
+3710,hackernews,no,difficulty of moving SaaS to on-prem; no reason for a choice
+5224,hackernews,no,Matrix server language choice; not a data platform
+7118,hackernews,no,on-prem to cloud migration (opposite direction); drafted as cost
+9069,stackexchange,no,metadata lost moving on-prem to Snowflake; no reason
+10738,devto,no,deployment complexity of a model endpoint; operational
+10948,devto,no,Kafka replacement write-up; no deployment choice
+10961,devto,no,orchestration breadth; lists on-prem among systems
+10977,devto,no,link list
+10980,devto,no,Snowflake feature description
+11019,devto,overlap,portability of a CDC layer off Supabase; lock-in is the reason
+11039,devto,no,legacy on-prem to cloud migration (opposite direction)
+11077,devto,no,S3 Tables feature description
+11078,devto,overlap,managed versus self-run maintenance; operational simplicity is the reason
+11094,devto,no,on-prem to Snowflake TCO claim; cost
+11150,devto,overlap,managed EMR versus self-managed Hadoop; operational simplicity is the reason
+12627,devto,no,on-prem consolidation marketing copy
+12713,devto,no,Hadoop to Databricks migration guide
+12733,devto,no,Databricks-managed versus customer-managed VPC listed as a setup option
+12802,devto,no,on-prem Hadoop to EMR case study (opposite direction)
+12822,devto,no,generic on-prem to cloud advice
+12892,devto,no,link list
