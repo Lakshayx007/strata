@@ -11,3 +11,8 @@ data/state/
 .venv/
 venv/
 data/processed/
+
+# Web frontend (findings.json is copied at build time; don't commit twice)
+web/src/data/findings.json
+web/node_modules/
+web/dist/
