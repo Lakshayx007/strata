@@ -3,7 +3,8 @@
     python -m analysis.labeling.recompute_mentions
 
 Prints, per vendor and source, the documents that gained or lost the vendor, and up to AUDIT_ROWS removed
-"snowflake" documents with the matcher's rejection snippet, so the change can be audited from the run log.
+"snowflake" documents with the matcher's rejection snippet (public post text, no author data), so every removal
+can be audited from the run log.
 Writes data/processed/labeling/mention_changes.csv (document_id, source, vendor, change).
 """
 
@@ -15,7 +16,7 @@ from sqlalchemy import text
 from analysis.labeling.sample import EXPORT_DIR
 from ingestion.normalize import find_mentions_with_rejections
 
-AUDIT_ROWS = 40
+AUDIT_ROWS = 400
 
 
 def _pairs(engine) -> pd.DataFrame:

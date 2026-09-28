@@ -273,17 +273,20 @@ class RejectedMention:
 
 
 _SENTENCE_START = re.compile(r"(?:^|[.!?:;\n*#>\"'(\[]\s*)$")
+_ABBREVIATION = re.compile(r"\b(?:e\.g|i\.e|vs|etc|cf)\.\s*$", re.IGNORECASE)
 
 
 def _sentence_initial(text: str, start: int) -> bool:
     """True when the word at `start` opens a sentence, heading or quote, where capitalisation says nothing."""
-    return bool(_SENTENCE_START.search(text[max(0, start - 3): start]))
+    before = text[max(0, start - 8): start]
+    return bool(_SENTENCE_START.search(before[-3:])) and not _ABBREVIATION.search(before)
 
 
-def _match_text(text: str, extra_context: str = "") -> tuple[dict[str, list[int]], list[RejectedMention]]:
+def _match_text(text: str, extra_context: str = "", is_title: bool = False) -> tuple[dict[str, list[int]], list[RejectedMention]]:
     """Offsets of accepted matches per entity, plus every rejected candidate.
 
-    `extra_context` (the body, when matching a title) also counts as context for ambiguous terms.
+    `extra_context` (the body, when matching a title) also counts as context for ambiguous terms. In a title,
+    headline capitalisation makes a capitalised first word as informative as one mid-sentence.
     """
     accepted: dict[str, list[int]] = {}
     spans: list[tuple[int, int]] = []
@@ -314,7 +317,8 @@ def _match_text(text: str, extra_context: str = "") -> tuple[dict[str, list[int]
             if any(s <= m.start() < e for s, e in excluded_spans.get(t["entity"], [])):
                 continue  # an excluded idiom; reported below as an "excluded" rejection
             window = context_text[max(0, m.start() - t["window"]): m.end() + t["window"]]
-            cased = t["accept_re"] is not None and t["accept_re"].match(text, m.start()) and not _sentence_initial(text, m.start())
+            cased = (t["accept_re"] is not None and t["accept_re"].match(text, m.start())
+                     and (is_title or not _sentence_initial(text, m.start())))
             if cased or any(c.search(window) for c in t["context_re"]) or any(c.search(extra_context) for c in t["context_re"]):
                 accepted.setdefault(t["entity"], []).append(m.start())
             else:
@@ -339,7 +343,7 @@ def find_mentions_with_rejections(body: str, title: str | None = None) -> tuple[
     body_hits, rejected = _match_text(body)
     title_hits: dict[str, list[int]] = {}
     if title and title != body:
-        title_hits, title_rejected = _match_text(title, extra_context=body)
+        title_hits, title_rejected = _match_text(title, extra_context=body, is_title=True)
         rejected += title_rejected
     out = []
     for entity in list(_ALIASES) + [t["entity"] for t in _AMBIGUOUS if t["entity"] not in _ALIASES]:
