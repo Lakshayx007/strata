@@ -5,6 +5,7 @@
 #                       voice, and attach the sampled documents as a run artifact for the labelling pass
 #   load_labels         load the committed label files: model_draft, claude_review and human, per sample
 #   probe_category      count a proposed reason category's cue sentences across the corpus (category_probe.py)
+#   export_findings     write analysis/export/findings.json from the database and commit it to the branch it ran on
 #
 # Uses the DATABASE_URL secret only.
 
@@ -17,7 +18,7 @@ on:
         description: Which step to run
         type: choice
         default: sample
-        options: [sample, recompute_mentions, load_labels, probe_category]
+        options: [sample, recompute_mentions, load_labels, probe_category, export_findings]
       sample:
         description: "sample only: which seed sample"
         type: choice
@@ -37,6 +38,7 @@ concurrency:
 
 jobs:
   phase2:
+    if: inputs.step != 'export_findings'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -84,3 +86,39 @@ jobs:
       - name: Load labels
         if: inputs.step == 'load_labels'
         run: python -m analysis.labeling.load_labels
+
+  # Separate job because it is the only step that writes to the repository.
+  export_findings:
+    if: inputs.step == 'export_findings'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Export findings
+        run: python -m analysis.export.findings
+
+      - name: Commit findings.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add analysis/export/findings.json
+          if git diff --cached --quiet; then echo "findings.json unchanged"; exit 0; fi
+          git commit -m "Export findings.json from the database (phase2 run ${{ github.run_id }})"
+          git push
