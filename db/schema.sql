@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS labels (
     document_id    BIGINT NOT NULL REFERENCES documents (id) ON DELETE CASCADE,
     taxonomy_code  TEXT NOT NULL,
     confidence     REAL,
-    labeled_by     TEXT NOT NULL CHECK (labeled_by IN ('human', 'model', 'model_draft')),
+    labeled_by     TEXT NOT NULL CHECK (labeled_by IN ('human', 'model', 'model_draft', 'claude_review')),
     labeled_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -69,7 +69,7 @@ ALTER TABLE labels ADD COLUMN IF NOT EXISTS to_vendor      TEXT;
 ALTER TABLE labels ADD COLUMN IF NOT EXISTS direction      TEXT;
 ALTER TABLE labels ADD COLUMN IF NOT EXISTS evidence_span  TEXT;
 ALTER TABLE labels DROP CONSTRAINT IF EXISTS labels_labeled_by_check;
-ALTER TABLE labels ADD CONSTRAINT labels_labeled_by_check CHECK (labeled_by IN ('human', 'model', 'model_draft'));
+ALTER TABLE labels ADD CONSTRAINT labels_labeled_by_check CHECK (labeled_by IN ('human', 'model', 'model_draft', 'claude_review'));
 ALTER TABLE labels DROP CONSTRAINT IF EXISTS labels_direction_check;
 ALTER TABLE labels ADD CONSTRAINT labels_direction_check CHECK (direction IS NULL OR direction IN ('adopt', 'leave', 'evaluate', 'none'));
 CREATE INDEX IF NOT EXISTS labels_sample_idx ON labels (sample, labeled_by);
