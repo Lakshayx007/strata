@@ -72,16 +72,21 @@ MENTION_ALIASES: dict[str, list[str]] = {
 
 AMBIGUOUS_TERMS: list[dict] = [
     {   # Also an idiom ("special snowflake"), an insult ("called a snowflake") and a modelling term. The seed_v1
-        # review found 8 HN documents wrongly counted as the vendor. A capitalised "Snowflake" that is not the
-        # first word of a sentence is accepted as the vendor (`accept_cased`); a lowercase or sentence-initial one
-        # needs data context. Idioms in EXCLUDED_PATTERNS are rejected either way.
+        # review found 8 HN documents wrongly counted as the vendor. A capitalised "Snowflake" counts as the vendor
+        # (`accept_cased`); a lowercase one needs data context. Idioms and other known senses in EXCLUDED_PATTERNS
+        # are rejected either way. Checked against every corpus document the rule drops (analysis.labeling.audit_mentions).
         "entity": "snowflake", "term": r"\bsnowflake\b", "window": 200, "accept_cased": r"Snowflake\b",
         "context": [r"warehous", r"\bsql\b", r"\bquer(?:y|ies)\b", r"\bdata\b", r"databricks", r"bigquery", r"redshift",
                     r"\bdbt\b", r"cortex", r"snowpark", r"\bcredits?\b", r"\bcloud\b", r"\bel?tl?\b", r"iceberg",
                     r"analytics", r"\btables?\b", r"pipelines?", r"\bsaas\b", r"lakehouse", r"\bs3\b", r"fivetran",
                     r"\bstages?\b", r"storage integration", r"\bazure\b", r"\baws\b", r"\bgcp\b", r"snowsight", r"\bipo\b",
                     r"postgres", r"\bspark\b", r"\bclusters?\b", r"\bcompute\b", r"\bceo\b", r"\bstock\b", r"earnings",
-                    r"slootman", r"arctic"],
+                    r"slootman", r"arctic", r"\bcolumns?\b", r"\bselect\b", r"\bjoin\b", r"\bcte\b", r"procedures?",
+                    r"\bfunctions?\b", r"\bconnect(?:ion|ions|or|ors)?\b", r"\bdrivers?\b", r"\bsdk\b", r"\bdb\b",
+                    r"databases?", r"json", r"regex", r"\binsert\b", r"datetime", r"\btasks?\b", r"snowflakedb", r"\bcli\b",
+                    r"\bjava\b", r"\bnode(?:js)?\b", r"streamlit", r"duckdb", r"clickhouse", r"\bmfa\b", r"\binstance\b",
+                    r"integrations?", r"resource monitor", r"embedding", r"\bvariant\b", r"quicksight", r"r/snowflake", r"\bapi\b",
+                    r"github\.com/snowflake"],
     },
     {   # Astronomy: "the redshift of distant galaxies"; also a GPU renderer.
         "entity": "aws", "term": r"\bredshift\b", "window": 200,
@@ -111,12 +116,21 @@ EXCLUDED_PATTERNS: list[dict] = [
     {"entity": "snowflake", "pattern": r"\bsnowflake[\s-]+(?:schemas?|model(?:l?ing)?|dimensions?|design)\b"},
     # Idioms: "special snowflake", "snowflake servers" (hand-configured hosts), Twitter's "snowflake IDs",
     # "snowflake status", and the insult ("you're a snowflake", "being called a snowflake", "snowflakes").
-    {"entity": "snowflake", "pattern": r"\b(?:special|unique|little|precious|beautiful|fresh|delicate|perfect)\s+snowflakes?\b"},
+    {"entity": "snowflake", "pattern": r"\b(?:special|unique|little|precious|beautiful|fresh|delicate|perfect|fragile|sensitive)[\s-]+"
+                                       r"snowflakes?\b"},
+    # "its own snowflake", "a one of a kind snowflake", "fractal shit snowflake": lowercase only, so "their own
+    # Snowflake account" still counts.
+    {"entity": "snowflake", "pattern": r"\b(?:its|it's|their|his|her|my|your|own|kind|fractal \w+)\s+(?:own\s+)?(?-i:snowflake)\b"},
     {"entity": "snowflake", "pattern": r"\bsnowflake\s+(?:servers?|ids?|status|generation)\b"},
     {"entity": "snowflake", "pattern": r"\b(?:call|called|calling)\s+(?:(?:me|them|him|her|you|us|someone|people|everyone)\s+)?"
                                        r"(?:a\s+)?snowflakes?\b"},
     {"entity": "snowflake", "pattern": r"\b(?:such|being|what|you're|youre|they're|theyre|he's|she's|i'm)\s+a\s+snowflake\b"},
     {"entity": "snowflake", "pattern": r"\bsnowflakes\b"},
+    # Other things called Snowflake: the Koch fractal, the photographer "Snowflake" Bentley, Tor's censorship-
+    # circumvention proxy, Twitter's ID scheme, the novel-writing method, and snowflake crystal growth.
+    {"entity": "snowflake", "pattern": r"\b(?:koch snowflake|snowflake koch|snowflake bentley|tor(?:'s)? snowflake|twitter(?:'s)? snowflake|"
+                                       r"snowflake (?:proxy|proxies|volunteer|method|growth|generator|animation)|"
+                                       r"snowflake,? an? (?:censorship|android app))\b|\bsnowflake \(slang\)"},
     # Ordinary English ("the fabric of", "fabric softener") unless a product phrase above matched.
     {"entity": "microsoft", "pattern": r"\bfabric\b"},
     # Ordinary English and "glue code" unless an AWS Glue phrase above matched.
