@@ -138,3 +138,38 @@ def test_nul_bytes_are_removed():
            "author": None, "created_at": "2025-01-02T00:00:00Z", "comments": 0, "reactions": 0}
     [doc] = normalize.to_documents([item("github_threads", "issue", raw)])
     assert "\x00" not in doc.body and "\x00" not in doc.title
+
+
+def test_snowflake_idioms_are_not_the_vendor():
+    # Phrases from the seed_v1 documents the second review flagged as "NOT THE VENDOR".
+    for text in ["boasts about wokeness and snowflake status", "they're a snowflake or a nut job",
+                 "being called a snowflake, stuffed animals", "a data-vault or snowflake model for data warehouse",
+                 "its own special snowflake in hardware configuration", "treat every screen like a fresh snowflake",
+                 "the kids these days are snowflakes"]:
+        assert "snowflake" not in {m.vendor for m in normalize.find_mentions(text)}, text
+
+
+def test_snowflake_vendor_by_case_or_context():
+    cases = {
+        "unless you're Snowflake level good": True,       # capitalised mid-sentence
+        "Snowflake raised prices again.": False,           # sentence-initial, no context
+        "Snowflake raised prices on warehouse credits.": True,
+        "we query snowflake from dbt": True,               # lowercase with data context
+        "a snowflake fell on my nose": False,
+        "Snowpark jobs are slow": True,                    # unambiguous product
+    }
+    for text, vendor in cases.items():
+        assert ("snowflake" in {m.vendor for m in normalize.find_mentions(text)}) is vendor, text
+
+
+def test_title_context_comes_from_the_body():
+    ms = normalize.find_mentions("Location azure://x is not allowed for this stage", "Snowflake Storage Integration fails")
+    assert "snowflake" in {m.vendor for m in ms}
+
+
+def test_reason_language_needs_a_platform_and_a_move_or_reason():
+    assert normalize.has_reason_language("We moved off Redshift to Snowflake last year.")
+    assert normalize.has_reason_language("Our Snowflake bill doubled.")
+    assert not normalize.has_reason_language("I evaluated three restaurants instead of cooking.")  # no platform
+    assert not normalize.has_reason_language("Snowflake announced a keynote.")  # platform, no move or reason
+    assert normalize.reason_score("We replaced Teradata with BigQuery because of cost. BigQuery is fast.") == 2
