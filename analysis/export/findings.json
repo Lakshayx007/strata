@@ -1,0 +1,1345 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-09-28T13:05:26+00:00",
+ "label_set": "claude_review",
+ "human_reviewed_labels": 0,
+ "corpus": {
+  "discussion_documents": 12056,
+  "discussion_documents_by_source": {
+   "hackernews": 6712,
+   "stackexchange": 3345,
+   "devto": 910,
+   "github_threads": 1089
+  },
+  "vendor_documents": 5941,
+  "switching_vendor_documents": 748
+ },
+ "share_of_voice": [
+  {
+   "vendor": "snowflake",
+   "documents": 1812,
+   "share_of_vendor_documents": 0.305,
+   "mentions": 14969,
+   "switching_documents": 326,
+   "reason_v2_documents": 626,
+   "documents_by_source": {
+    "hackernews": 857,
+    "stackexchange": 500,
+    "devto": 449,
+    "github_threads": 6
+   }
+  },
+  {
+   "vendor": "databricks",
+   "documents": 1687,
+   "share_of_vendor_documents": 0.284,
+   "mentions": 10468,
+   "switching_documents": 245,
+   "reason_v2_documents": 548,
+   "documents_by_source": {
+    "hackernews": 815,
+    "stackexchange": 477,
+    "devto": 352,
+    "github_threads": 43
+   }
+  },
+  {
+   "vendor": "google",
+   "documents": 1376,
+   "share_of_vendor_documents": 0.2316,
+   "mentions": 5477,
+   "switching_documents": 168,
+   "reason_v2_documents": 399,
+   "documents_by_source": {
+    "hackernews": 722,
+    "stackexchange": 453,
+    "devto": 199,
+    "github_threads": 2
+   }
+  },
+  {
+   "vendor": "aws",
+   "documents": 1166,
+   "share_of_vendor_documents": 0.1963,
+   "mentions": 4403,
+   "switching_documents": 150,
+   "reason_v2_documents": 342,
+   "documents_by_source": {
+    "hackernews": 230,
+    "stackexchange": 759,
+    "devto": 140,
+    "github_threads": 37
+   }
+  },
+  {
+   "vendor": "microsoft",
+   "documents": 687,
+   "share_of_vendor_documents": 0.1156,
+   "mentions": 3289,
+   "switching_documents": 66,
+   "reason_v2_documents": 146,
+   "documents_by_source": {
+    "hackernews": 64,
+    "stackexchange": 575,
+    "devto": 47,
+    "github_threads": 1
+   }
+  },
+  {
+   "vendor": "cloudera",
+   "documents": 55,
+   "share_of_vendor_documents": 0.0093,
+   "mentions": 118,
+   "switching_documents": 7,
+   "reason_v2_documents": 15,
+   "documents_by_source": {
+    "hackernews": 30,
+    "stackexchange": 19,
+    "devto": 3,
+    "github_threads": 3
+   }
+  }
+ ],
+ "reasons": {
+  "documents_labelled": 300,
+  "reasons_total": 63,
+  "by_category": [
+   {
+    "category": "cost",
+    "reasons": 20,
+    "by_source": {
+     "devto": 5,
+     "hackernews": 15,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 8,
+     "seed_v2": 12
+    }
+   },
+   {
+    "category": "operational_simplicity",
+    "reasons": 11,
+    "by_source": {
+     "devto": 4,
+     "hackernews": 7,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 7,
+     "seed_v2": 4
+    }
+   },
+   {
+    "category": "lock_in_openness",
+    "reasons": 8,
+    "by_source": {
+     "devto": 6,
+     "hackernews": 2,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 4,
+     "seed_v2": 4
+    }
+   },
+   {
+    "category": "performance_scale",
+    "reasons": 8,
+    "by_source": {
+     "devto": 2,
+     "hackernews": 5,
+     "stackexchange": 1
+    },
+    "by_sample": {
+     "seed_v1": 3,
+     "seed_v2": 5
+    }
+   },
+   {
+    "category": "right_sizing",
+    "reasons": 7,
+    "by_source": {
+     "devto": 0,
+     "hackernews": 7,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 3,
+     "seed_v2": 4
+    }
+   },
+   {
+    "category": "ecosystem_fit",
+    "reasons": 4,
+    "by_source": {
+     "devto": 4,
+     "hackernews": 0,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 3,
+     "seed_v2": 1
+    }
+   },
+   {
+    "category": "other",
+    "reasons": 3,
+    "by_source": {
+     "devto": 0,
+     "hackernews": 3,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 1,
+     "seed_v2": 2
+    }
+   },
+   {
+    "category": "governance_security",
+    "reasons": 2,
+    "by_source": {
+     "devto": 1,
+     "hackernews": 1,
+     "stackexchange": 0
+    },
+    "by_sample": {
+     "seed_v1": 2,
+     "seed_v2": 0
+    }
+   }
+  ],
+  "by_source": [
+   {
+    "source": "devto",
+    "documents": 90,
+    "with_reason": 22,
+    "with_move": 19,
+    "reason_share": 0.2444
+   },
+   {
+    "source": "hackernews",
+    "documents": 120,
+    "with_reason": 40,
+    "with_move": 22,
+    "reason_share": 0.3333
+   },
+   {
+    "source": "stackexchange",
+    "documents": 90,
+    "with_reason": 1,
+    "with_move": 4,
+    "reason_share": 0.0111
+   }
+  ]
+ },
+ "agreement": [
+  {
+   "sample": "seed_v1",
+   "field": "taxonomy_code",
+   "n": 150,
+   "agree": 142,
+   "pct_agree": 0.9467,
+   "cohen_kappa": 0.85,
+   "raters": [
+    "model_draft",
+    "claude_review"
+   ]
+  },
+  {
+   "sample": "seed_v1",
+   "field": "direction",
+   "n": 150,
+   "agree": 144,
+   "pct_agree": 0.96,
+   "cohen_kappa": 0.85,
+   "raters": [
+    "model_draft",
+    "claude_review"
+   ]
+  },
+  {
+   "sample": "seed_v2",
+   "field": "taxonomy_code",
+   "n": 150,
+   "agree": 147,
+   "pct_agree": 0.98,
+   "cohen_kappa": 0.95,
+   "raters": [
+    "model_draft",
+    "claude_review"
+   ]
+  },
+  {
+   "sample": "seed_v2",
+   "field": "direction",
+   "n": 150,
+   "agree": 148,
+   "pct_agree": 0.9867,
+   "cohen_kappa": 0.95,
+   "raters": [
+    "model_draft",
+    "claude_review"
+   ]
+  }
+ ],
+ "promotional_sensitivity": {
+  "seed_v2": {
+   "flagged_document_ids": [
+    164,
+    453,
+    454,
+    6565,
+    10626
+   ],
+   "flagged_with_reason": 5,
+   "reasons_with": 63,
+   "reasons_without": 58,
+   "by_category": [
+    {
+     "category": "cost",
+     "with": 20,
+     "without": 17
+    },
+    {
+     "category": "operational_simplicity",
+     "with": 11,
+     "without": 11
+    },
+    {
+     "category": "lock_in_openness",
+     "with": 8,
+     "without": 8
+    },
+    {
+     "category": "performance_scale",
+     "with": 8,
+     "without": 6
+    },
+    {
+     "category": "right_sizing",
+     "with": 7,
+     "without": 7
+    },
+    {
+     "category": "ecosystem_fit",
+     "with": 4,
+     "without": 4
+    },
+    {
+     "category": "other",
+     "with": 3,
+     "without": 3
+    },
+    {
+     "category": "governance_security",
+     "with": 2,
+     "without": 2
+    }
+   ],
+   "rank_order_with": [
+    "cost",
+    "operational_simplicity",
+    "lock_in_openness",
+    "performance_scale",
+    "right_sizing",
+    "ecosystem_fit",
+    "other",
+    "governance_security"
+   ],
+   "rank_order_without": [
+    "cost",
+    "operational_simplicity",
+    "lock_in_openness",
+    "right_sizing",
+    "performance_scale",
+    "ecosystem_fit",
+    "other",
+    "governance_security"
+   ]
+  },
+  "all_samples": {
+   "flagged_document_ids": [
+    164,
+    453,
+    454,
+    1121,
+    1400,
+    6565,
+    10626,
+    11070
+   ],
+   "flagged_with_reason": 8,
+   "reasons_with": 63,
+   "reasons_without": 55,
+   "by_category": [
+    {
+     "category": "cost",
+     "with": 20,
+     "without": 15
+    },
+    {
+     "category": "operational_simplicity",
+     "with": 11,
+     "without": 11
+    },
+    {
+     "category": "lock_in_openness",
+     "with": 8,
+     "without": 7
+    },
+    {
+     "category": "performance_scale",
+     "with": 8,
+     "without": 6
+    },
+    {
+     "category": "right_sizing",
+     "with": 7,
+     "without": 7
+    },
+    {
+     "category": "ecosystem_fit",
+     "with": 4,
+     "without": 4
+    },
+    {
+     "category": "other",
+     "with": 3,
+     "without": 3
+    },
+    {
+     "category": "governance_security",
+     "with": 2,
+     "without": 2
+    }
+   ],
+   "rank_order_with": [
+    "cost",
+    "operational_simplicity",
+    "lock_in_openness",
+    "performance_scale",
+    "right_sizing",
+    "ecosystem_fit",
+    "other",
+    "governance_security"
+   ],
+   "rank_order_without": [
+    "cost",
+    "operational_simplicity",
+    "lock_in_openness",
+    "right_sizing",
+    "performance_scale",
+    "ecosystem_fit",
+    "other",
+    "governance_security"
+   ]
+  }
+ },
+ "quotes": [
+  {
+   "document_id": 1611,
+   "category": "cost",
+   "quote": "We switched to Snowflake, saved money, got better performance, and had a simpler setup.",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=48084671",
+   "posted_at": "2026-05-10T15:18:52+00:00",
+   "sample": "seed_v2",
+   "from_vendor": "aws",
+   "to_vendor": "snowflake",
+   "direction": "adopt"
+  },
+  {
+   "document_id": 274,
+   "category": "cost",
+   "quote": "The quickest way to 10x your costs is to move a Vertica workload to Snowflake (last I heard my old job is now up to 40x).",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=44884657",
+   "posted_at": "2025-08-13T04:32:13+00:00",
+   "sample": "seed_v1",
+   "from_vendor": "other",
+   "to_vendor": "snowflake",
+   "direction": "adopt"
+  },
+  {
+   "document_id": 649,
+   "category": "operational_simplicity",
+   "quote": "Trying to just run a simple Spark query using an S3 Table Bucket was enough to remind me why Snowflake and Databricks are printing money by making it a more user friendly experience.",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=48086968",
+   "posted_at": "2026-05-10T19:22:51+00:00",
+   "sample": "seed_v1",
+   "from_vendor": "none",
+   "to_vendor": "none",
+   "direction": "none"
+  },
+  {
+   "document_id": 11002,
+   "category": "lock_in_openness",
+   "quote": "Snowflake's optimizations lived inside a proprietary storage layout nothing else could read.",
+   "source": "devto",
+   "url": "https://dev.to/aiexplore369zoho/databricks-vs-snowflake-27-lakehouse-vs-warehouse-the-architecture-bet-each-company-made-2m8l",
+   "posted_at": "2026-08-11T13:15:02+00:00",
+   "sample": "seed_v2",
+   "from_vendor": "none",
+   "to_vendor": "none",
+   "direction": "evaluate"
+  },
+  {
+   "document_id": 1272,
+   "category": "performance_scale",
+   "quote": "But at the larger org, we started having performance issues. We migrated from Redshift to Snowflake",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=44045610",
+   "posted_at": "2025-05-20T20:31:40+00:00",
+   "sample": "seed_v2",
+   "from_vendor": "aws",
+   "to_vendor": "snowflake",
+   "direction": "adopt"
+  },
+  {
+   "document_id": 1268,
+   "category": "right_sizing",
+   "quote": "In fact, I just advised someone recently to simply use Postgres instead of BigQuery since they had <1TB and their queries weren't super intensive.",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=43966737",
+   "posted_at": "2025-05-12T19:36:46+00:00",
+   "sample": "seed_v1",
+   "from_vendor": "google",
+   "to_vendor": "other",
+   "direction": "evaluate"
+  },
+  {
+   "document_id": 1750,
+   "category": "governance_security",
+   "quote": "The best thing I've built in a long time is replacing a complex (and scary) permissions system built on top of Snowflake with single role duckdb databases",
+   "source": "hackernews",
+   "url": "https://news.ycombinator.com/item?id=48600360",
+   "posted_at": "2026-06-19T16:32:13+00:00",
+   "sample": "seed_v1",
+   "from_vendor": "snowflake",
+   "to_vendor": "other",
+   "direction": "leave"
+  },
+  {
+   "document_id": 10963,
+   "category": "ecosystem_fit",
+   "quote": "Fabric wins on Microsoft-shop fit because the identity, licensing, and Power BI story compound",
+   "source": "devto",
+   "url": "https://dev.to/gowthampotureddi/microsoft-fabric-onelake-deep-dive-for-data-engineers-lakehouse-warehouse-real-time-in-one-4fi0",
+   "posted_at": "2026-07-29T14:08:57+00:00",
+   "sample": "seed_v1",
+   "from_vendor": "none",
+   "to_vendor": "microsoft",
+   "direction": "evaluate"
+  }
+ ],
+ "cloudera": {
+  "documents": 55,
+  "by_source": {
+   "hackernews": 30,
+   "stackexchange": 19,
+   "devto": 3,
+   "github_threads": 3
+  },
+  "by_year": {
+   "2023": 34,
+   "2024": 10,
+   "2025": 4,
+   "2026": 7
+  },
+  "labelled": 24,
+  "labelled_with_reason": 6,
+  "labelled_leaving_cloudera": 1,
+  "cases": [
+   {
+    "document_id": 7279,
+    "kind": "stranded_on_free_edition",
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/77139887/cloudera-enterprise-community-edition-for-rhel-8",
+    "title": "Cloudera Enterprise (Community Edition) for RHEL 8",
+    "posted_at": "2023-09-20T06:42:47+00:00",
+    "quotes": [
+     "We are running a mini DWH platform with Cloudera Enterprise community version.",
+     "not able to find any upgraded version of Cloudera Enterprise which supports RHEL 8",
+     "We want to stay on Community edition of Cloudera."
+    ]
+   },
+   {
+    "document_id": 220,
+    "kind": "exit_to_open_source",
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=43984709",
+    "title": null,
+    "posted_at": "2025-05-14T14:05:10+00:00",
+    "quotes": [
+     "I know a company who had 2PBs+ of data in Cloudera. But instead of moving to the cloud (and Databricks), they saved 5X costs by building their own analytics platform with Iceberg, Trino and Superset."
+    ]
+   },
+   {
+    "document_id": 2153,
+    "kind": "legacy_reference",
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37582516",
+    "title": null,
+    "posted_at": "2023-09-20T10:27:06+00:00",
+    "quotes": [
+     "old and expensive cloudera clusters"
+    ]
+   }
+  ],
+  "document_list": [
+   {
+    "document_id": 2060,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=34223614",
+    "title": null,
+    "posted_at": "2023-01-02T21:03:23+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2061,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=34225082",
+    "title": null,
+    "posted_at": "2023-01-02T23:14:53+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7162,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/75131896/issue-of-container-oom-when-writing-dataframe-to-parquet-files-in-spark-job",
+    "title": "Issue of container OOM when writing Dataframe to parquet files in Spark Job",
+    "posted_at": "2023-01-16T08:46:33+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7165,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/75267772/unable-to-connect-remote-spark-session-with-yarn-mode-on-kubeflow",
+    "title": "Unable to Connect Remote Spark Session with YARN mode on Kubeflow",
+    "posted_at": "2023-01-28T12:48:00+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2071,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=34614619",
+    "title": null,
+    "posted_at": "2023-02-01T17:57:50+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7168,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/75337455/error-while-installing-cloudera-hue-on-mac-os-13-0-1",
+    "title": "Error while installing Cloudera Hue on MAC OS 13.0.1",
+    "posted_at": "2023-02-03T14:58:11+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7169,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/75379062/cannot-use-regular-expression-in-hadoop-in-linux-command-line",
+    "title": "Cannot use regular expression in hadoop in Linux command line",
+    "posted_at": "2023-02-07T21:14:01+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2081,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=34877125",
+    "title": null,
+    "posted_at": "2023-02-21T05:37:16+00:00",
+    "other_vendors": [
+     "databricks"
+    ],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2082,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=34890746",
+    "title": null,
+    "posted_at": "2023-02-22T02:21:42+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2088,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35108849",
+    "title": null,
+    "posted_at": "2023-03-11T15:10:56+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2096,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35265654",
+    "title": null,
+    "posted_at": "2023-03-22T19:00:20+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2098,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35401229",
+    "title": null,
+    "posted_at": "2023-04-01T15:52:45+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7180,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/75917127/cloudbreak-and-hortonworks-hdp-sandbox-are-same-on-azure",
+    "title": "Cloudbreak and Hortonworks HDP sandbox are same on azure?",
+    "posted_at": "2023-04-03T07:50:25+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2099,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35433911",
+    "title": null,
+    "posted_at": "2023-04-04T01:45:14+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2102,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35526192",
+    "title": null,
+    "posted_at": "2023-04-11T15:05:37+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2105,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=35782988",
+    "title": null,
+    "posted_at": "2023-05-02T03:29:17+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2110,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36146552",
+    "title": null,
+    "posted_at": "2023-06-01T01:13:38+00:00",
+    "other_vendors": [],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "performance_scale",
+    "direction": "adopt",
+    "from_vendor": "other"
+   },
+   {
+    "document_id": 2111,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36157941",
+    "title": null,
+    "posted_at": "2023-06-01T21:56:36+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2113,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36392183",
+    "title": null,
+    "posted_at": "2023-06-19T15:28:17+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2114,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36393241",
+    "title": null,
+    "posted_at": "2023-06-19T16:48:13+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2116,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36481710",
+    "title": null,
+    "posted_at": "2023-06-26T16:14:03+00:00",
+    "other_vendors": [
+     "databricks"
+    ],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "other",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2118,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36535271",
+    "title": null,
+    "posted_at": "2023-06-30T14:12:58+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2120,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36576251",
+    "title": null,
+    "posted_at": "2023-07-03T17:31:44+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2129,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=36986538",
+    "title": null,
+    "posted_at": "2023-08-03T14:33:53+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7223,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/76852808/monitoring-and-observability-over-my-hadoop-cluster",
+    "title": "monitoring and observability over my Hadoop cluster",
+    "posted_at": "2023-08-07T14:43:54+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2138,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37145907",
+    "title": null,
+    "posted_at": "2023-08-16T12:20:07+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7228,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/76929912/pulling-data-from-cdp-cloudera-data-platform-using-hive-query-language-hql-i",
+    "title": "pulling data from CDP (cloudera data platform) using hive query language (HQL) into python",
+    "posted_at": "2023-08-18T13:41:24+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2140,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37211304",
+    "title": null,
+    "posted_at": "2023-08-21T15:55:10+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2141,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37211967",
+    "title": null,
+    "posted_at": "2023-08-21T16:37:26+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "right_sizing",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2146,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37314146",
+    "title": null,
+    "posted_at": "2023-08-29T21:09:51+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7279,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/77139887/cloudera-enterprise-community-edition-for-rhel-8",
+    "title": "Cloudera Enterprise (Community Edition) for RHEL 8",
+    "posted_at": "2023-09-20T06:42:47+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2153,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=37582516",
+    "title": null,
+    "posted_at": "2023-09-20T10:27:06+00:00",
+    "other_vendors": [
+     "aws",
+     "databricks"
+    ],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 11322,
+    "source": "github_threads",
+    "url": "https://github.com/delta-io/delta/issues/2192",
+    "title": "[BUG]",
+    "posted_at": "2023-10-16T08:30:17+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2156,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=38827541",
+    "title": null,
+    "posted_at": "2023-12-31T21:09:13+00:00",
+    "other_vendors": [],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "right_sizing",
+    "direction": "evaluate",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7719,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/77865685/permission-denied-error-while-importing-a-table-into-hdfs-using-scoop",
+    "title": "Permission denied error while importing a table into HDFS using Scoop",
+    "posted_at": "2024-01-23T10:48:14+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 11374,
+    "source": "github_threads",
+    "url": "https://github.com/apache/iceberg/issues/9553",
+    "title": "Apache Iceberg - Branch cannot be merged using the fast_forward procedure",
+    "posted_at": "2024-01-24T16:35:22+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7804,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/77989980/no-output-for-mapreduce-program-even-after-successful-job-completion-on-cloudera",
+    "title": "No Output for MapReduce Program even after successful job completion on Cloudera VM",
+    "posted_at": "2024-02-13T17:56:05+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7903,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/78135939/cloudera-quickstart-image-running-in-docker-container-is-not-starting-and-status",
+    "title": "cloudera/quickstart image running in docker container is not starting and status is exited(139). How to solve it?",
+    "posted_at": "2024-03-10T12:57:29+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v2",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 7929,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/78167946/issue-with-sqlalchemy-accessing-impala-database-via-cloudera-odbc-dsn",
+    "title": "Issue with SQLAlchemy accessing Impala database via cloudera ODBC DSN",
+    "posted_at": "2024-03-15T15:16:28+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 7994,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/78265122/ssis-remove-quotation-from-insert-script-to-ado-net-destination",
+    "title": "SSIS Remove quotation from insert script to ADO NET Destination",
+    "posted_at": "2024-04-03T03:52:55+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 8319,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/78735118/kafka-connect-to-snowflake-connection-via-jdbc-error",
+    "title": "Kafka Connect to Snowflake connection via JDBC error",
+    "posted_at": "2024-07-11T10:59:35+00:00",
+    "other_vendors": [
+     "snowflake"
+    ],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 8446,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/78915663/how-to-load-csv-file-into-hive-table-using-python-on-local-windows-machine",
+    "title": "How to load csv file into hive table using python on local windows machine",
+    "posted_at": "2024-08-26T17:24:36+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 8707,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/79090183/does-anyone-know-how-to-start-work-with-manager-api-java-client",
+    "title": "Does anyone know how to start work with Manager API Java client?",
+    "posted_at": "2024-10-15T13:29:26+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 9044,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/79244701/how-to-get-name-of-the-script-used-in-a-job-on-cloudera-ml-platform",
+    "title": "How to get name of the script used in a job on Cloudera ML platform",
+    "posted_at": "2024-12-02T15:45:20+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 9566,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/79469978/keep-getting-connectionrefused-or-oom-errors-when-working-with-pyspark-in-cl",
+    "title": "Keep getting \"ConnectionRefused\" or \"OOM\" errors when working with PySpark in Cloudera Machine Learning",
+    "posted_at": "2025-02-26T13:50:32+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 9742,
+    "source": "stackexchange",
+    "url": "https://stackoverflow.com/questions/79539055/sparklyr-job-hang",
+    "title": "Sparklyr job hang",
+    "posted_at": "2025-03-27T13:40:39+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 220,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=43984709",
+    "title": null,
+    "posted_at": "2025-05-14T14:05:10+00:00",
+    "other_vendors": [
+     "databricks"
+    ],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "cost",
+    "direction": "leave",
+    "from_vendor": "cloudera"
+   },
+   {
+    "document_id": 337,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=44987684",
+    "title": null,
+    "posted_at": "2025-08-22T18:06:23+00:00",
+    "other_vendors": [
+     "databricks"
+    ],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 506,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=46501895",
+    "title": null,
+    "posted_at": "2026-01-05T17:34:40+00:00",
+    "other_vendors": [
+     "databricks",
+     "snowflake"
+    ],
+    "switching_v1": false,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 10793,
+    "source": "devto",
+    "url": "https://dev.to/manojjagtap/snowpro-core-roadmap-5f6o",
+    "title": "SnowPro Core Roadmap",
+    "posted_at": "2026-03-24T19:41:48+00:00",
+    "other_vendors": [
+     "aws",
+     "google",
+     "microsoft",
+     "snowflake"
+    ],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 2213,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=47941284",
+    "title": "Civil Rights Division Sues Cloudera for Blocking U.S. Workers from Tech Jobs",
+    "posted_at": "2026-04-28T21:45:37+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 2214,
+    "source": "hackernews",
+    "url": "https://news.ycombinator.com/item?id=47948752",
+    "title": "Civil Rights Division Sues Cloudera for Excluding U.S. Workers",
+    "posted_at": "2026-04-29T14:12:51+00:00",
+    "other_vendors": [],
+    "switching_v1": false,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 12240,
+    "source": "github_threads",
+    "url": "https://github.com/apache/hudi/issues/19910",
+    "title": "[CI] Java CI runner-minutes and critical runtime: PR tracker",
+    "posted_at": "2026-09-11T15:49:52+00:00",
+    "other_vendors": [],
+    "switching_v1": true,
+    "sample": null,
+    "taxonomy_code": null,
+    "direction": null,
+    "from_vendor": null
+   },
+   {
+    "document_id": 11140,
+    "source": "devto",
+    "url": "https://dev.to/jonisar/apache-iceberg-maintenance-tools-from-spark-procedures-to-autonomous-control-planes-lbi",
+    "title": "Apache Iceberg Maintenance Tools: From Spark Procedures to Autonomous Control Planes",
+    "posted_at": "2026-09-17T11:34:50+00:00",
+    "other_vendors": [
+     "aws",
+     "databricks",
+     "snowflake"
+    ],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "none",
+    "direction": "none",
+    "from_vendor": "none"
+   },
+   {
+    "document_id": 13140,
+    "source": "devto",
+    "url": "https://dev.to/jonisar/aws-glue-iceberg-optimizer-alternatives-for-a-data-lakehouse-8f7",
+    "title": "AWS Glue Iceberg Optimizer Alternatives for a Data Lakehouse",
+    "posted_at": "2026-09-25T09:34:47+00:00",
+    "other_vendors": [
+     "aws",
+     "databricks",
+     "snowflake"
+    ],
+    "switching_v1": true,
+    "sample": "seed_v1",
+    "taxonomy_code": "cost",
+    "direction": "none",
+    "from_vendor": "aws"
+   }
+  ]
+ },
+ "deployment_control_probe": {
+  "strict_documents_audited": 27,
+  "deployment_control_reason": 3,
+  "overlaps_other_category": 6,
+  "not_a_reason": 18,
+  "decision": "not_added"
+ }
+}
