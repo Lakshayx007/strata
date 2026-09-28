@@ -59,6 +59,7 @@ jobs:
         if: inputs.step == 'recompute_mentions'
         run: |
           python -m analysis.labeling.recompute_mentions
+          python -m analysis.labeling.audit_mentions --entity snowflake
           python -m analysis.labeling.sample --sample seed_v1   # re-exports seed_v1 and prints share of voice
 
       - name: Draw seed sample
