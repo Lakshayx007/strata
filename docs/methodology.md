@@ -181,6 +181,8 @@ Caveats a reader should see alongside the number:
 - The sources skew toward cloud-native and developer audiences, where on-premises Hadoop estates are discussed less.
 - "Hortonworks" is counted as Cloudera, so the figure is not lowered by the merger.
 - Cloudera findings from the seed sample rest on 12 documents.
+- The table above uses the Phase 1 matcher. The recomputed figures after the Snowflake fix (2026-09-28) are in
+  "Snowflake disambiguation and recomputed share of voice" below; Cloudera is unchanged at 55 documents (0.9%).
 
 ## Draft taxonomy and pre-labels (`model_draft`)
 
@@ -295,3 +297,98 @@ Correct vendor matches: 694, 706 (Variant type proposals), 910, 1119 (the Snowfl
 OpenTelemetry maintainer). False "snowflake" matches: 895 ("snowflake status"), 903 ("they're a snowflake"), 905
 ("being called a snowflake"), 929 ("snowflake model"), 942, 1364 and 1394 ("special snowflake"), 1545 ("fresh
 snowflake"). These eight are the test cases for the Snowflake disambiguation rule below.
+
+## Snowflake disambiguation and recomputed share of voice (2026-09-28)
+
+**Rule.** Bare "snowflake" is now an ambiguous term (`config.AMBIGUOUS_TERMS`), like "redshift" and "synapse":
+
+- A capitalised "Snowflake" counts as the vendor.
+- A lowercase "snowflake" counts only with data context within 200 characters (warehouse, SQL, query, data, dbt,
+  Databricks, BigQuery, column, procedure, connector, Snowpark and similar; the full list is in the config).
+- Known other senses never count, whatever the case (`config.EXCLUDED_PATTERNS`): "special/unique/fragile snowflake",
+  the insult ("called a snowflake", "you're such a snowflake", plural "snowflakes"), "its own snowflake", snowflake
+  schema/model/dimension, snowflake servers and IDs (Twitter's ID scheme), the Koch snowflake, Tor's Snowflake proxy,
+  the novel-writing "snowflake method", and Snowflake Bentley.
+- A title now takes its context from the document body as well as from the title itself.
+- Snowpark, Snowpipe, SnowSQL, Snowflake Cortex and snowflake.com always count.
+
+On seed_v1 the rule removes exactly the eight false matches the review flagged (895, 903, 905, 929, 942, 1364, 1394,
+1545) and changes nothing else about Snowflake.
+
+**How it was checked on the corpus.** Rebuilding mentions (`python -m analysis.labeling.recompute_mentions`) logs every
+document-vendor pair that changes, and `python -m analysis.labeling.audit_mentions --entity snowflake` lists every
+document containing "snowflake" that is no longer counted, with the matcher's reason and snippet. The first version of
+the rule (lowercase or sentence-initial needs context) was too strict: the audit showed it dropped real vendor
+headlines ("Snowflake CEO Frank Slootman Retires", "Snowflake Copilot") and Stack Exchange questions ("setup snowflake
+task to run every 2nd Monday of the month"). It was corrected before any number was recorded. In the final audit, 309
+documents contain "snowflake" but are not counted. Reading every snippet, about 6 of them are the vendor and are
+still missed (for example "the snowflake event" at Moscone Center, "internal to snowflake?"). Among documents the
+rule accepts, a handful of non-vendor uses remain (for example a quoted insult, "Snowflake", and "snowflake features"
+of a Rust variant). Both error counts are small next to the 197 false matches removed.
+
+**Side effect.** Because titles now take context from the body, Stack Exchange questions that name "Redshift" or
+"Synapse" in the title only are now counted: AWS gains 44 documents and Microsoft 9.
+
+**Recomputed share of voice** (12,056 discussion documents; 5,941 name a vendor, down from 6,086; 748 of those use
+v1 switching language, down from 791):
+
+| Vendor | Documents (was) | Share (was) | Mentions | Switching-language documents | Reason-bearing (v2) |
+|---|---|---|---|---|---|
+| Snowflake | 1,812 (2,009) | 30.5% (33.0%) | 14,969 | 326 | 626 |
+| Databricks | 1,687 (1,687) | 28.4% (27.7%) | 10,468 | 245 | 548 |
+| Google | 1,376 (1,376) | 23.2% (22.6%) | 5,477 | 168 | 399 |
+| AWS | 1,166 (1,122) | 19.6% (18.4%) | 4,403 | 150 | 342 |
+| Microsoft | 687 (678) | 11.6% (11.1%) | 3,289 | 66 | 146 |
+| Cloudera | 55 (55) | 0.9% (0.9%) | 118 | 7 | 15 |
+
+Snowflake stays first, but its lead over Databricks narrows from 5.3 to 2.1 points of vendor-naming documents.
+Almost all of the change is on HN, which loses 195 Snowflake documents (Stack Exchange and Dev.to lose one each);
+Snowflake still leads Databricks on HN, 857 to 815. The seed_v1 sample was drawn with the old matcher and is left as
+drawn; its Snowflake coverage falls from 72 to 64 documents.
+
+## Switching detector v2 (2026-09-28)
+
+The v1 phrase list (`config.SWITCHING_PHRASES`) stays unchanged so earlier switching counts remain comparable.
+Detector v2 (`normalize.has_reason_language`) works per sentence: a sentence qualifies when it names a data platform
+(`config.PLATFORM_TERMS`, which includes non-vendor platforms such as Postgres, DuckDB, Teradata and Hadoop) and
+either reports a move or comparison (`config.MOVE_PHRASES`) or gives a reason (`config.REASON_CUES`, one group of cue
+words per taxonomy category).
+
+Measured against the seed_v1 `claude_review` labels (`python -m analysis.labeling.detector_eval`), where a document is
+positive when the reviewer gave a reason or a move (33 of 150):
+
+| Detector | Flagged | True positives | Precision | Recall |
+|---|---|---|---|---|
+| v1 phrase list | 110 | 27 | 24.5% | 81.8% |
+| v2 platform + move/reason sentence | 84 | 27 | 32.1% | 81.8% |
+
+Three reasons these numbers flatter both detectors, so they must not be quoted as corpus precision or recall:
+- v2 was tuned on seed_v1, so its seed_v1 score is optimistic.
+- seed_v1 was drawn so that 110 of 150 documents match v1, so positives that v1 misses are under-represented and v1's
+  recall is overstated.
+- The labels are a second model pass, not a human one.
+seed_v2 gives a fresh test: once it is reviewed, both detectors will be scored on it. v2 still misses reasons stated
+without naming a platform in the same sentence (989, 2156, 10994, 11092) and moves described without a reason word
+or move verb (6711, 8134).
+
+## Seed sample `seed_v2` (2026-09-28)
+
+Drawn by `python -m analysis.labeling.sample --sample seed_v2` after the mention recompute, with seed 20260928. It uses
+the same pool rules, quotas (HN 60, Stack Exchange 45, Dev.to 45) and vendor floors as seed_v1, with two changes:
+every seed_v1 document is excluded, and detector v2 replaces the phrase list as the priority flag (at least 120
+flagged). Within flagged documents, those with a sentence that both reports a move and gives a reason are taken first.
+
+| | seed_v1 | seed_v2 |
+|---|---|---|
+| Documents | 150 | 150 |
+| v1 phrase list matches | 110 | 47 |
+| Detector v2 matches | 84 | 120 |
+| A sentence with a move and a reason | 23 | 74 |
+| Multi-vendor | 39 | 32 |
+| HN / Stack Exchange / Dev.to (flagged) | 60 (44) / 45 (33) / 45 (33) | 60 (48) / 45 (36) / 45 (36) |
+| Databricks / Snowflake / Cloudera / AWS / Microsoft / Google | 46 / 64 / 12 / 32 / 19 / 36 | 41 / 55 / 12 / 37 / 13 / 34 |
+
+All vendor floors are met (Cloudera 12, Microsoft 13, AWS 37, Google 34). seed_v2 deliberately over-samples
+reason-bearing documents, so category shares in it are not corpus shares; they are for building and testing the
+taxonomy.
+
