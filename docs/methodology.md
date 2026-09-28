@@ -532,3 +532,17 @@ seed_v2 was drawn with 120 of 150 documents flagged by v2, so its recall here is
 unflagged documents can hold a miss (one, 6538, does). The fair reading is precision, which holds at about 30% on a
 sample the detector was not tuned on (32% on seed_v1). v1's recall falls from 82% on seed_v1 to 33% here because
 this sample was not drawn on v1's phrases.
+
+## Freeze and export (2026-09-28)
+
+Data collection and labelling are frozen. `python -m analysis.export.findings` (Actions `phase2`, step
+`export_findings`) writes `analysis/export/findings.json` from the database and the committed audit files, and stops
+if the database `claude_review` labels differ from the committed label files. Every quote in it is re-checked as
+verbatim against its stored document. The brief is [findings.md](findings.md); the file's schema is
+[data_contract.md](data_contract.md).
+
+**Promotional sensitivity** (no pipeline flag; labels unchanged). The seed_v2 review notes flag 5 documents as vendor
+or self-promotional (164, 453, 454, 6565, 10626), all with a reason. Without them there are 58 reasons: cost 20 to
+17, performance 8 to 6, nothing else changes, and cost stays first. The seed_v1 review notes flag 3 more (1121,
+1400, 11070); without all 8 there are 55 reasons and cost is 15, still first.
+

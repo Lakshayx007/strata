@@ -1,6 +1,20 @@
 # Strata
 
-Market and competitive intelligence for the enterprise lakehouse market. Phase 1: schema and ingestion.
+Strata is a market and competitive intelligence study of the enterprise lakehouse market (Databricks, Snowflake,
+Cloudera, AWS, Microsoft, Google), built as a product-management portfolio project. It collects public developer
+discussion through official APIs only (Hacker News, Stack Exchange, Dev.to, GitHub; no Reddit and no review-site
+scraping), measures each vendor's share of voice across 12,056 documents, and labels a 300-document sample for the
+reasons people give when they choose or leave a data platform. Data collection and labelling are frozen as of
+2026-09-28.
+
+**Headline:** cost is the most common stated reason for a data-platform choice, 20 of 63 reasons in 300 labelled
+documents, and together with right-sizing ("a smaller tool is enough", 7) it accounts for 27 of 63. Snowflake
+(30.5%) and Databricks (28.4%) lead share of voice; Cloudera appears in 0.9% of vendor-naming documents. Labels
+are a model draft plus a second-model review, with no human review.
+
+- [docs/findings.md](docs/findings.md): the one-page brief, with quotes, the Cloudera section and limitations
+- [docs/methodology.md](docs/methodology.md): how every number was produced
+- [docs/data_contract.md](docs/data_contract.md): the schema of `analysis/export/findings.json`, the frontend's data
 
 ## Sources
 | source | what | access |
