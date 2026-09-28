@@ -257,7 +257,8 @@ def to_signals(items: Iterable[FetchedItem]) -> list[SignalRow]:
 
 _ALIASES = {e: [re.compile(p, re.IGNORECASE) for p in pats] for e, pats in config.MENTION_ALIASES.items()}
 _AMBIGUOUS = [
-    {**t, "term_re": re.compile(t["term"], re.IGNORECASE), "context_re": [re.compile(c, re.IGNORECASE) for c in t["context"]]}
+    {**t, "term_re": re.compile(t["term"], re.IGNORECASE), "context_re": [re.compile(c, re.IGNORECASE) for c in t["context"]],
+     "accept_re": re.compile(t["accept_cased"]) if t.get("accept_cased") else None}
     for t in config.AMBIGUOUS_TERMS
 ]
 _EXCLUDED = [{**x, "re": re.compile(x["pattern"], re.IGNORECASE)} for x in config.EXCLUDED_PATTERNS]
@@ -271,8 +272,19 @@ class RejectedMention:
     snippet: str
 
 
-def _match_text(text: str) -> tuple[dict[str, list[int]], list[RejectedMention]]:
-    """Offsets of accepted matches per entity, plus every rejected candidate."""
+_SENTENCE_START = re.compile(r"(?:^|[.!?:;\n*#>\"'(\[]\s*)$")
+
+
+def _sentence_initial(text: str, start: int) -> bool:
+    """True when the word at `start` opens a sentence, heading or quote, where capitalisation says nothing."""
+    return bool(_SENTENCE_START.search(text[max(0, start - 3): start]))
+
+
+def _match_text(text: str, extra_context: str = "") -> tuple[dict[str, list[int]], list[RejectedMention]]:
+    """Offsets of accepted matches per entity, plus every rejected candidate.
+
+    `extra_context` (the body, when matching a title) also counts as context for ambiguous terms.
+    """
     accepted: dict[str, list[int]] = {}
     spans: list[tuple[int, int]] = []
     for entity, patterns in _ALIASES.items():
@@ -290,13 +302,20 @@ def _match_text(text: str) -> tuple[dict[str, list[int]], list[RejectedMention]]
     for x in _EXCLUDED:
         context_text = x["re"].sub(lambda m: m.group(0) if covered(m.start()) else " " * len(m.group(0)), context_text)
 
+    excluded_spans = {x["entity"]: [] for x in _EXCLUDED}
+    for x in _EXCLUDED:
+        excluded_spans[x["entity"]] += [m.span() for m in x["re"].finditer(text)]
+
     rejected: list[RejectedMention] = []
     for t in _AMBIGUOUS:
         for m in t["term_re"].finditer(text):
             if covered(m.start()):
                 continue  # already counted by an unambiguous phrase such as "azure synapse"
+            if any(s <= m.start() < e for s, e in excluded_spans.get(t["entity"], [])):
+                continue  # an excluded idiom; reported below as an "excluded" rejection
             window = context_text[max(0, m.start() - t["window"]): m.end() + t["window"]]
-            if any(c.search(window) for c in t["context_re"]):
+            cased = t["accept_re"] is not None and t["accept_re"].match(text, m.start()) and not _sentence_initial(text, m.start())
+            if cased or any(c.search(window) for c in t["context_re"]) or any(c.search(extra_context) for c in t["context_re"]):
                 accepted.setdefault(t["entity"], []).append(m.start())
             else:
                 rejected.append(RejectedMention(t["entity"], t["term"], "no_context", _snippet(text, m.start(), m.end())))
@@ -320,7 +339,7 @@ def find_mentions_with_rejections(body: str, title: str | None = None) -> tuple[
     body_hits, rejected = _match_text(body)
     title_hits: dict[str, list[int]] = {}
     if title and title != body:
-        title_hits, title_rejected = _match_text(title)
+        title_hits, title_rejected = _match_text(title, extra_context=body)
         rejected += title_rejected
     out = []
     for entity in list(_ALIASES) + [t["entity"] for t in _AMBIGUOUS if t["entity"] not in _ALIASES]:
@@ -342,3 +361,35 @@ _SWITCHING_RE = re.compile(
 
 def has_switching_language(text: str) -> bool:
     return bool(_SWITCHING_RE.search(text))
+
+
+# Detector v2: reason-bearing switching language, per sentence (see config.REASON_CUES).
+_PLATFORM_RE = re.compile("|".join(rf"(?:{p})" for p in config.PLATFORM_TERMS), re.IGNORECASE)
+_MOVE_RE = re.compile("|".join(rf"(?:{p})" for p in config.MOVE_PHRASES), re.IGNORECASE)
+_REASON_RE = re.compile(r"\b(?:" + "|".join(p for ps in config.REASON_CUES.values() for p in ps) + r")\b", re.IGNORECASE)
+_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|\n+")
+
+
+def switching_sentences(text: str) -> list[tuple[str, bool, bool]]:
+    """Sentences that name a data platform and report a move/comparison or give a reason.
+
+    Returns (sentence, has_move, has_reason) for each qualifying sentence, in order.
+    """
+    out = []
+    for s in _SENTENCE_SPLIT.split(text or ""):
+        if not s.strip() or not _PLATFORM_RE.search(s):
+            continue
+        move, reason = bool(_MOVE_RE.search(s)), bool(_REASON_RE.search(s))
+        if move or reason:
+            out.append((s.strip(), move, reason))
+    return out
+
+
+def has_reason_language(text: str) -> bool:
+    return bool(switching_sentences(text))
+
+
+def reason_score(text: str) -> int:
+    """Priority for drawing reason-bearing documents: 2 per sentence with both a move and a reason, 1 per other."""
+    return sum(2 if m and r else 1 for _, m, r in switching_sentences(text))
+

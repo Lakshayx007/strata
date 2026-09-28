@@ -57,7 +57,9 @@ VENDORS: list[str] = list(VENDOR_QUERIES)
 # Databricks, Spark is not Databricks) and are excluded from vendor charts.
 MENTION_ALIASES: dict[str, list[str]] = {
     "databricks": [r"\bdatabricks\b", r"\bunity catalog\b"],
-    "snowflake": [r"\bsnowflake\b(?!\s+schemas?\b)", r"\bsnowpark\b", r"\bsnowpipe\b"],
+    # Bare "snowflake" is ambiguous (see AMBIGUOUS_TERMS); these phrases are always the vendor.
+    "snowflake": [r"\bsnowpark\b", r"\bsnowpipe\b", r"\bsnowsql\b", r"\bsnowflake (?:cortex|computing|data cloud|marketplace)\b",
+                  r"\bsnowflake\.com\b"],
     "cloudera": [r"\bcloudera\b", r"\bhortonworks\b"],
     "aws": [r"\b(?:amazon|aws) redshift\b", r"\bredshift (?:serverless|spectrum)\b", r"\baws glue\b",
             r"\bglue (?:catalog|jobs?|etl|crawlers?|data catalog)\b"],
@@ -69,6 +71,16 @@ MENTION_ALIASES: dict[str, list[str]] = {
 }
 
 AMBIGUOUS_TERMS: list[dict] = [
+    {   # Also an idiom ("special snowflake"), an insult ("called a snowflake") and a modelling term. The seed_v1
+        # review found 8 HN documents wrongly counted as the vendor. A capitalised "Snowflake" that is not the
+        # first word of a sentence is accepted as the vendor (`accept_cased`); a lowercase or sentence-initial one
+        # needs data context. Idioms in EXCLUDED_PATTERNS are rejected either way.
+        "entity": "snowflake", "term": r"\bsnowflake\b", "window": 200, "accept_cased": r"Snowflake\b",
+        "context": [r"warehous", r"\bsql\b", r"\bquer(?:y|ies)\b", r"\bdata\b", r"databricks", r"bigquery", r"redshift",
+                    r"\bdbt\b", r"cortex", r"snowpark", r"\bcredits?\b", r"\bcloud\b", r"\bel?tl?\b", r"iceberg",
+                    r"analytics", r"\btables?\b", r"pipelines?", r"\bsaas\b", r"lakehouse", r"\bs3\b", r"fivetran",
+                    r"\bstages?\b", r"storage integration", r"\bazure\b", r"\baws\b", r"\bgcp\b", r"snowsight", r"\bipo\b"],
+    },
     {   # Astronomy: "the redshift of distant galaxies"; also a GPU renderer.
         "entity": "aws", "term": r"\bredshift\b", "window": 200,
         "context": [r"\baws\b", r"\bamazon\b", r"warehouse", r"\bclusters?\b", r"\bsql\b", r"\bquer(?:y|ies)\b",
@@ -94,7 +106,15 @@ AMBIGUOUS_TERMS: list[dict] = [
 
 EXCLUDED_PATTERNS: list[dict] = [
     # Kimball dimensional-modelling term, not the vendor.
-    {"entity": "snowflake", "pattern": r"\bsnowflake\s+schemas?\b"},
+    {"entity": "snowflake", "pattern": r"\bsnowflake[\s-]+(?:schemas?|model(?:l?ing)?|dimensions?|design)\b"},
+    # Idioms: "special snowflake", "snowflake servers" (hand-configured hosts), Twitter's "snowflake IDs",
+    # "snowflake status", and the insult ("you're a snowflake", "being called a snowflake", "snowflakes").
+    {"entity": "snowflake", "pattern": r"\b(?:special|unique|little|precious|beautiful|fresh|delicate|perfect)\s+snowflakes?\b"},
+    {"entity": "snowflake", "pattern": r"\bsnowflake\s+(?:servers?|ids?|status|generation)\b"},
+    {"entity": "snowflake", "pattern": r"\b(?:call|called|calling)\s+(?:(?:me|them|him|her|you|us|someone|people|everyone)\s+)?"
+                                       r"(?:a\s+)?snowflakes?\b"},
+    {"entity": "snowflake", "pattern": r"\b(?:such|being|what|you're|youre|they're|theyre|he's|she's|i'm)\s+a\s+snowflake\b"},
+    {"entity": "snowflake", "pattern": r"\bsnowflakes\b"},
     # Ordinary English ("the fabric of", "fabric softener") unless a product phrase above matched.
     {"entity": "microsoft", "pattern": r"\bfabric\b"},
     # Ordinary English and "glue code" unless an AWS Glue phrase above matched.
@@ -111,6 +131,37 @@ SWITCHING_PHRASES: list[str] = [
     "evaluated", "bake-off", "bakeoff", "POC", "proof of concept", "ripped out",
     "replaced with", "consolidated onto",
 ]
+
+# --- Reason-bearing switching language (detector v2, 2026-09-28) -------------
+# The seed_v1 review found the phrase list above is a weak filter: 27 of its 110 matches state a reason or a
+# platform move. v2 works per sentence: a sentence qualifies when it names a data platform (PLATFORM_TERMS) and
+# either reports a move or comparison (MOVE_PHRASES) or gives a reason (REASON_CUES, one group per taxonomy
+# category). It was tuned on seed_v1, so its seed_v1 precision/recall are optimistic; seed_v2 measures it fresh.
+# SWITCHING_PHRASES stays unchanged so earlier switching counts remain comparable.
+PLATFORM_TERMS: list[str] = [
+    r"snowflake", r"databricks", r"cloudera", r"hortonworks", r"redshift", r"synapse", r"fabric", r"onelake", r"bigquery",
+    r"big query", r"athena", r"\bemr\b", r"\bglue\b", r"dataproc", r"postgres(?:ql)?", r"duckdb", r"motherduck", r"clickhouse",
+    r"trino", r"presto", r"starburst", r"dremio", r"firebolt", r"vertica", r"teradata", r"netezza", r"greenplum", r"\boracle\b",
+    r"sql server", r"mysql", r"hadoop", r"\bhdfs\b", r"\bhive\b", r"impala", r"\bspark\b", r"iceberg", r"delta lake", r"\bhudi\b",
+    r"\bs3\b", r"\baws\b", r"azure", r"\bgcp\b", r"google cloud", r"on-?prem(?:ise|ises)?\b", r"data ?warehouse", r"lakehouse",
+    r"data lake",
+]
+MOVE_PHRASES: list[str] = [
+    r"migrat(?:ed|ing|ion) (?:from|to|off)", r"mov(?:ed|ing) (?:off|away from|from|to|over to)", r"switch(?:ed|ing) (?:from|to|over)",
+    r"replac(?:ed|ing)\b", r"ripped out", r"consolidat(?:ed|ing) onto", r"(?:chose|picked|went with|opted for|settled on)\b",
+    r"evaluat(?:ed|ing)\b", r"bake-?off", r"proof of concept", r"\bPOC\b", r"ditched", r"instead of", r"alternative to",
+    r"rather than", r"compared (?:to|with)", r"\bvs\.?(?=\s)", r"versus", r"wins on", r"why we",
+]
+REASON_CUES: dict[str, list[str]] = {
+    "cost": [r"costs?", r"costly", r"bills?", r"billing", r"pricing", r"priced", r"expensive", r"cheap(?:er)?", r"savings?",
+             r"saved", r"budget"],
+    "performance_scale": [r"faster", r"slower", r"performance", r"latency", r"scal(?:e|es|ing|ability)"],
+    "right_sizing": [r"overkill"],
+    "lock_in_openness": [r"lock(?:ed)?[- ]in", r"locked into", r"proprietary", r"open (?:source|formats?|table formats?)"],
+    "operational_simplicity": [r"simpl(?:er|icity|e)", r"complex(?:ity)?", r"user[- ]friendly", r"maintain", r"maintenance"],
+    "governance_security": [r"governance", r"permissions?", r"security", r"compliance"],
+    "ecosystem_fit": [r"ecosystem", r"integrat(?:ion|ions|es|ed)"],
+}
 
 # Phrases combined with vendor queries at search time to over-sample switching discussion.
 # A superset of SWITCHING_PHRASES (recall at collection time is cheap; the report uses the
