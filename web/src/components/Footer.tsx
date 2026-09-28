@@ -28,9 +28,9 @@ export default function Footer({ data }: FooterProps) {
             <ExternalLink size={14} />
             GitHub
           </a>
-          {/* TODO: Replace with actual LinkedIn URL */}
+          {/* LinkedIn */}
           <a
-            href="https://linkedin.com/in/TODO-LAKSHAY-LINKEDIN"
+            href="https://www.linkedin.com/in/lakshaymalik3127"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
