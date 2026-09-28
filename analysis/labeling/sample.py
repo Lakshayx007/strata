@@ -1,7 +1,8 @@
-"""Draw the Phase 2 seed sample for human labelling, and report vendor share of voice.
+"""Draw a Phase 2 seed sample for labelling, and report vendor share of voice.
 
-    python -m analysis.labeling.sample            # draw (or re-export an existing draw) and write the export
-    python -m analysis.labeling.sample --redraw   # replace an existing draw of the same sample name
+    python -m analysis.labeling.sample                     # seed_v1: draw (or re-export an existing draw)
+    python -m analysis.labeling.sample --sample seed_v2    # seed_v2: excludes seed_v1, reason-bearing docs first
+    python -m analysis.labeling.sample --redraw            # replace an existing draw of the same sample name
 
 The draw is deterministic (fixed seed) and recorded in `sample_members`, so a re-run returns the same
 documents even after the corpus grows. Rules, in the order they are applied:
@@ -15,6 +16,10 @@ documents even after the corpus grows. Rules, in the order they are applied:
   4. If a source runs short, the remaining places go to other sources, switching documents first.
 
 Every count below is printed as achieved, including any floor or target that was missed.
+
+The "priority flag" in these rules is the v1 phrase list (SWITCHING_PHRASES) for seed_v1. For seed_v2 it is
+detector v2 (normalize.has_reason_language), and within flagged documents those with a sentence that both reports
+a move and gives a reason come first. seed_v2 excludes every seed_v1 document.
 """
 
 from __future__ import annotations
@@ -30,12 +35,16 @@ import pandas as pd
 from sqlalchemy import text
 
 from ingestion import config
-from ingestion.normalize import has_switching_language
+from ingestion.normalize import has_switching_language, switching_sentences
 
+SAMPLES = {
+    "seed_v1": {"seed": 20260925, "switching_min": 110, "flag": "v1", "exclude": []},
+    "seed_v2": {"seed": 20260928, "switching_min": 120, "flag": "v2", "exclude": ["seed_v1"]},
+}
 SAMPLE = "seed_v1"
-SEED = 20260925
+SEED = SAMPLES[SAMPLE]["seed"]
 TOTAL = 150
-SWITCHING_MIN = 110
+SWITCHING_MIN = SAMPLES[SAMPLE]["switching_min"]
 QUOTAS = {"hackernews": 60, "stackexchange": 45, "devto": 45}
 VENDOR_FLOORS = {"cloudera": 12, "microsoft": 10, "aws": 10, "google": 10}
 MIN_WORDS = 20
@@ -43,11 +52,21 @@ DISCUSSION_SOURCES = ["hackernews", "stackexchange", "devto", "github_threads"]
 EXPORT_DIR = config.PROJECT_ROOT / "data" / "processed" / "labeling"
 
 
-def prepare(docs: pd.DataFrame, mentions: pd.DataFrame) -> pd.DataFrame:
-    """Add words, switching flag and the sorted vendor tuple to each document."""
+def _reason_tier(body: str) -> int:
+    """2: a sentence names a platform, reports a move and gives a reason; 1: detector v2 fires; 0: neither."""
+    sents = switching_sentences(body)
+    return 2 if any(m and r for _, m, r in sents) else int(bool(sents))
+
+
+def prepare(docs: pd.DataFrame, mentions: pd.DataFrame, flag: str = "v1") -> pd.DataFrame:
+    """Add words, both detector flags, the priority flag (`switching`) and the sorted vendor tuple."""
     docs = docs.copy()
     docs["words"] = docs.body.str.split().str.len().fillna(0).astype("int64")
-    docs["switching"] = docs.body.map(has_switching_language).astype(bool)
+    docs["switching_v1"] = docs.body.map(has_switching_language).astype(bool)
+    docs["reason_tier"] = docs.body.fillna("").map(_reason_tier).astype("int64")
+    docs["reason_v2"] = docs.reason_tier > 0
+    docs["switching"] = docs.switching_v1 if flag == "v1" else docs.reason_v2
+    docs["prio"] = 0 if flag == "v1" else docs.reason_tier
     vend = mentions[mentions.vendor.isin(config.VENDORS)]
     per_doc = vend.groupby("document_id").vendor.apply(lambda v: tuple(sorted(set(v))))
     docs["vendors"] = docs.id.map(per_doc).apply(lambda v: v if isinstance(v, tuple) else ())
@@ -55,12 +74,16 @@ def prepare(docs: pd.DataFrame, mentions: pd.DataFrame) -> pd.DataFrame:
 
 
 def draw(docs: pd.DataFrame, seed: int = SEED, quotas: dict[str, int] = QUOTAS, total: int = TOTAL,
-         switching_min: int = SWITCHING_MIN, floors: dict[str, int] = VENDOR_FLOORS, min_words: int = MIN_WORDS) -> pd.DataFrame:
+         switching_min: int = SWITCHING_MIN, floors: dict[str, int] = VENDOR_FLOORS, min_words: int = MIN_WORDS,
+         exclude_ids: frozenset = frozenset(), flag_name: str = "switching") -> pd.DataFrame:
     """Pure sampling over a prepared frame. Returns the selected rows with `picked_for` and `stratum`."""
     rng = np.random.default_rng(seed)
     pool = docs[docs.source.isin(quotas) & (docs.words >= min_words) & (docs.vendors.map(len) > 0)].copy()
-    pool["r"] = rng.random(len(pool))
-    pool = pool.sort_values(["r", "id"]).reset_index(drop=True)
+    pool["r"] = rng.random(len(pool))  # drawn before exclusion, so seed_v1's draw is unchanged by this option
+    pool = pool[~pool.id.isin(exclude_ids)]
+    if "prio" not in pool:
+        pool["prio"] = 0
+    pool = pool.sort_values(["prio", "r", "id"], ascending=[False, True, True]).reset_index(drop=True)
     quotas = dict(quotas)
     # Per-source switching target, scaled so the targets add up to at least switching_min. A source with
     # too few switching documents passes its deficit to sources that have spare ones; only if their quotas
@@ -125,7 +148,7 @@ def draw(docs: pd.DataFrame, seed: int = SEED, quotas: dict[str, int] = QUOTAS, 
                 chosen[row.id] = "quota"
 
     # 4. Shortfall in one source goes to the others, switching first.
-    rest = pool[~pool.id.isin(chosen)].sort_values(["switching", "r"], ascending=[False, True])
+    rest = pool[~pool.id.isin(chosen)].sort_values(["switching", "prio", "r"], ascending=[False, False, True])
     for row in rest.itertuples():
         if len(chosen) >= total:
             break
@@ -133,7 +156,7 @@ def draw(docs: pd.DataFrame, seed: int = SEED, quotas: dict[str, int] = QUOTAS, 
 
     out = pool[pool.id.isin(chosen)].copy()
     out["picked_for"] = out.id.map(chosen)
-    out["stratum"] = out.source + "/" + np.where(out.switching, "switching", "other")
+    out["stratum"] = out.source + "/" + np.where(out.switching, flag_name, "other")
     return out.drop(columns=["r"]).sort_values(["source", "id"]).reset_index(drop=True)
 
 
@@ -141,6 +164,8 @@ def coverage(sample: pd.DataFrame, quotas: dict[str, int] = QUOTAS) -> dict:
     return {
         "total": len(sample),
         "switching": int(sample.switching.sum()),
+        **({"switching_v1": int(sample.switching_v1.sum()), "reason_v2": int(sample.reason_v2.sum()),
+            "reason_tier_2": int((sample.reason_tier == 2).sum())} if "reason_tier" in sample else {}),
         "by_source": {s: {"target": quotas.get(s), "achieved": int((sample.source == s).sum()),
                           "switching": int(((sample.source == s) & sample.switching).sum())}
                       for s in sorted(set(quotas) | set(sample.source))},
@@ -166,6 +191,7 @@ def share_of_voice(docs: pd.DataFrame, mentions: pd.DataFrame) -> pd.DataFrame:
             "vendor": v, "documents": len(ids), "share_of_vendor_docs": len(ids) / any_vendor,
             "mentions": int(mv.mention_count.sum()),
             "switching_documents": len(ids & sw_ids), "share_of_switching_vendor_docs": len(ids & sw_ids) / sw_any,
+            **({"reason_v2_documents": len(ids & set(disc.id[disc.reason_v2]))} if "reason_v2" in disc else {}),
             **{f"docs_{s}": int(disc.id[disc.source == s].isin(ids).sum()) for s in DISCUSSION_SOURCES},
         })
     out = pd.DataFrame(rows).sort_values("documents", ascending=False).reset_index(drop=True)
@@ -173,19 +199,25 @@ def share_of_voice(docs: pd.DataFrame, mentions: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def render(cov: dict, sov: pd.DataFrame, quotas=QUOTAS, floors=VENDOR_FLOORS) -> str:
-    lines = [f"SEED SAMPLE {SAMPLE} (seed {SEED})", "",
-             f"Total {cov['total']} (target {TOTAL});  switching language {cov['switching']} (min {SWITCHING_MIN});"
-             f"  multi-vendor {cov['multi_vendor']}", "", "By source (achieved / target, of which switching):"]
+def render(cov: dict, sov: pd.DataFrame, quotas=QUOTAS, floors=VENDOR_FLOORS, sample: str = SAMPLE) -> str:
+    cfg = SAMPLES[sample]
+    flag = "switching language (v1 phrase list)" if cfg["flag"] == "v1" else "reason-bearing (detector v2)"
+    lines = [f"SEED SAMPLE {sample} (seed {cfg['seed']})" + (f", excluding {', '.join(cfg['exclude'])}" if cfg["exclude"] else ""),
+             "", f"Total {cov['total']} (target {TOTAL});  {flag} {cov['switching']} (min {cfg['switching_min']});"
+             f"  multi-vendor {cov['multi_vendor']}"]
+    if "reason_v2" in cov:
+        lines.append(f"Both detectors: v1 phrase list {cov['switching_v1']}, v2 {cov['reason_v2']}, "
+                     f"v2 with a move and a reason in one sentence {cov['reason_tier_2']}")
+    lines += ["", "By source (achieved / target, of which priority-flagged):"]
     for s, c in cov["by_source"].items():
-        lines.append(f"  {s:<15} {c['achieved']:>4} / {c['target'] or '-':>3}   switching {c['switching']}")
+        lines.append(f"  {s:<15} {c['achieved']:>4} / {c['target'] or '-':>3}   flagged {c['switching']}")
     lines += ["", "Documents mentioning each vendor (a document can name several):"]
     for v, n in cov["by_vendor"].items():
         f = floors.get(v)
         lines.append(f"  {v:<12} {n:>4}" + (f"   floor {f}: {'met' if n >= f else 'MISSED'}" if f else ""))
     lines += ["", f"Picked for: {cov['picked_for']}", "",
               f"SHARE OF VOICE, discussion sources ({sov.attrs['discussion_docs']:,} documents; "
-              f"{sov.attrs['vendor_docs']:,} name a vendor; {sov.attrs['switching_vendor_docs']:,} of those use switching language)",
+              f"{sov.attrs['vendor_docs']:,} name a vendor; {sov.attrs['switching_vendor_docs']:,} of those use v1 switching language)",
               "\n".join("  " + l for l in sov.round(3).to_string(index=False).splitlines())]
     return "\n".join(lines)
 
@@ -201,42 +233,51 @@ def main() -> None:
     from ingestion.load_to_db import apply_schema, get_engine
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--sample", default=SAMPLE, choices=sorted(SAMPLES))
     ap.add_argument("--redraw", action="store_true", help="replace an existing draw of this sample")
     args = ap.parse_args()
+    name, cfg = args.sample, SAMPLES[args.sample]
 
     engine = get_engine()
     apply_schema(engine)
     docs, mentions = load_frames(engine)
-    docs = prepare(docs, mentions)
+    docs = prepare(docs, mentions, cfg["flag"])
 
     with engine.connect() as conn:
-        existing = pd.read_sql(text("SELECT document_id, stratum, picked_for FROM sample_members WHERE sample = :s"),
-                               conn, params={"s": SAMPLE})
+        members = pd.read_sql(text("SELECT sample, document_id, stratum, picked_for FROM sample_members"), conn)
+    existing = members[members["sample"] == name].drop(columns="sample")
+    missing = [s for s in cfg["exclude"] if not (members["sample"] == s).any()]
+    if missing:
+        raise SystemExit(f"{name} excludes {missing}, which are not drawn yet")
     if len(existing) and not args.redraw:
-        print(f"{SAMPLE} already drawn ({len(existing)} documents); re-exporting it. Use --redraw to replace it.")
+        print(f"{name} already drawn ({len(existing)} documents); re-exporting it. Use --redraw to replace it.")
         sample = docs.merge(existing.rename(columns={"document_id": "id"}), on="id")
     else:
-        sample = draw(docs)
+        exclude = frozenset(members.document_id[members["sample"].isin(cfg["exclude"])])
+        sample = draw(docs, seed=cfg["seed"], switching_min=cfg["switching_min"], exclude_ids=exclude,
+                      flag_name="switching" if cfg["flag"] == "v1" else "reason")
+        assert not set(sample.id) & exclude
         with engine.begin() as conn:
-            conn.execute(text("DELETE FROM sample_members WHERE sample = :s"), {"s": SAMPLE})
+            conn.execute(text("DELETE FROM sample_members WHERE sample = :s"), {"s": name})
             conn.execute(text("""INSERT INTO sample_members (sample, document_id, stratum, picked_for, seed)
                                  VALUES (:sample, :id, :stratum, :picked_for, :seed)"""),
-                         [{"sample": SAMPLE, "id": int(r.id), "stratum": r.stratum, "picked_for": r.picked_for, "seed": SEED}
-                          for r in sample.itertuples()])
+                         [{"sample": name, "id": int(r.id), "stratum": r.stratum, "picked_for": r.picked_for,
+                           "seed": cfg["seed"]} for r in sample.itertuples()])
 
     cov = coverage(sample)
-    sov = share_of_voice(docs, mentions)
-    report = render(cov, sov)
+    # Share of voice always uses the v1 phrase list for its switching column, so it stays comparable across runs.
+    sov = share_of_voice(docs.assign(switching=docs.switching_v1), mentions)
+    report = render(cov, sov, sample=name)
     print(report)
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
-    (EXPORT_DIR / f"{SAMPLE}_report.txt").write_text(report + "\n")
-    (EXPORT_DIR / f"{SAMPLE}_coverage.json").write_text(json.dumps(cov, indent=2))
+    (EXPORT_DIR / f"{name}_report.txt").write_text(report + "\n")
+    (EXPORT_DIR / f"{name}_coverage.json").write_text(json.dumps(cov, indent=2))
     sov.to_csv(EXPORT_DIR / "share_of_voice.csv", index=False)
     records = sample.assign(posted_at=sample.posted_at.astype(str), vendors=sample.vendors.map(list))
     cols = ["id", "source", "external_id", "url", "title", "body", "posted_at", "score", "words", "switching",
-            "vendors", "stratum", "picked_for"]
-    (EXPORT_DIR / f"{SAMPLE}_documents.json").write_text(
+            "switching_v1", "reason_v2", "reason_tier", "vendors", "stratum", "picked_for"]
+    (EXPORT_DIR / f"{name}_documents.json").write_text(
         json.dumps(records[cols].to_dict(orient="records"), ensure_ascii=False, indent=1, default=str))
     print(f"\nWrote {len(sample)} documents to {EXPORT_DIR}")
 

@@ -1,9 +1,9 @@
 # Phase 2 labelling steps that need the database. Start from the Actions tab: "phase2" > "Run workflow".
 #
-#   sample       draw the seed sample (or re-export the existing draw), print coverage and share of voice,
-#                and attach the sampled documents as a run artifact for the labelling pass
-#   load_labels  load the committed draft labels (labeled_by='model_draft') and, once the reviewed file is
-#                committed, the human labels (labeled_by='human')
+#   recompute_mentions  rebuild the mentions table after a matcher change, log what moved, then print share of voice
+#   sample              draw the chosen seed sample (or re-export the existing draw), print coverage and share of
+#                       voice, and attach the sampled documents as a run artifact for the labelling pass
+#   load_labels         load the committed label files: model_draft, claude_review and human, per sample
 #
 # Uses the DATABASE_URL secret only.
 
@@ -16,7 +16,12 @@ on:
         description: Which step to run
         type: choice
         default: sample
-        options: [sample, load_labels]
+        options: [sample, recompute_mentions, load_labels]
+      sample:
+        description: "sample only: which seed sample"
+        type: choice
+        default: seed_v2
+        options: [seed_v1, seed_v2]
       redraw:
         description: "sample only: replace an existing draw"
         type: boolean
@@ -50,17 +55,23 @@ jobs:
       - name: Run tests
         run: pytest -q
 
+      - name: Recompute mentions
+        if: inputs.step == 'recompute_mentions'
+        run: |
+          python -m analysis.labeling.recompute_mentions
+          python -m analysis.labeling.sample --sample seed_v1   # re-exports seed_v1 and prints share of voice
+
       - name: Draw seed sample
         if: inputs.step == 'sample'
         run: |
-          python -m analysis.labeling.sample ${{ inputs.redraw && '--redraw' || '' }}
-          { echo '```'; cat data/processed/labeling/seed_v1_report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          python -m analysis.labeling.sample --sample ${{ inputs.sample }} ${{ inputs.redraw && '--redraw' || '' }}
+          { echo '```'; cat data/processed/labeling/${{ inputs.sample }}_report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload sampled documents
-        if: inputs.step == 'sample'
+        if: inputs.step == 'sample' || inputs.step == 'recompute_mentions'
         uses: actions/upload-artifact@v4
         with:
-          name: seed_v1
+          name: ${{ inputs.step == 'sample' && inputs.sample || 'recompute_mentions' }}
           path: data/processed/labeling/
           retention-days: 14
 

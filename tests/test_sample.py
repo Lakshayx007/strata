@@ -51,3 +51,16 @@ def test_share_of_voice_counts_documents_not_tech_entities():
     assert "tech:apache_spark" not in sov.index
     assert abs(sov.share_of_vendor_docs.sum() - 1) > 0 or True  # shares overlap: a doc can name several vendors
     assert sov.loc["cloudera", "documents"] < sov.loc["snowflake", "documents"]
+
+
+def test_seed_v2_excludes_earlier_sample_and_prefers_reason_bearing_docs():
+    docs, mentions = _corpus()
+    # Two thirds of documents carry a platform sentence with a move and a reason.
+    docs.loc[docs.id % 3 != 0, "body"] = WORDS + ". We moved off Redshift to BigQuery because of cost."
+    v1 = draw(prepare(docs, mentions))
+    p2 = prepare(docs, mentions, flag="v2")
+    s2 = draw(p2, seed=20260928, switching_min=120, exclude_ids=frozenset(v1.id), flag_name="reason")
+    assert not set(s2.id) & set(v1.id) and len(s2) == 150
+    assert (s2.reason_tier == 2).sum() >= 120
+    assert s2.stratum.str.endswith(("/reason", "/other")).all()
+    assert list(draw(prepare(docs, mentions)).id) == list(v1.id)  # seed_v1 unchanged by the new options
