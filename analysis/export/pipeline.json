@@ -1,0 +1,457 @@
+{
+  "win_rate_by_competitor": [
+    {
+      "competitor": "Cloudera",
+      "total": 178,
+      "wins": 69,
+      "win_rate": 0.388
+    },
+    {
+      "competitor": "AWS",
+      "total": 691,
+      "wins": 251,
+      "win_rate": 0.363
+    },
+    {
+      "competitor": "Snowflake",
+      "total": 1017,
+      "wins": 366,
+      "win_rate": 0.36
+    },
+    {
+      "competitor": "Microsoft",
+      "total": 457,
+      "wins": 156,
+      "win_rate": 0.341
+    },
+    {
+      "competitor": "Databricks",
+      "total": 865,
+      "wins": 294,
+      "win_rate": 0.34
+    },
+    {
+      "competitor": "Other",
+      "total": 322,
+      "wins": 107,
+      "win_rate": 0.332
+    },
+    {
+      "competitor": "Google",
+      "total": 470,
+      "wins": 152,
+      "win_rate": 0.323
+    }
+  ],
+  "loss_reason_by_competitor": [
+    {
+      "competitor": "AWS",
+      "loss_reason": "Cost",
+      "count": 140
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Operational Complexity",
+      "count": 69
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Performance Issues",
+      "count": 63
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Lock-in Concerns",
+      "count": 52
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 51
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Ecosystem Fit",
+      "count": 23
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Other",
+      "count": 21
+    },
+    {
+      "competitor": "AWS",
+      "loss_reason": "Governance / Security",
+      "count": 21
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Cost",
+      "count": 32
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Operational Complexity",
+      "count": 22
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 13
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Lock-in Concerns",
+      "count": 11
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Performance Issues",
+      "count": 10
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Other",
+      "count": 9
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Ecosystem Fit",
+      "count": 7
+    },
+    {
+      "competitor": "Cloudera",
+      "loss_reason": "Governance / Security",
+      "count": 5
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Cost",
+      "count": 158
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Operational Complexity",
+      "count": 112
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Lock-in Concerns",
+      "count": 77
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 64
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Performance Issues",
+      "count": 61
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Ecosystem Fit",
+      "count": 49
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Other",
+      "count": 29
+    },
+    {
+      "competitor": "Databricks",
+      "loss_reason": "Governance / Security",
+      "count": 21
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Cost",
+      "count": 99
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Operational Complexity",
+      "count": 50
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 46
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Lock-in Concerns",
+      "count": 39
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Performance Issues",
+      "count": 38
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Other",
+      "count": 16
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Ecosystem Fit",
+      "count": 16
+    },
+    {
+      "competitor": "Google",
+      "loss_reason": "Governance / Security",
+      "count": 14
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Cost",
+      "count": 98
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Lock-in Concerns",
+      "count": 51
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Operational Complexity",
+      "count": 43
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 33
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Performance Issues",
+      "count": 33
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Ecosystem Fit",
+      "count": 25
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Other",
+      "count": 11
+    },
+    {
+      "competitor": "Microsoft",
+      "loss_reason": "Governance / Security",
+      "count": 7
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Cost",
+      "count": 73
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Operational Complexity",
+      "count": 35
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Performance Issues",
+      "count": 30
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Lock-in Concerns",
+      "count": 24
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 20
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Ecosystem Fit",
+      "count": 14
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Other",
+      "count": 12
+    },
+    {
+      "competitor": "Other",
+      "loss_reason": "Governance / Security",
+      "count": 7
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Cost",
+      "count": 205
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Operational Complexity",
+      "count": 114
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Performance Issues",
+      "count": 93
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Right-sizing / Overkill",
+      "count": 83
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Lock-in Concerns",
+      "count": 79
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Other",
+      "count": 29
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Ecosystem Fit",
+      "count": 29
+    },
+    {
+      "competitor": "Snowflake",
+      "loss_reason": "Governance / Security",
+      "count": 19
+    }
+  ],
+  "stage_conversion": [
+    {
+      "stage": "Qualification",
+      "entries": 4000,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Prospecting",
+      "entries": 4000,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Closed Lost",
+      "entries": 4000,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Technical Evaluation",
+      "entries": 3508,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Proposal",
+      "entries": 2972,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Negotiation",
+      "entries": 2465,
+      "median_days": 0.0
+    },
+    {
+      "stage": "Closed Won",
+      "entries": 1922,
+      "median_days": 0.0
+    }
+  ],
+  "churn_by_usage_decile": [
+    {
+      "usage_decile": 1,
+      "accounts": 150,
+      "churned": 11,
+      "churn_rate": 0.073
+    },
+    {
+      "usage_decile": 2,
+      "accounts": 150,
+      "churned": 11,
+      "churn_rate": 0.073
+    },
+    {
+      "usage_decile": 3,
+      "accounts": 150,
+      "churned": 8,
+      "churn_rate": 0.053
+    },
+    {
+      "usage_decile": 4,
+      "accounts": 150,
+      "churned": 13,
+      "churn_rate": 0.087
+    },
+    {
+      "usage_decile": 5,
+      "accounts": 150,
+      "churned": 9,
+      "churn_rate": 0.06
+    },
+    {
+      "usage_decile": 6,
+      "accounts": 150,
+      "churned": 9,
+      "churn_rate": 0.06
+    },
+    {
+      "usage_decile": 7,
+      "accounts": 150,
+      "churned": 11,
+      "churn_rate": 0.073
+    },
+    {
+      "usage_decile": 8,
+      "accounts": 150,
+      "churned": 8,
+      "churn_rate": 0.053
+    },
+    {
+      "usage_decile": 9,
+      "accounts": 150,
+      "churned": 12,
+      "churn_rate": 0.08
+    },
+    {
+      "usage_decile": 10,
+      "accounts": 150,
+      "churned": 12,
+      "churn_rate": 0.08
+    }
+  ],
+  "delivery_velocity": [
+    {
+      "pm_team": "Analytics",
+      "sprints": 48,
+      "avg_delivered": 33.2,
+      "on_time_pct": 0.729,
+      "avg_slip_days": 3.1
+    },
+    {
+      "pm_team": "Data Integration",
+      "sprints": 48,
+      "avg_delivered": 31.1,
+      "on_time_pct": 0.75,
+      "avg_slip_days": 2.2
+    },
+    {
+      "pm_team": "Platform",
+      "sprints": 48,
+      "avg_delivered": 32.6,
+      "on_time_pct": 0.625,
+      "avg_slip_days": 3.5
+    },
+    {
+      "pm_team": "Security",
+      "sprints": 48,
+      "avg_delivered": 34.5,
+      "on_time_pct": 0.771,
+      "avg_slip_days": 2.6
+    }
+  ]
+}

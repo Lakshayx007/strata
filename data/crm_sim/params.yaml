@@ -1,0 +1,94 @@
+# CRM Simulation Parameters
+# All data generated from these parameters is SIMULATED.
+# Loss-reason mix is calibrated to phase-1 stated-reason shares.
+
+seed: 42
+
+accounts:
+  count: 1500
+  industries:
+    - Financial Services
+    - Healthcare
+    - Technology
+    - Retail
+    - Manufacturing
+    - Energy
+    - Government
+    - Media
+  regions:
+    - North America
+    - Europe
+    - APAC
+    - Rest of World
+  region_weights: [0.40, 0.30, 0.22, 0.08]
+  tiers:
+    - Large Enterprise
+    - Mid-Market
+  tier_weights: [0.35, 0.65]
+  deployments:
+    - Public Cloud
+    - Private Cloud
+    - Hybrid
+  deployment_weights: [0.60, 0.20, 0.20]
+  arr_bands:
+    - "<50K"
+    - "50K-200K"
+    - "200K-500K"
+    - "500K-1M"
+    - ">1M"
+  arr_band_weights: [0.30, 0.30, 0.20, 0.12, 0.08]
+
+opportunities:
+  count: 4000
+  quarters: 8  # Q1 2024 through Q4 2025
+  competitors:
+    - Snowflake
+    - Databricks
+    - AWS
+    - Google
+    - Microsoft
+    - Cloudera
+    - Other
+  competitor_weights: [0.25, 0.22, 0.18, 0.12, 0.10, 0.05, 0.08]
+  stages:
+    - Prospecting
+    - Qualification
+    - Technical Evaluation
+    - Proposal
+    - Negotiation
+    - Closed Won
+    - Closed Lost
+  # Calibrated from phase-1: cost 20/63, op_simplicity 11/63, lock_in 8/63,
+  # perf_scale 8/63, right_sizing 7/63, ecosystem 4/63, gov_sec 2/63, other 3/63
+  loss_reasons:
+    - Cost
+    - Operational Complexity
+    - Lock-in Concerns
+    - Performance Issues
+    - Right-sizing / Overkill
+    - Ecosystem Fit
+    - Governance / Security
+    - Other
+  loss_reason_weights: [0.317, 0.175, 0.127, 0.127, 0.111, 0.063, 0.032, 0.048]
+  win_rate: 0.35
+
+services:
+  - engineering
+  - warehouse
+  - streaming
+  - ai
+
+renewals:
+  churn_rate: 0.08
+  expansion_rate: 0.30
+  contraction_rate: 0.12
+
+releases:
+  pm_teams:
+    - Platform
+    - Analytics
+    - Security
+    - Data Integration
+  sprints_per_quarter: 6
+  points_per_sprint_mean: 40
+  on_time_rate: 0.72
