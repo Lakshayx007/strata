@@ -1,0 +1,26 @@
+key,value,unit,low,base,high,type,source_url,accessed,rationale
+firms_large,50000,firms,40000,50000,60000,SOURCED,https://www.census.gov/programs-surveys/susb.html,2026-09-30,US Census + extrapolating global 1000+ emp firms
+firms_mid,250000,firms,200000,250000,300000,ASSUMPTION,,,Broad estimate of 100-999 emp firms globally
+adoption_large,0.60,share,0.50,0.60,0.70,ASSUMPTION,,,Large enterprises are more likely to have a modern data platform
+adoption_mid,0.25,share,0.15,0.25,0.35,ASSUMPTION,,,Mid market adoption is growing but trails large enterprise
+spend_large,1500000,USD,1000000,1500000,2000000,ASSUMPTION,,,Average annual platform spend for large enterprise
+spend_mid,150000,USD,100000,150000,200000,ASSUMPTION,,,Average annual platform spend for mid market
+share_eng,0.30,share,0.25,0.30,0.35,ASSUMPTION,,,Data engineering and ETL remains the heaviest workload
+share_wh,0.35,share,0.30,0.35,0.40,ASSUMPTION,,,SQL analytics and BI is the core warehouse use case
+share_stream,0.10,share,0.05,0.10,0.15,ASSUMPTION,,,Streaming is growing but still smaller share of spend
+share_ai,0.15,share,0.10,0.15,0.20,ASSUMPTION,,,AI/ML preparation spend is increasing rapidly
+share_gov,0.10,share,0.05,0.10,0.15,ASSUMPTION,,,Governance and cataloging is essential but lower compute cost
+deploy_public,0.65,share,0.55,0.65,0.75,ASSUMPTION,,,Public cloud is the dominant deployment mode
+deploy_private,0.15,share,0.10,0.15,0.20,ASSUMPTION,,,On-prem/private cloud remains for regulated industries
+deploy_hybrid,0.20,share,0.15,0.20,0.25,ASSUMPTION,,,Hybrid spans both
+cagr_eng,0.12,rate,0.08,0.12,0.16,ASSUMPTION,,,Steady growth for data engineering
+cagr_wh,0.10,rate,0.05,0.10,0.15,ASSUMPTION,,,Mature market and slower growth
+cagr_stream,0.25,rate,0.20,0.25,0.30,ASSUMPTION,,,High growth in real-time use cases
+cagr_ai,0.35,rate,0.25,0.35,0.45,ASSUMPTION,,,Fastest growing segment due to GenAI
+cagr_gov,0.20,rate,0.15,0.20,0.25,ASSUMPTION,,,Governance needs grow with data volume
+cagr_deploy_public,0.22,rate,0.18,0.22,0.26,ASSUMPTION,,,Public cloud growing faster than on-prem
+cagr_deploy_private,-0.05,rate,-0.10,-0.05,0.00,ASSUMPTION,,,On-prem is shrinking slowly
+cagr_deploy_hybrid,0.15,rate,0.10,0.15,0.20,ASSUMPTION,,,Hybrid grows as a transition architecture
+top_down_snowflake,3500000000,USD,,,SOURCED,https://investors.snowflake.com,2026-09-30,Reported product revenue
+top_down_databricks,2400000000,USD,,,SOURCED,https://www.databricks.com/company/newsroom,2026-09-30,Announced revenue run-rate
+top_down_cloud,15000000000,USD,,,ASSUMPTION,,,Estimated data platform revenue from AWS/GCP/Azure

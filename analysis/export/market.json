@@ -1,0 +1,414 @@
+{
+  "base_year": 2025,
+  "target_year": 2030,
+  "total_2025": 54375000000.0,
+  "total_2030": 121329995074.91,
+  "overall_cagr": 0.1741,
+  "workloads_2025": {
+    "AI/ML & GenAI prep": 8156250000.0,
+    "Data engineering / ETL": 16312500000.0,
+    "Governance / catalog": 5437500000.0,
+    "SQL analytics & BI": 19031250000.0,
+    "Streaming / real-time": 5437500000.0
+  },
+  "workloads_2030": {
+    "AI/ML & GenAI prep": 26013552046.12,
+    "Data engineering / ETL": 32298032865.71,
+    "Governance / catalog": 12773864527.31,
+    "SQL analytics & BI": 36070685635.62,
+    "Streaming / real-time": 14173860000.15
+  },
+  "deployments_2025": {
+    "Hybrid": 10875000000.0,
+    "Private cloud / on-prem": 8156250000.0,
+    "Public cloud": 35343750000.0
+  },
+  "deployments_2030": {
+    "Hybrid": 23123997232.02,
+    "Private cloud / on-prem": 11081214008.88,
+    "Public cloud": 87124783834.01
+  },
+  "top_down": {
+    "references": [
+      {
+        "label": "Snowflake",
+        "value": 3500000000.0,
+        "type": "https://investors.snowflake.com",
+        "source_url": "2026-09-30",
+        "accessed": "Reported product revenue",
+        "rationale": null
+      },
+      {
+        "label": "Databricks",
+        "value": 2400000000.0,
+        "type": "https://www.databricks.com/company/newsroom",
+        "source_url": "2026-09-30",
+        "accessed": "Announced revenue run-rate",
+        "rationale": null
+      },
+      {
+        "label": "Cloud",
+        "value": 15000000000.0,
+        "type": NaN,
+        "source_url": null,
+        "accessed": "Estimated data platform revenue from AWS/GCP/Azure",
+        "rationale": null
+      }
+    ],
+    "total": 20900000000.0
+  },
+  "sensitivity": [
+    {
+      "input": "Large-enterprise annual spend",
+      "direction": "low",
+      "delta": -20082206081.380005
+    },
+    {
+      "input": "Large-enterprise annual spend",
+      "direction": "high",
+      "delta": 20082206081.339996
+    },
+    {
+      "input": "Large-enterprise adoption rate",
+      "direction": "low",
+      "delta": -20082206081.380005
+    },
+    {
+      "input": "Large-enterprise adoption rate",
+      "direction": "high",
+      "delta": 20082206081.339996
+    },
+    {
+      "input": "AI/ML workload CAGR",
+      "direction": "low",
+      "delta": -3406866058.2100067
+    },
+    {
+      "input": "AI/ML workload CAGR",
+      "direction": "high",
+      "delta": 3806264990.159973
+    },
+    {
+      "input": "SQL analytics spend share",
+      "direction": "low",
+      "delta": -7214137127.110001
+    },
+    {
+      "input": "SQL analytics spend share",
+      "direction": "high",
+      "delta": 7214137127.130005
+    },
+    {
+      "input": "Public-cloud deployment share",
+      "direction": "low",
+      "delta": -17424956766.819992
+    },
+    {
+      "input": "Public-cloud deployment share",
+      "direction": "high",
+      "delta": 17424956766.799988
+    }
+  ],
+  "assumptions": [
+    {
+      "key": "firms_large",
+      "value": 50000.0,
+      "unit": "firms",
+      "low": 40000.0,
+      "base": 50000.0,
+      "high": "60000",
+      "type": "SOURCED",
+      "source_url": "https://www.census.gov/programs-surveys/susb.html",
+      "accessed": "2026-09-30",
+      "rationale": "US Census + extrapolating global 1000+ emp firms"
+    },
+    {
+      "key": "firms_mid",
+      "value": 250000.0,
+      "unit": "firms",
+      "low": 200000.0,
+      "base": 250000.0,
+      "high": "300000",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Broad estimate of 100-999 emp firms globally"
+    },
+    {
+      "key": "adoption_large",
+      "value": 0.6,
+      "unit": "share",
+      "low": 0.5,
+      "base": 0.6,
+      "high": "0.70",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Large enterprises are more likely to have a modern data platform"
+    },
+    {
+      "key": "adoption_mid",
+      "value": 0.25,
+      "unit": "share",
+      "low": 0.15,
+      "base": 0.25,
+      "high": "0.35",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Mid market adoption is growing but trails large enterprise"
+    },
+    {
+      "key": "spend_large",
+      "value": 1500000.0,
+      "unit": "USD",
+      "low": 1000000.0,
+      "base": 1500000.0,
+      "high": "2000000",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Average annual platform spend for large enterprise"
+    },
+    {
+      "key": "spend_mid",
+      "value": 150000.0,
+      "unit": "USD",
+      "low": 100000.0,
+      "base": 150000.0,
+      "high": "200000",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Average annual platform spend for mid market"
+    },
+    {
+      "key": "share_eng",
+      "value": 0.3,
+      "unit": "share",
+      "low": 0.25,
+      "base": 0.3,
+      "high": "0.35",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Data engineering and ETL remains the heaviest workload"
+    },
+    {
+      "key": "share_wh",
+      "value": 0.35,
+      "unit": "share",
+      "low": 0.3,
+      "base": 0.35,
+      "high": "0.40",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "SQL analytics and BI is the core warehouse use case"
+    },
+    {
+      "key": "share_stream",
+      "value": 0.1,
+      "unit": "share",
+      "low": 0.05,
+      "base": 0.1,
+      "high": "0.15",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Streaming is growing but still smaller share of spend"
+    },
+    {
+      "key": "share_ai",
+      "value": 0.15,
+      "unit": "share",
+      "low": 0.1,
+      "base": 0.15,
+      "high": "0.20",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "AI/ML preparation spend is increasing rapidly"
+    },
+    {
+      "key": "share_gov",
+      "value": 0.1,
+      "unit": "share",
+      "low": 0.05,
+      "base": 0.1,
+      "high": "0.15",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Governance and cataloging is essential but lower compute cost"
+    },
+    {
+      "key": "deploy_public",
+      "value": 0.65,
+      "unit": "share",
+      "low": 0.55,
+      "base": 0.65,
+      "high": "0.75",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Public cloud is the dominant deployment mode"
+    },
+    {
+      "key": "deploy_private",
+      "value": 0.15,
+      "unit": "share",
+      "low": 0.1,
+      "base": 0.15,
+      "high": "0.20",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "On-prem/private cloud remains for regulated industries"
+    },
+    {
+      "key": "deploy_hybrid",
+      "value": 0.2,
+      "unit": "share",
+      "low": 0.15,
+      "base": 0.2,
+      "high": "0.25",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Hybrid spans both"
+    },
+    {
+      "key": "cagr_eng",
+      "value": 0.12,
+      "unit": "rate",
+      "low": 0.08,
+      "base": 0.12,
+      "high": "0.16",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Steady growth for data engineering"
+    },
+    {
+      "key": "cagr_wh",
+      "value": 0.1,
+      "unit": "rate",
+      "low": 0.05,
+      "base": 0.1,
+      "high": "0.15",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Mature market and slower growth"
+    },
+    {
+      "key": "cagr_stream",
+      "value": 0.25,
+      "unit": "rate",
+      "low": 0.2,
+      "base": 0.25,
+      "high": "0.30",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "High growth in real-time use cases"
+    },
+    {
+      "key": "cagr_ai",
+      "value": 0.35,
+      "unit": "rate",
+      "low": 0.25,
+      "base": 0.35,
+      "high": "0.45",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Fastest growing segment due to GenAI"
+    },
+    {
+      "key": "cagr_gov",
+      "value": 0.2,
+      "unit": "rate",
+      "low": 0.15,
+      "base": 0.2,
+      "high": "0.25",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Governance needs grow with data volume"
+    },
+    {
+      "key": "cagr_deploy_public",
+      "value": 0.22,
+      "unit": "rate",
+      "low": 0.18,
+      "base": 0.22,
+      "high": "0.26",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Public cloud growing faster than on-prem"
+    },
+    {
+      "key": "cagr_deploy_private",
+      "value": -0.05,
+      "unit": "rate",
+      "low": -0.1,
+      "base": -0.05,
+      "high": "0.00",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "On-prem is shrinking slowly"
+    },
+    {
+      "key": "cagr_deploy_hybrid",
+      "value": 0.15,
+      "unit": "rate",
+      "low": 0.1,
+      "base": 0.15,
+      "high": "0.20",
+      "type": "ASSUMPTION",
+      "source_url": null,
+      "accessed": null,
+      "rationale": "Hybrid grows as a transition architecture"
+    },
+    {
+      "key": "top_down_snowflake",
+      "value": 3500000000.0,
+      "unit": "USD",
+      "low": null,
+      "base": null,
+      "high": "SOURCED",
+      "type": "https://investors.snowflake.com",
+      "source_url": "2026-09-30",
+      "accessed": "Reported product revenue",
+      "rationale": null
+    },
+    {
+      "key": "top_down_databricks",
+      "value": 2400000000.0,
+      "unit": "USD",
+      "low": null,
+      "base": null,
+      "high": "SOURCED",
+      "type": "https://www.databricks.com/company/newsroom",
+      "source_url": "2026-09-30",
+      "accessed": "Announced revenue run-rate",
+      "rationale": null
+    },
+    {
+      "key": "top_down_cloud",
+      "value": 15000000000.0,
+      "unit": "USD",
+      "low": null,
+      "base": null,
+      "high": "ASSUMPTION",
+      "type": null,
+      "source_url": null,
+      "accessed": "Estimated data platform revenue from AWS/GCP/Azure",
+      "rationale": null
+    }
+  ]
+}
