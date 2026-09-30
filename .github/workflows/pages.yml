@@ -24,10 +24,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Copy findings.json into web
+      - name: Copy data JSONs into web
         run: |
           mkdir -p web/src/data
           cp analysis/export/findings.json web/src/data/findings.json
+          cp analysis/export/market.json web/src/data/market.json
+          cp analysis/export/competitive.json web/src/data/competitive.json
+          cp analysis/export/pipeline.json web/src/data/pipeline.json
 
       - name: Setup Node
         uses: actions/setup-node@v4

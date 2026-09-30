@@ -314,7 +314,7 @@ def _write_json(assumptions: pd.DataFrame, segments: pd.DataFrame,
         "top_down": top_down,
         "sensitivity": sensitivity,
         "assumptions": [
-            {k: (v if pd.notna(v) else None) for k, v in row.items()}
+            {k: (v if pd.notna(v) else None) for k, v in row.to_dict().items()}
             for _, row in assumptions.reset_index().iterrows()
         ],
     }

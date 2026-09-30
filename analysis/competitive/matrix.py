@@ -116,11 +116,12 @@ def build_matrix() -> None:
     plt.close(fig)
 
     # --- Export JSON ---
+    scores_dict = df[["vendor", "capability", "group", "score", "evidence_url", "note"]].replace({np.nan: None}).to_dict(orient="records")
     competitive_json = {
         "vendors": vendors,
         "capabilities": capabilities,
         "groups": groups,
-        "scores": df[["vendor", "capability", "group", "score", "evidence_url", "note"]].to_dict(orient="records"),
+        "scores": scores_dict,
         "group_scores": group_scores_dict,
         "positioning": positions,
         "positioning_axes": {

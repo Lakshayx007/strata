@@ -94,7 +94,7 @@
       "capability": "cross_system_lineage",
       "group": "governed_catalog",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No native lineage outside Snowflake"
     },
     {
@@ -118,7 +118,7 @@
       "capability": "self_managed_onprem",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only service"
     },
     {
@@ -126,7 +126,7 @@
       "capability": "private_cloud",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only service"
     },
     {
@@ -142,7 +142,7 @@
       "capability": "sovereign_airgapped",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No air-gapped deployment"
     },
     {
@@ -294,7 +294,7 @@
       "capability": "semantic_layer",
       "group": "governed_catalog",
       "score": 1,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Partners (dbt semantic layer) not native"
     },
     {
@@ -302,7 +302,7 @@
       "capability": "self_managed_onprem",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only managed service"
     },
     {
@@ -310,7 +310,7 @@
       "capability": "private_cloud",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only managed service"
     },
     {
@@ -326,7 +326,7 @@
       "capability": "sovereign_airgapped",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No air-gapped deployment"
     },
     {
@@ -334,7 +334,7 @@
       "capability": "single_control_plane",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Separate workspaces per cloud"
     },
     {
@@ -422,7 +422,7 @@
       "capability": "delta_support",
       "group": "open_table_formats",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No native Delta Lake support"
     },
     {
@@ -470,7 +470,7 @@
       "capability": "data_quality_monitoring",
       "group": "governed_catalog",
       "score": 1,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloudera Data Quality via partner (Qualiti/Great Expectations); no native DQ"
     },
     {
@@ -478,7 +478,7 @@
       "capability": "semantic_layer",
       "group": "governed_catalog",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No native semantic layer"
     },
     {
@@ -542,7 +542,7 @@
       "capability": "vector_search",
       "group": "genai",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No native vector search"
     },
     {
@@ -558,7 +558,7 @@
       "capability": "ai_agent_mcp",
       "group": "genai",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No agent framework or MCP support"
     },
     {
@@ -582,7 +582,7 @@
       "capability": "consumption_pricing",
       "group": "commercial",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "License/subscription only"
     },
     {
@@ -646,7 +646,7 @@
       "capability": "cross_system_lineage",
       "group": "governed_catalog",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No cross-system lineage outside AWS"
     },
     {
@@ -662,7 +662,7 @@
       "capability": "semantic_layer",
       "group": "governed_catalog",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No native semantic layer"
     },
     {
@@ -670,7 +670,7 @@
       "capability": "self_managed_onprem",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only services"
     },
     {
@@ -686,7 +686,7 @@
       "capability": "multi_cloud",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "AWS-only"
     },
     {
@@ -702,7 +702,7 @@
       "capability": "single_control_plane",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No unified on-prem + cloud control plane"
     },
     {
@@ -854,7 +854,7 @@
       "capability": "self_managed_onprem",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Fabric is cloud-only"
     },
     {
@@ -1038,7 +1038,7 @@
       "capability": "self_managed_onprem",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "Cloud-only services"
     },
     {
@@ -1070,7 +1070,7 @@
       "capability": "single_control_plane",
       "group": "deployment",
       "score": 0,
-      "evidence_url": NaN,
+      "evidence_url": null,
       "note": "No unified on-prem + cloud control plane"
     },
     {
