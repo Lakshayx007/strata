@@ -1,0 +1,139 @@
+vendor,capability,group,score,evidence_url,note,as_of
+snowflake,iceberg_read_write,open_table_formats,2,https://docs.snowflake.com/en/user-guide/tables-iceberg,Native Iceberg tables GA since 2024,2026-09-30
+snowflake,delta_support,open_table_formats,1,https://docs.snowflake.com/en/user-guide/tables-external-intro,Read-only via external tables,2026-09-30
+snowflake,rest_catalog_interop,open_table_formats,2,https://docs.snowflake.com/en/user-guide/polaris-catalog,Snowflake Open Catalog (Polaris-based) GA,2026-09-30
+snowflake,fine_grained_access,governed_catalog,2,https://docs.snowflake.com/en/user-guide/security-column-ext,Row/column access policies GA,2026-09-30
+snowflake,tag_attribute_policies,governed_catalog,2,https://docs.snowflake.com/en/user-guide/object-tagging,Tag-based masking policies GA,2026-09-30
+snowflake,column_lineage,governed_catalog,2,https://docs.snowflake.com/en/user-guide/ui-snowsight-lineage,Access History + column lineage GA,2026-09-30
+snowflake,cross_system_lineage,governed_catalog,0,,No native lineage outside Snowflake,2026-09-30
+snowflake,data_quality_monitoring,governed_catalog,2,https://docs.snowflake.com/en/user-guide/data-quality-intro,Data Metric Functions GA,2026-09-30
+snowflake,semantic_layer,governed_catalog,1,https://docs.snowflake.com/en/user-guide/semantic-model,Semantic model in preview,2026-09-30
+snowflake,self_managed_onprem,deployment,0,,Cloud-only service,2026-09-30
+snowflake,private_cloud,deployment,0,,Cloud-only service,2026-09-30
+snowflake,multi_cloud,deployment,2,https://docs.snowflake.com/en/user-guide/intro-regions,Available on AWS/Azure/GCP,2026-09-30
+snowflake,sovereign_airgapped,deployment,0,,No air-gapped deployment,2026-09-30
+snowflake,single_control_plane,deployment,1,https://docs.snowflake.com/en/user-guide/replication-intro,Cross-cloud replication but not unified control plane,2026-09-30
+snowflake,model_serving,genai,2,https://docs.snowflake.com/en/developer-guide/snowpark-ml/model-registry,Snowpark ML model registry GA,2026-09-30
+snowflake,private_llm_hosting,genai,2,https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-llm-rest-api,Cortex LLM runs in Snowflake VPC,2026-09-30
+snowflake,vector_search,genai,2,https://docs.snowflake.com/en/user-guide/snowflake-cortex/vector-embeddings,Cortex vector embedding + search GA,2026-09-30
+snowflake,nl_to_sql,genai,2,https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst,Cortex Analyst GA,2026-09-30
+snowflake,ai_agent_mcp,genai,1,https://docs.snowflake.com/en/developer-guide/snowflake-cortex/cortex-agent,Cortex Agent in preview,2026-09-30
+snowflake,streaming_ingest,data_movement,1,https://docs.snowflake.com/en/user-guide/data-load-snowpipe-streaming,Snowpipe Streaming (micro-batch),2026-09-30
+snowflake,federated_query,data_movement,1,https://docs.snowflake.com/en/user-guide/tables-external-intro,External tables read-only,2026-09-30
+snowflake,consumption_pricing,commercial,2,https://www.snowflake.com/pricing/,Credit-based consumption pricing,2026-09-30
+snowflake,committed_subscription,commercial,2,https://www.snowflake.com/pricing/,Capacity commitments available,2026-09-30
+databricks,iceberg_read_write,open_table_formats,2,https://docs.databricks.com/en/delta/uniform.html,UniForm converts Delta to Iceberg GA,2026-09-30
+databricks,delta_support,open_table_formats,2,https://docs.databricks.com/en/delta/index.html,Delta Lake is native format,2026-09-30
+databricks,rest_catalog_interop,open_table_formats,2,https://docs.databricks.com/en/data-governance/unity-catalog/index.html,Unity Catalog OSS with REST API,2026-09-30
+databricks,fine_grained_access,governed_catalog,2,https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html,Row/column filters GA,2026-09-30
+databricks,tag_attribute_policies,governed_catalog,2,https://docs.databricks.com/en/data-governance/unity-catalog/tags.html,Tag-based governance GA,2026-09-30
+databricks,column_lineage,governed_catalog,2,https://docs.databricks.com/en/data-governance/unity-catalog/data-lineage.html,Column-level lineage GA,2026-09-30
+databricks,cross_system_lineage,governed_catalog,1,https://docs.databricks.com/en/data-governance/unity-catalog/index.html,Limited to Databricks-managed assets,2026-09-30
+databricks,data_quality_monitoring,governed_catalog,2,https://docs.databricks.com/en/lakehouse-monitoring/index.html,Lakehouse Monitoring GA,2026-09-30
+databricks,semantic_layer,governed_catalog,1,,Partners (dbt semantic layer) not native,2026-09-30
+databricks,self_managed_onprem,deployment,0,,Cloud-only managed service,2026-09-30
+databricks,private_cloud,deployment,0,,Cloud-only managed service,2026-09-30
+databricks,multi_cloud,deployment,2,https://docs.databricks.com/en/getting-started/index.html,Available on AWS/Azure/GCP,2026-09-30
+databricks,sovereign_airgapped,deployment,0,,No air-gapped deployment,2026-09-30
+databricks,single_control_plane,deployment,0,,Separate workspaces per cloud,2026-09-30
+databricks,model_serving,genai,2,https://docs.databricks.com/en/machine-learning/model-serving/index.html,Model Serving GA,2026-09-30
+databricks,private_llm_hosting,genai,2,https://docs.databricks.com/en/generative-ai/external-models/index.html,Foundation Model APIs in customer VPC,2026-09-30
+databricks,vector_search,genai,2,https://docs.databricks.com/en/generative-ai/vector-search.html,Vector Search GA,2026-09-30
+databricks,nl_to_sql,genai,2,https://docs.databricks.com/en/genie/index.html,Genie / AI/BI GA,2026-09-30
+databricks,ai_agent_mcp,genai,2,https://docs.databricks.com/en/generative-ai/agent-framework/index.html,Agent Framework + MCP support GA,2026-09-30
+databricks,streaming_ingest,data_movement,2,https://docs.databricks.com/en/structured-streaming/index.html,Structured Streaming native,2026-09-30
+databricks,federated_query,data_movement,2,https://docs.databricks.com/en/query-federation/index.html,Lakehouse Federation GA,2026-09-30
+databricks,consumption_pricing,commercial,2,https://www.databricks.com/product/pricing,DBU-based consumption pricing,2026-09-30
+databricks,committed_subscription,commercial,2,https://www.databricks.com/product/pricing,Committed-use discounts available,2026-09-30
+cloudera,iceberg_read_write,open_table_formats,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/iceberg-in-cdp/topics/iceberg-in-cdp.html,Iceberg read/write GA in CDP,2026-09-30
+cloudera,delta_support,open_table_formats,0,,No native Delta Lake support,2026-09-30
+cloudera,rest_catalog_interop,open_table_formats,1,https://docs.cloudera.com/cdp-private-cloud-base/latest/iceberg-in-cdp/topics/iceberg-polaris-catalog.html,Polaris catalog integration in preview,2026-09-30
+cloudera,fine_grained_access,governed_catalog,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/security-ranger-authorization/topics/security-ranger-provide-authorization-cdp.html,Apache Ranger fine-grained policies GA,2026-09-30
+cloudera,tag_attribute_policies,governed_catalog,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/security-ranger-authorization/topics/security-ranger-tag-based-access-control.html,Ranger tag-based policies GA,2026-09-30
+cloudera,column_lineage,governed_catalog,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/atlas-lineage/topics/atlas-viewing-lineage.html,Apache Atlas column lineage GA,2026-09-30
+cloudera,cross_system_lineage,governed_catalog,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/atlas-lineage/topics/atlas-viewing-lineage.html,Atlas tracks lineage across Hive/Spark/NiFi,2026-09-30
+cloudera,data_quality_monitoring,governed_catalog,1,,Cloudera Data Quality via partner (Qualiti/Great Expectations); no native DQ,2026-09-30
+cloudera,semantic_layer,governed_catalog,0,,No native semantic layer,2026-09-30
+cloudera,self_managed_onprem,deployment,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/index.html,CDP Private Cloud Base GA,2026-09-30
+cloudera,private_cloud,deployment,2,https://docs.cloudera.com/cdp-private-cloud/latest/index.html,CDP Private Cloud GA,2026-09-30
+cloudera,multi_cloud,deployment,2,https://docs.cloudera.com/cdp-public-cloud/cloud/index.html,CDP Public Cloud on AWS/Azure,2026-09-30
+cloudera,sovereign_airgapped,deployment,2,https://docs.cloudera.com/cdp-private-cloud-base/latest/index.html,Fully air-gapped on-prem deployments supported,2026-09-30
+cloudera,single_control_plane,deployment,2,https://docs.cloudera.com/management-console/cloud/index.html,CDP Management Console spans on-prem and cloud,2026-09-30
+cloudera,model_serving,genai,1,https://docs.cloudera.com/machine-learning/cloud/index.html,Cloudera ML model serving (limited scale),2026-09-30
+cloudera,private_llm_hosting,genai,2,https://docs.cloudera.com/machine-learning/cloud/index.html,CML supports private LLM hosting on customer infra,2026-09-30
+cloudera,vector_search,genai,0,,No native vector search,2026-09-30
+cloudera,nl_to_sql,genai,1,https://docs.cloudera.com/data-visualization/cloud/index.html,Cloudera AI assistant in preview,2026-09-30
+cloudera,ai_agent_mcp,genai,0,,No agent framework or MCP support,2026-09-30
+cloudera,streaming_ingest,data_movement,2,https://docs.cloudera.com/cdf-datahub/cloud/index.html,NiFi + Kafka + Flink native streaming,2026-09-30
+cloudera,federated_query,data_movement,1,https://docs.cloudera.com/cdw-runtime/cloud/hive-introduction/topics/hive-introduction.html,Hive federated queries (JDBC connectors),2026-09-30
+cloudera,consumption_pricing,commercial,0,,License/subscription only,2026-09-30
+cloudera,committed_subscription,commercial,2,https://www.cloudera.com/products/pricing.html,Annual subscription model,2026-09-30
+aws,iceberg_read_write,open_table_formats,2,https://docs.aws.amazon.com/athena/latest/ug/querying-iceberg.html,Athena + Glue + EMR Iceberg GA,2026-09-30
+aws,delta_support,open_table_formats,2,https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-delta.html,EMR Delta Lake support GA,2026-09-30
+aws,rest_catalog_interop,open_table_formats,2,https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format-iceberg.html,Glue Data Catalog as Iceberg REST catalog,2026-09-30
+aws,fine_grained_access,governed_catalog,2,https://docs.aws.amazon.com/lake-formation/latest/dg/access-control-overview.html,Lake Formation fine-grained access GA,2026-09-30
+aws,tag_attribute_policies,governed_catalog,2,https://docs.aws.amazon.com/lake-formation/latest/dg/tag-based-access-control.html,Lake Formation tag-based access control GA,2026-09-30
+aws,column_lineage,governed_catalog,1,https://docs.aws.amazon.com/glue/latest/dg/monitor-data-lineage.html,Glue lineage (limited to Glue jobs),2026-09-30
+aws,cross_system_lineage,governed_catalog,0,,No cross-system lineage outside AWS,2026-09-30
+aws,data_quality_monitoring,governed_catalog,2,https://docs.aws.amazon.com/glue/latest/dg/data-quality.html,Glue Data Quality GA,2026-09-30
+aws,semantic_layer,governed_catalog,0,,No native semantic layer,2026-09-30
+aws,self_managed_onprem,deployment,0,,Cloud-only services,2026-09-30
+aws,private_cloud,deployment,1,https://aws.amazon.com/outposts/,Outposts available but limited data services,2026-09-30
+aws,multi_cloud,deployment,0,,AWS-only,2026-09-30
+aws,sovereign_airgapped,deployment,1,https://aws.amazon.com/govcloud-us/,GovCloud regions (not fully air-gapped),2026-09-30
+aws,single_control_plane,deployment,0,,No unified on-prem + cloud control plane,2026-09-30
+aws,model_serving,genai,2,https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html,SageMaker model serving GA,2026-09-30
+aws,private_llm_hosting,genai,2,https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html,Bedrock runs in customer AWS account,2026-09-30
+aws,vector_search,genai,2,https://docs.aws.amazon.com/opensearch-service/latest/developerguide/knn.html,OpenSearch vector search GA,2026-09-30
+aws,nl_to_sql,genai,2,https://docs.aws.amazon.com/quicksight/latest/user/quicksight-q.html,QuickSight Q natural language GA,2026-09-30
+aws,ai_agent_mcp,genai,2,https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html,Bedrock Agents GA,2026-09-30
+aws,streaming_ingest,data_movement,2,https://docs.aws.amazon.com/kinesis/latest/dev/introduction.html,Kinesis + MSK native streaming,2026-09-30
+aws,federated_query,data_movement,2,https://docs.aws.amazon.com/athena/latest/ug/connect-to-a-data-source.html,Athena federated query GA,2026-09-30
+aws,consumption_pricing,commercial,2,https://aws.amazon.com/pricing/,Pay-per-use across all services,2026-09-30
+aws,committed_subscription,commercial,2,https://aws.amazon.com/savingsplans/,Savings Plans and Reserved Instances,2026-09-30
+microsoft,iceberg_read_write,open_table_formats,1,https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-iceberg,Fabric Iceberg shortcuts in preview,2026-09-30
+microsoft,delta_support,open_table_formats,2,https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview,Delta is the native format in Fabric,2026-09-30
+microsoft,rest_catalog_interop,open_table_formats,1,https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts,OneLake shortcuts; REST catalog interop in preview,2026-09-30
+microsoft,fine_grained_access,governed_catalog,2,https://learn.microsoft.com/en-us/fabric/security/security-overview,Row/column security GA in Fabric,2026-09-30
+microsoft,tag_attribute_policies,governed_catalog,2,https://learn.microsoft.com/en-us/purview/sensitivity-labels-overview,Purview sensitivity labels GA,2026-09-30
+microsoft,column_lineage,governed_catalog,2,https://learn.microsoft.com/en-us/purview/concept-data-lineage,Purview column lineage GA,2026-09-30
+microsoft,cross_system_lineage,governed_catalog,2,https://learn.microsoft.com/en-us/purview/concept-data-lineage,Purview lineage spans Azure + on-prem + multi-cloud,2026-09-30
+microsoft,data_quality_monitoring,governed_catalog,1,https://learn.microsoft.com/en-us/purview/concept-data-quality,Purview Data Quality in preview,2026-09-30
+microsoft,semantic_layer,governed_catalog,2,https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-composite-models,Power BI semantic models GA,2026-09-30
+microsoft,self_managed_onprem,deployment,0,,Fabric is cloud-only,2026-09-30
+microsoft,private_cloud,deployment,1,https://learn.microsoft.com/en-us/azure/azure-arc/overview,Azure Arc for hybrid (partial data services),2026-09-30
+microsoft,multi_cloud,deployment,1,https://learn.microsoft.com/en-us/azure/azure-arc/overview,Azure Arc for multi-cloud (partial),2026-09-30
+microsoft,sovereign_airgapped,deployment,1,https://learn.microsoft.com/en-us/azure/sovereign/,Azure sovereign clouds (not fully air-gapped),2026-09-30
+microsoft,single_control_plane,deployment,1,https://learn.microsoft.com/en-us/azure/azure-arc/overview,Azure Arc provides partial unified view,2026-09-30
+microsoft,model_serving,genai,2,https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-online-endpoints,Azure ML endpoints GA,2026-09-30
+microsoft,private_llm_hosting,genai,2,https://learn.microsoft.com/en-us/azure/ai-services/openai/overview,Azure OpenAI runs in customer tenant,2026-09-30
+microsoft,vector_search,genai,2,https://learn.microsoft.com/en-us/azure/search/vector-search-overview,Azure AI Search vector GA,2026-09-30
+microsoft,nl_to_sql,genai,2,https://learn.microsoft.com/en-us/fabric/get-started/copilot-fabric-overview,Fabric Copilot GA,2026-09-30
+microsoft,ai_agent_mcp,genai,2,https://learn.microsoft.com/en-us/azure/ai-services/agents/overview,Azure AI Agent Service GA,2026-09-30
+microsoft,streaming_ingest,data_movement,2,https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about,Event Hubs + Stream Analytics GA,2026-09-30
+microsoft,federated_query,data_movement,1,https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview,OneLake shortcuts (read-only federation),2026-09-30
+microsoft,consumption_pricing,commercial,2,https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/,Fabric capacity units consumption pricing,2026-09-30
+microsoft,committed_subscription,commercial,2,https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/,Reserved capacity commitments,2026-09-30
+google,iceberg_read_write,open_table_formats,2,https://cloud.google.com/bigquery/docs/iceberg-tables,BigQuery Iceberg tables GA,2026-09-30
+google,delta_support,open_table_formats,1,https://cloud.google.com/bigquery/docs/query-open-table-format-using-manifest-files,Read-only via BigLake,2026-09-30
+google,rest_catalog_interop,open_table_formats,2,https://cloud.google.com/bigquery/docs/manage-open-source-metadata,BigLake Metastore with REST catalog GA,2026-09-30
+google,fine_grained_access,governed_catalog,2,https://cloud.google.com/bigquery/docs/column-level-security-intro,Column/row-level security GA,2026-09-30
+google,tag_attribute_policies,governed_catalog,2,https://cloud.google.com/data-catalog/docs/policy-tags,Data Catalog policy tags GA,2026-09-30
+google,column_lineage,governed_catalog,2,https://cloud.google.com/data-catalog/docs/concepts/about-data-lineage,Dataplex lineage GA,2026-09-30
+google,cross_system_lineage,governed_catalog,1,https://cloud.google.com/data-catalog/docs/concepts/about-data-lineage,Dataplex lineage mostly within GCP,2026-09-30
+google,data_quality_monitoring,governed_catalog,2,https://cloud.google.com/dataplex/docs/data-quality-overview,Dataplex Auto Data Quality GA,2026-09-30
+google,semantic_layer,governed_catalog,1,https://cloud.google.com/looker/docs/lookml-overview,Looker LookML (separate product),2026-09-30
+google,self_managed_onprem,deployment,0,,Cloud-only services,2026-09-30
+google,private_cloud,deployment,1,https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch/overview,Google Distributed Cloud Hosted (limited),2026-09-30
+google,multi_cloud,deployment,1,https://cloud.google.com/bigquery/docs/omni-introduction,BigQuery Omni on AWS/Azure,2026-09-30
+google,sovereign_airgapped,deployment,1,https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch/overview,GDC Hosted supports air-gapped,2026-09-30
+google,single_control_plane,deployment,0,,No unified on-prem + cloud control plane,2026-09-30
+google,model_serving,genai,2,https://cloud.google.com/vertex-ai/docs/predictions/overview,Vertex AI model serving GA,2026-09-30
+google,private_llm_hosting,genai,2,https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview,Vertex AI runs in customer project,2026-09-30
+google,vector_search,genai,2,https://cloud.google.com/vertex-ai/docs/vector-search/overview,Vertex AI Vector Search GA,2026-09-30
+google,nl_to_sql,genai,2,https://cloud.google.com/bigquery/docs/gemini-in-bigquery-overview,Gemini in BigQuery GA,2026-09-30
+google,ai_agent_mcp,genai,2,https://cloud.google.com/vertex-ai/docs/generative-ai/agent-builder/overview,Vertex AI Agent Builder GA,2026-09-30
+google,streaming_ingest,data_movement,2,https://cloud.google.com/dataflow/docs/concepts/streaming-with-cloud-pubsub,Pub/Sub + Dataflow native streaming,2026-09-30
+google,federated_query,data_movement,2,https://cloud.google.com/bigquery/docs/federated-queries-intro,BigQuery federated queries GA,2026-09-30
+google,consumption_pricing,commercial,2,https://cloud.google.com/bigquery/pricing,On-demand and capacity pricing,2026-09-30
+google,committed_subscription,commercial,2,https://cloud.google.com/bigquery/pricing,Committed-use editions,2026-09-30

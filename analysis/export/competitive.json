@@ -1,0 +1,1252 @@
+{
+  "vendors": [
+    "snowflake",
+    "databricks",
+    "cloudera",
+    "aws",
+    "microsoft",
+    "google"
+  ],
+  "capabilities": [
+    "iceberg_read_write",
+    "delta_support",
+    "rest_catalog_interop",
+    "fine_grained_access",
+    "tag_attribute_policies",
+    "column_lineage",
+    "cross_system_lineage",
+    "data_quality_monitoring",
+    "semantic_layer",
+    "self_managed_onprem",
+    "private_cloud",
+    "multi_cloud",
+    "sovereign_airgapped",
+    "single_control_plane",
+    "model_serving",
+    "private_llm_hosting",
+    "vector_search",
+    "nl_to_sql",
+    "ai_agent_mcp",
+    "streaming_ingest",
+    "federated_query",
+    "consumption_pricing",
+    "committed_subscription"
+  ],
+  "groups": [
+    "open_table_formats",
+    "governed_catalog",
+    "deployment",
+    "genai",
+    "data_movement",
+    "commercial"
+  ],
+  "scores": [
+    {
+      "vendor": "snowflake",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/tables-iceberg",
+      "note": "Native Iceberg tables GA since 2024"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/tables-external-intro",
+      "note": "Read-only via external tables"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/polaris-catalog",
+      "note": "Snowflake Open Catalog (Polaris-based) GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/security-column-ext",
+      "note": "Row/column access policies GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/object-tagging",
+      "note": "Tag-based masking policies GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/ui-snowsight-lineage",
+      "note": "Access History + column lineage GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No native lineage outside Snowflake"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/data-quality-intro",
+      "note": "Data Metric Functions GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/semantic-model",
+      "note": "Semantic model in preview"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only service"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only service"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/intro-regions",
+      "note": "Available on AWS/Azure/GCP"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No air-gapped deployment"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/replication-intro",
+      "note": "Cross-cloud replication but not unified control plane"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/developer-guide/snowpark-ml/model-registry",
+      "note": "Snowpark ML model registry GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-llm-rest-api",
+      "note": "Cortex LLM runs in Snowflake VPC"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/vector-embeddings",
+      "note": "Cortex vector embedding + search GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst",
+      "note": "Cortex Analyst GA"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/developer-guide/snowflake-cortex/cortex-agent",
+      "note": "Cortex Agent in preview"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/data-load-snowpipe-streaming",
+      "note": "Snowpipe Streaming (micro-batch)"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 1,
+      "evidence_url": "https://docs.snowflake.com/en/user-guide/tables-external-intro",
+      "note": "External tables read-only"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://www.snowflake.com/pricing/",
+      "note": "Credit-based consumption pricing"
+    },
+    {
+      "vendor": "snowflake",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://www.snowflake.com/pricing/",
+      "note": "Capacity commitments available"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/delta/uniform.html",
+      "note": "UniForm converts Delta to Iceberg GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/delta/index.html",
+      "note": "Delta Lake is native format"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+      "note": "Unity Catalog OSS with REST API"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html",
+      "note": "Row/column filters GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/data-governance/unity-catalog/tags.html",
+      "note": "Tag-based governance GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/data-governance/unity-catalog/data-lineage.html",
+      "note": "Column-level lineage GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://docs.databricks.com/en/data-governance/unity-catalog/index.html",
+      "note": "Limited to Databricks-managed assets"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/lakehouse-monitoring/index.html",
+      "note": "Lakehouse Monitoring GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": NaN,
+      "note": "Partners (dbt semantic layer) not native"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only managed service"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only managed service"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/getting-started/index.html",
+      "note": "Available on AWS/Azure/GCP"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No air-gapped deployment"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Separate workspaces per cloud"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/machine-learning/model-serving/index.html",
+      "note": "Model Serving GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/generative-ai/external-models/index.html",
+      "note": "Foundation Model APIs in customer VPC"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/generative-ai/vector-search.html",
+      "note": "Vector Search GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/genie/index.html",
+      "note": "Genie / AI/BI GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/generative-ai/agent-framework/index.html",
+      "note": "Agent Framework + MCP support GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/structured-streaming/index.html",
+      "note": "Structured Streaming native"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://docs.databricks.com/en/query-federation/index.html",
+      "note": "Lakehouse Federation GA"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://www.databricks.com/product/pricing",
+      "note": "DBU-based consumption pricing"
+    },
+    {
+      "vendor": "databricks",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://www.databricks.com/product/pricing",
+      "note": "Committed-use discounts available"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/iceberg-in-cdp/topics/iceberg-in-cdp.html",
+      "note": "Iceberg read/write GA in CDP"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No native Delta Lake support"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 1,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/iceberg-in-cdp/topics/iceberg-polaris-catalog.html",
+      "note": "Polaris catalog integration in preview"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/security-ranger-authorization/topics/security-ranger-provide-authorization-cdp.html",
+      "note": "Apache Ranger fine-grained policies GA"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/security-ranger-authorization/topics/security-ranger-tag-based-access-control.html",
+      "note": "Ranger tag-based policies GA"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/atlas-lineage/topics/atlas-viewing-lineage.html",
+      "note": "Apache Atlas column lineage GA"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/atlas-lineage/topics/atlas-viewing-lineage.html",
+      "note": "Atlas tracks lineage across Hive/Spark/NiFi"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": NaN,
+      "note": "Cloudera Data Quality via partner (Qualiti/Great Expectations); no native DQ"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No native semantic layer"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/index.html",
+      "note": "CDP Private Cloud Base GA"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud/latest/index.html",
+      "note": "CDP Private Cloud GA"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-public-cloud/cloud/index.html",
+      "note": "CDP Public Cloud on AWS/Azure"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdp-private-cloud-base/latest/index.html",
+      "note": "Fully air-gapped on-prem deployments supported"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/management-console/cloud/index.html",
+      "note": "CDP Management Console spans on-prem and cloud"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 1,
+      "evidence_url": "https://docs.cloudera.com/machine-learning/cloud/index.html",
+      "note": "Cloudera ML model serving (limited scale)"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/machine-learning/cloud/index.html",
+      "note": "CML supports private LLM hosting on customer infra"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No native vector search"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 1,
+      "evidence_url": "https://docs.cloudera.com/data-visualization/cloud/index.html",
+      "note": "Cloudera AI assistant in preview"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No agent framework or MCP support"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://docs.cloudera.com/cdf-datahub/cloud/index.html",
+      "note": "NiFi + Kafka + Flink native streaming"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 1,
+      "evidence_url": "https://docs.cloudera.com/cdw-runtime/cloud/hive-introduction/topics/hive-introduction.html",
+      "note": "Hive federated queries (JDBC connectors)"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "License/subscription only"
+    },
+    {
+      "vendor": "cloudera",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://www.cloudera.com/products/pricing.html",
+      "note": "Annual subscription model"
+    },
+    {
+      "vendor": "aws",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/athena/latest/ug/querying-iceberg.html",
+      "note": "Athena + Glue + EMR Iceberg GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-delta.html",
+      "note": "EMR Delta Lake support GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-format-iceberg.html",
+      "note": "Glue Data Catalog as Iceberg REST catalog"
+    },
+    {
+      "vendor": "aws",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/lake-formation/latest/dg/access-control-overview.html",
+      "note": "Lake Formation fine-grained access GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/lake-formation/latest/dg/tag-based-access-control.html",
+      "note": "Lake Formation tag-based access control GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-data-lineage.html",
+      "note": "Glue lineage (limited to Glue jobs)"
+    },
+    {
+      "vendor": "aws",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No cross-system lineage outside AWS"
+    },
+    {
+      "vendor": "aws",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/glue/latest/dg/data-quality.html",
+      "note": "Glue Data Quality GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No native semantic layer"
+    },
+    {
+      "vendor": "aws",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only services"
+    },
+    {
+      "vendor": "aws",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://aws.amazon.com/outposts/",
+      "note": "Outposts available but limited data services"
+    },
+    {
+      "vendor": "aws",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "AWS-only"
+    },
+    {
+      "vendor": "aws",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://aws.amazon.com/govcloud-us/",
+      "note": "GovCloud regions (not fully air-gapped)"
+    },
+    {
+      "vendor": "aws",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No unified on-prem + cloud control plane"
+    },
+    {
+      "vendor": "aws",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html",
+      "note": "SageMaker model serving GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html",
+      "note": "Bedrock runs in customer AWS account"
+    },
+    {
+      "vendor": "aws",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/knn.html",
+      "note": "OpenSearch vector search GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/quicksight/latest/user/quicksight-q.html",
+      "note": "QuickSight Q natural language GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+      "note": "Bedrock Agents GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/kinesis/latest/dev/introduction.html",
+      "note": "Kinesis + MSK native streaming"
+    },
+    {
+      "vendor": "aws",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://docs.aws.amazon.com/athena/latest/ug/connect-to-a-data-source.html",
+      "note": "Athena federated query GA"
+    },
+    {
+      "vendor": "aws",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://aws.amazon.com/pricing/",
+      "note": "Pay-per-use across all services"
+    },
+    {
+      "vendor": "aws",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://aws.amazon.com/savingsplans/",
+      "note": "Savings Plans and Reserved Instances"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-iceberg",
+      "note": "Fabric Iceberg shortcuts in preview"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview",
+      "note": "Delta is the native format in Fabric"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/onelake/onelake-shortcuts",
+      "note": "OneLake shortcuts; REST catalog interop in preview"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/security/security-overview",
+      "note": "Row/column security GA in Fabric"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/purview/sensitivity-labels-overview",
+      "note": "Purview sensitivity labels GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/purview/concept-data-lineage",
+      "note": "Purview column lineage GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/purview/concept-data-lineage",
+      "note": "Purview lineage spans Azure + on-prem + multi-cloud"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/purview/concept-data-quality",
+      "note": "Purview Data Quality in preview"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-composite-models",
+      "note": "Power BI semantic models GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Fabric is cloud-only"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/azure-arc/overview",
+      "note": "Azure Arc for hybrid (partial data services)"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/azure-arc/overview",
+      "note": "Azure Arc for multi-cloud (partial)"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/sovereign/",
+      "note": "Azure sovereign clouds (not fully air-gapped)"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/azure-arc/overview",
+      "note": "Azure Arc provides partial unified view"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/machine-learning/how-to-deploy-online-endpoints",
+      "note": "Azure ML endpoints GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/overview",
+      "note": "Azure OpenAI runs in customer tenant"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview",
+      "note": "Azure AI Search vector GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/get-started/copilot-fabric-overview",
+      "note": "Fabric Copilot GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/ai-services/agents/overview",
+      "note": "Azure AI Agent Service GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-about",
+      "note": "Event Hubs + Stream Analytics GA"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 1,
+      "evidence_url": "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview",
+      "note": "OneLake shortcuts (read-only federation)"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/",
+      "note": "Fabric capacity units consumption pricing"
+    },
+    {
+      "vendor": "microsoft",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/",
+      "note": "Reserved capacity commitments"
+    },
+    {
+      "vendor": "google",
+      "capability": "iceberg_read_write",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/iceberg-tables",
+      "note": "BigQuery Iceberg tables GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "delta_support",
+      "group": "open_table_formats",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/query-open-table-format-using-manifest-files",
+      "note": "Read-only via BigLake"
+    },
+    {
+      "vendor": "google",
+      "capability": "rest_catalog_interop",
+      "group": "open_table_formats",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/manage-open-source-metadata",
+      "note": "BigLake Metastore with REST catalog GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "fine_grained_access",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/column-level-security-intro",
+      "note": "Column/row-level security GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "tag_attribute_policies",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/data-catalog/docs/policy-tags",
+      "note": "Data Catalog policy tags GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "column_lineage",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/data-catalog/docs/concepts/about-data-lineage",
+      "note": "Dataplex lineage GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "cross_system_lineage",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/data-catalog/docs/concepts/about-data-lineage",
+      "note": "Dataplex lineage mostly within GCP"
+    },
+    {
+      "vendor": "google",
+      "capability": "data_quality_monitoring",
+      "group": "governed_catalog",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/dataplex/docs/data-quality-overview",
+      "note": "Dataplex Auto Data Quality GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "semantic_layer",
+      "group": "governed_catalog",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/looker/docs/lookml-overview",
+      "note": "Looker LookML (separate product)"
+    },
+    {
+      "vendor": "google",
+      "capability": "self_managed_onprem",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "Cloud-only services"
+    },
+    {
+      "vendor": "google",
+      "capability": "private_cloud",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch/overview",
+      "note": "Google Distributed Cloud Hosted (limited)"
+    },
+    {
+      "vendor": "google",
+      "capability": "multi_cloud",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/omni-introduction",
+      "note": "BigQuery Omni on AWS/Azure"
+    },
+    {
+      "vendor": "google",
+      "capability": "sovereign_airgapped",
+      "group": "deployment",
+      "score": 1,
+      "evidence_url": "https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch/overview",
+      "note": "GDC Hosted supports air-gapped"
+    },
+    {
+      "vendor": "google",
+      "capability": "single_control_plane",
+      "group": "deployment",
+      "score": 0,
+      "evidence_url": NaN,
+      "note": "No unified on-prem + cloud control plane"
+    },
+    {
+      "vendor": "google",
+      "capability": "model_serving",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/vertex-ai/docs/predictions/overview",
+      "note": "Vertex AI model serving GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "private_llm_hosting",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview",
+      "note": "Vertex AI runs in customer project"
+    },
+    {
+      "vendor": "google",
+      "capability": "vector_search",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
+      "note": "Vertex AI Vector Search GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "nl_to_sql",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/gemini-in-bigquery-overview",
+      "note": "Gemini in BigQuery GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "ai_agent_mcp",
+      "group": "genai",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/agent-builder/overview",
+      "note": "Vertex AI Agent Builder GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "streaming_ingest",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/dataflow/docs/concepts/streaming-with-cloud-pubsub",
+      "note": "Pub/Sub + Dataflow native streaming"
+    },
+    {
+      "vendor": "google",
+      "capability": "federated_query",
+      "group": "data_movement",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/docs/federated-queries-intro",
+      "note": "BigQuery federated queries GA"
+    },
+    {
+      "vendor": "google",
+      "capability": "consumption_pricing",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/pricing",
+      "note": "On-demand and capacity pricing"
+    },
+    {
+      "vendor": "google",
+      "capability": "committed_subscription",
+      "group": "commercial",
+      "score": 2,
+      "evidence_url": "https://cloud.google.com/bigquery/pricing",
+      "note": "Committed-use editions"
+    }
+  ],
+  "group_scores": {
+    "snowflake": {
+      "open_table_formats": 1.67,
+      "governed_catalog": 1.5,
+      "deployment": 0.6,
+      "genai": 1.8,
+      "data_movement": 1.0,
+      "commercial": 2.0
+    },
+    "databricks": {
+      "open_table_formats": 2.0,
+      "governed_catalog": 1.67,
+      "deployment": 0.4,
+      "genai": 2.0,
+      "data_movement": 2.0,
+      "commercial": 2.0
+    },
+    "cloudera": {
+      "open_table_formats": 1.0,
+      "governed_catalog": 1.5,
+      "deployment": 2.0,
+      "genai": 0.8,
+      "data_movement": 1.5,
+      "commercial": 1.0
+    },
+    "aws": {
+      "open_table_formats": 2.0,
+      "governed_catalog": 1.17,
+      "deployment": 0.4,
+      "genai": 2.0,
+      "data_movement": 2.0,
+      "commercial": 2.0
+    },
+    "microsoft": {
+      "open_table_formats": 1.33,
+      "governed_catalog": 1.83,
+      "deployment": 0.8,
+      "genai": 2.0,
+      "data_movement": 1.5,
+      "commercial": 2.0
+    },
+    "google": {
+      "open_table_formats": 1.67,
+      "governed_catalog": 1.67,
+      "deployment": 0.6,
+      "genai": 2.0,
+      "data_movement": 2.0,
+      "commercial": 2.0
+    }
+  },
+  "positioning": [
+    {
+      "vendor": "snowflake",
+      "deploy_flex": 0.6,
+      "openness": 1.25
+    },
+    {
+      "vendor": "databricks",
+      "deploy_flex": 0.4,
+      "openness": 1.75
+    },
+    {
+      "vendor": "cloudera",
+      "deploy_flex": 2.0,
+      "openness": 1.25
+    },
+    {
+      "vendor": "aws",
+      "deploy_flex": 0.4,
+      "openness": 1.5
+    },
+    {
+      "vendor": "microsoft",
+      "deploy_flex": 0.8,
+      "openness": 1.5
+    },
+    {
+      "vendor": "google",
+      "deploy_flex": 0.6,
+      "openness": 1.5
+    }
+  ],
+  "positioning_axes": {
+    "x": {
+      "label": "Deployment Flexibility",
+      "capabilities": [
+        "self_managed_onprem",
+        "private_cloud",
+        "multi_cloud",
+        "sovereign_airgapped",
+        "single_control_plane"
+      ]
+    },
+    "y": {
+      "label": "Openness / Interoperability",
+      "capabilities": [
+        "iceberg_read_write",
+        "delta_support",
+        "rest_catalog_interop",
+        "cross_system_lineage"
+      ]
+    }
+  }
+}
