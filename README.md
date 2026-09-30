@@ -59,3 +59,11 @@ Stack Overflow tag counts and GitHub star, contributor and issue data are time s
 table and are never combined with `documents`. See `docs/methodology.md` for this rule and every other counting decision.
 
 A missing credential for any requested source stops the run before anything is fetched, and lists what to set.
+
+## Phase 3: Market & Pipeline Analytics
+- Added bottom-up market sizing (nalysis/market/model.py), projecting the data platform market to $121B by 2030 (17% CAGR). Segments workloads across deployments, tiers, and regions. See [docs/market_model.md](docs/market_model.md).
+- Added competitive feature parity and positioning (nalysis/competitive/matrix.py), mapping 6 vendors across 24 capabilities, backed by docs. See [docs/competitive_matrix.md](docs/competitive_matrix.md).
+- Added simulated CRM pipeline generation (nalysis/crm_sim/generator.py), generating opportunities, usage, and releases *calibrated* to phase-1 loss reasons. All data is marked SIMULATED. See [docs/crm_sim.md](docs/crm_sim.md).
+- Deployed a web frontend using React and Vite at web/ with interactive data visualization of findings.
+- See [docs/phase3_summary.md](docs/phase3_summary.md) for headline outputs.
+

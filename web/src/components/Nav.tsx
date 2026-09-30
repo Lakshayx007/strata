@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { href: '#why-teams-switch', label: 'Why teams switch' },
   { href: '#voices', label: 'Voices' },
   { href: '#cloudera', label: 'Cloudera lens' },
+  { href: '#market-pipeline', label: 'Market & Pipeline' },
   { href: '#how-it-was-built', label: 'How it was built' },
 ];
 

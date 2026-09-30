@@ -12,7 +12,10 @@ data/state/
 venv/
 data/processed/
 
-# Web frontend (findings.json is copied at build time; don't commit twice)
+# Web frontend (JSONs are copied at build time; don't commit twice)
 web/src/data/findings.json
+web/src/data/market.json
+web/src/data/competitive.json
+web/src/data/pipeline.json
 web/node_modules/
 web/dist/
